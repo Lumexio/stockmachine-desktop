@@ -1,5 +1,5 @@
 <script setup>
-import GenericTableCrud from '../../components/generics/generic-table-crud.vue';
+import GenericTableCrud from '../../components/generics/generic-table-crud.js';
 
 import { ref } from 'vue';
 

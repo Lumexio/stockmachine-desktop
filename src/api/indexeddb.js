@@ -66,3 +66,22 @@ export const remove = async (storeName, id) => {
   const db = await dbPromise;
   return db.delete(storeName, id);
 };
+
+export const exportAllData = async () => {
+  const db = await dbPromise;
+  const stores = db.objectStoreNames;
+  const data = {};
+  for (const store of stores) {
+    data[store] = await db.getAll(store);
+  }
+  return data;
+};
+
+export const importAllData = async (data) => {
+  const db = await dbPromise;
+  for (const store in data) {
+    for (const item of data[store]) {
+      await db.add(store, item);
+    }
+  }
+};

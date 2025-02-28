@@ -4,7 +4,7 @@
   "description": "My Electron application description",
   "author": {
     "name": "Lumexio",
-    "email": "trotroyu@gmail.com"
+    "email": "fsmsoftdev@gmail.com"
   },
   "scripts": {
     "lint": "echo \"No linting configured\"",
@@ -25,7 +25,8 @@
     "vue-query": "^1.26.0",
     "vue-router": "^4.0.13",
     "vue-toast-notification": "^3.1.2",
-    "vuetify": "^3.7.1"
+    "vuetify": "^3.7.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
@@ -43,7 +44,20 @@
     "vite": "^5.4.2",
     "vue-cli-plugin-pinia": "~0.2.4"
   },
-  "keywords": [],
+  "keywords": [
+    "stock",
+    "machine",
+    "stockmachine",
+    "stock-machine",
+    "inventory",
+    "management",
+    "system",
+    "ims",
+    "stock management system",
+    "stock management",
+    "inventory management",
+    "inventory management system"
+  ],
   "license": "MIT",
   "productName": "STOCKMACHINE"
 }
