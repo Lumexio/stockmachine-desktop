@@ -3,6 +3,7 @@ import { useGenericFetchQueries } from '../../api/generic-fetch-querys';
 import ModalGeneric from './modal-generic';
 import { useToast } from 'vue-toast-notification';
 import { VTable, VToolbar, VBtn, VSpacer, VTextField, VIcon } from 'vuetify/components';
+import { useI18nStore } from '../../store/i18n';
 
 export default {
   name: 'GenericTableCrud',
@@ -24,6 +25,7 @@ export default {
 
     const { fetchQuery, fetchRelatedData, createMutation, updateMutation, deleteMutation } = useGenericFetchQueries(props.endpoint);
     const eventBus = inject('eventBus');
+    const i18n = useI18nStore();
 
     const loadItems = async () => {
       try {
@@ -127,9 +129,14 @@ export default {
       });
     });
 
+    const translatedColumns = computed(() => props.columns.map(column => ({
+      ...column,
+      title: `${i18n.t(`tables.${props.endpoint}.columns.${column.key}`)}`
+    })));
+
     return () => h('div', [
       h(VToolbar, { class: 'ma-1' }, () => [
-        h('h2', props.title),
+        h('h2', i18n.t(`tables.${props.endpoint}.title`)),
         h(VSpacer),
         h(VTextField, {
           'max-width': '15rem',
@@ -137,7 +144,7 @@ export default {
           density: 'compact',
           modelValue: search.value,
           'onUpdate:modelValue': (val) => search.value = val,
-          label: 'Search',
+          label: i18n.t('common.search'),
           'prepend-inner-icon': 'mdi-magnify',
           variant: 'outlined',
           'hide-details': true,
@@ -148,17 +155,17 @@ export default {
           onClick: () => openModal('create'),
           color: 'primary',
           variant: 'tonal'
-        }, () => 'Create')
+        }, () => i18n.t('actions.create'))
       ]),
 
       h(VTable, { 'fixed-header': true }, {
         default: () => [
           h('thead', [
             h('tr', [
-              ...props.columns.map(column =>
+              ...translatedColumns.value.map(column =>
                 h('th', { key: column.id }, column.title)
               ),
-              h('th', 'Actions')
+              h('th', i18n.t('common.actions'))
             ])
           ]),
           h('tbody', filteredItems.value.map(data =>
@@ -186,7 +193,11 @@ export default {
       h(ModalGeneric, {
         ref: dialog,
         maxWidth: '500',
-        title: props.title,
+        title: mode.value === 'create'
+          ? i18n.t(`tables.${props.endpoint}.create`)
+          : mode.value === 'edit'
+            ? i18n.t(`tables.${props.endpoint}.edit`)
+            : i18n.t(`tables.${props.endpoint}.delete`),
         formFields: props.formFields,
         mode: mode.value,
         item: selectedItem.value,
@@ -198,7 +209,7 @@ export default {
             color: 'primary',
             variant: 'tonal'
           }, () => [
-            'Save ',
+            i18n.t('actions.save'),
             h(VIcon, () => 'mdi-check')
           ])
           : mode.value === 'edit'
@@ -207,7 +218,7 @@ export default {
               color: 'primary',
               variant: 'tonal'
             }, () => [
-              'Save ',
+              i18n.t('actions.save'),
               h(VIcon, () => 'mdi-check')
             ])
             : h(VBtn, {
@@ -215,7 +226,7 @@ export default {
               color: 'error',
               variant: 'tonal'
             }, () => [
-              'Confirmar ',
+              i18n.t('actions.confirm'),
               h(VIcon, () => 'mdi-check')
             ])
       })

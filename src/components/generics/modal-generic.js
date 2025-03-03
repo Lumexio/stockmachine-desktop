@@ -1,8 +1,9 @@
-import { h, ref, watch, watchEffect, onMounted } from 'vue';
+import { h, ref, watch, watchEffect, onMounted, inject } from 'vue';
 import { VDialog, VCard, VCardTitle, VCardText, VCardActions, VTextField, VSelect, VBtn, VSpacer, VRow, VCol, VIcon } from 'vuetify/components';
 
 import { VFileUpload } from 'vuetify/labs/VFileUpload';
 import { getAll } from '../../api/indexeddb';
+import { useI18nStore } from '../../store/i18n';
 
 export default {
   name: 'ModalGeneric',
@@ -22,6 +23,7 @@ export default {
     scrollable: Boolean
   },
   setup(props, { slots, expose }) {
+    const i18n = useI18nStore();
     const isOpen = ref(false);
     const visible = ref(false);
     const valueItem = ref(null);
@@ -85,6 +87,15 @@ export default {
 
     expose({ handleOpen, handleClose, valueItem, isOpen });
 
+    const getEndpoint = (title) => {
+      const lowercaseTitle = title.toLowerCase();
+      if (lowercaseTitle.includes('product')) return 'products';
+      if (lowercaseTitle.includes('categor')) return 'categories';
+      if (lowercaseTitle.includes('rack')) return 'racks';
+      if (lowercaseTitle.includes('shelve')) return 'shelves';
+      return '';
+    };
+
     return () => h(VDialog, {
       modelValue: isOpen.value,
       'onUpdate:modelValue': (val) => isOpen.value = val,
@@ -102,7 +113,7 @@ export default {
               return h('div', {
                 class: 'text-h6 text-center pa-4',
                 style: 'min-height: 100px; display: flex; align-items: center; justify-content: center;'
-              }, '¿Quieres eliminar este registro?');
+              }, i18n.t('modals.deleteConfirm'));
             }
             return h(VRow, {}, () => props.formFields.map(input =>
               h(VCol, { cols: '12', key: input.key }, () =>
@@ -110,11 +121,15 @@ export default {
                   ? h(VSelect, {
                     items: relationData.value[input.fk] || [],
                     label: input.label,
+                    placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
                     itemTitle: 'name',
                     itemValue: 'id',
                     variant: 'outlined',
                     modelValue: input.value,
-                    'onUpdate:modelValue': (val) => input.value = val
+                    'onUpdate:modelValue': (val) => input.value = val,
+                    rules: input.rules?.map(rule =>
+                      (v) => rule(v) || i18n.t('forms.validation.required')
+                    )
                   })
                   : input.isFileUpload
                     ? h(VFileUpload, {
@@ -122,20 +137,23 @@ export default {
                       'onUpdate:modelValue': (val) => input.value = val,
                       accept: input.accept,
                       label: input.label,
-
                       density: 'comfortable',
                       clearable: true,
                       showSize: true,
                       multiple: false, // Keep single file mode
                       chips: true,
                       hideDetails: false,
-                      counter: true
+                      counter: true,
+                      placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`
                     })
                     : h(VTextField, {
                       modelValue: input.value,
                       'onUpdate:modelValue': (val) => input.value = val,
                       label: input.label,
-                      rules: input.rules,
+                      placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
+                      rules: input.rules?.map(rule =>
+                        (v) => rule(v) || i18n.t('forms.validation.required')
+                      ),
                       type: input.ispassword ? (visible.value ? 'text' : 'password') : input.type,
                       variant: 'outlined',
                       appendInnerIcon: input.ispassword ? (visible.value ? 'mdi-eye-off' : 'mdi-eye') : null,

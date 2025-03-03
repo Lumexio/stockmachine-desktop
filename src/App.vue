@@ -12,13 +12,23 @@
 </template>
 
 <script setup>
-import { provide, ref } from 'vue';
+import { provide, ref, onMounted } from 'vue';
 import NavDrawer from './components/generics/nav-drawer.vue';
 import useStore from './store';
 import { useGenericFetchQueries } from './api/generic-fetch-querys';
 import { eventBus } from './utils/eventBus';
+import { useI18nStore } from './store/i18n';
 
 const store = useStore();
+const i18n = useI18nStore();
+
+onMounted(() => {
+ // Initialize language from localStorage if exists
+ const savedLang = localStorage.getItem('language');
+ if (savedLang) {
+  i18n.setLocale(savedLang);
+ }
+});
 
 const { fetchRelatedData } = useGenericFetchQueries();
 const loadItems = async () => {

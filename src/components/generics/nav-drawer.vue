@@ -2,10 +2,10 @@
   <v-app-bar app>
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     <v-toolbar-title>
-      STOCKMACHINE
+      {{ i18n.t('app.title') }}
     </v-toolbar-title>
     <v-spacer></v-spacer>
-
+    <LanguageSelector @change-language="handleLanguageChange" />
     <v-switch :prepend-icon="iconTheme" class="mr-3" @click="setDark" v-model="darkMode" hide-details inset></v-switch>
     <v-btn icon>
       <v-icon>mdi-content-save</v-icon>
@@ -25,10 +25,10 @@
     </v-list>
   </v-navigation-drawer>
 
-  <modal-generic ref="modalRef" title="Import Data" :form-fields="fileUploadFields" mode="create">
+  <modal-generic ref="modalRef" :title="i18n.t('modals.import.title')" :form-fields="fileUploadFields" mode="create">
     <template #buttonAction>
       <v-btn color="primary" variant="tonal" @click="handleFileUpload">
-        Import
+        {{ i18n.t('actions.import') }}
         <v-icon>mdi-upload</v-icon>
       </v-btn>
     </template>
@@ -36,15 +36,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, inject } from 'vue';
+import { ref, onMounted, computed, inject, watch } from 'vue';
 import { useStore } from '../../store';
 import { useGenericFetchQueries } from "../../api/generic-fetch-querys";
 import ModalGeneric from './modal-generic.js';
 import { useToast } from 'vue-toast-notification';
 import { FILE_FORMATS, MENU_ITEMS } from '../../constants/fileOperations';
 import FileMenuItem from '../menus/FileMenuItem.vue';
+import LanguageSelector from '../language/LanguageSelector.vue';
+import { useI18nStore } from '../../store/i18n';
 
 const store = useStore();
+const i18n = useI18nStore();
 const props = defineProps({
   items: Array,
 });
@@ -81,9 +84,9 @@ async function handleExport(param) {
   try {
     await exportDataToFile(param);
     eventBus.emit('refreshData');
-    toast.success('Data exported and refreshed successfully');
+    toast.success(i18n.t('messages.success.exported'));
   } catch (error) {
-    toast.error('Error during export');
+    toast.error(i18n.t('messages.error.export'));
     console.error(error);
   }
 }
@@ -132,10 +135,23 @@ async function handleFileUpload() {
   }
 }
 
-const menuItems = [
-  MENU_ITEMS.EXPORT,
-  MENU_ITEMS.IMPORT
-];
+const list = computed(() => [
+  { title: i18n.t('navigation.products'), icon: 'mdi-package-variant-closed', to: '/products' },
+  { title: i18n.t('navigation.categories'), icon: 'mdi-folder-multiple', to: '/category' },
+  { title: i18n.t('navigation.racks'), icon: 'mdi-package-variant-closed', to: '/racks' },
+  { title: i18n.t('navigation.shelves'), icon: 'mdi-package-variant-closed', to: '/shelves' },
+]);
+
+// Watch for language changes
+watch(() => i18n.currentLocale, (newLocale) => {
+  // Force component update
+  list.value = [...list.value];
+}, { immediate: true });
+
+const menuItems = computed(() => [
+  { ...MENU_ITEMS.EXPORT, title: i18n.t('actions.export') },
+  { ...MENU_ITEMS.IMPORT, title: i18n.t('actions.import') }
+]);
 
 const handleMenuAction = async ({ type, format }) => {
   try {
@@ -148,5 +164,12 @@ const handleMenuAction = async ({ type, format }) => {
     toast.error(`Error during ${type}`);
     console.error(error);
   }
+};
+
+// Add language handling
+const handleLanguageChange = (languageCode) => {
+  i18n.setLocale(languageCode);
+  // Emit a custom event for language change
+  eventBus.emit('languageChanged', languageCode);
 };
 </script>
