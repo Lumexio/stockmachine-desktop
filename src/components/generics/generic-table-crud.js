@@ -1,4 +1,4 @@
-import { h, ref, computed } from 'vue';
+import { h, ref, computed, onMounted, inject } from 'vue';
 import { useGenericFetchQueries } from '../../api/generic-fetch-querys';
 import ModalGeneric from './modal-generic';
 import { useToast } from 'vue-toast-notification';
@@ -23,33 +23,50 @@ export default {
     const items = ref([]);
 
     const { fetchQuery, fetchRelatedData, createMutation, updateMutation, deleteMutation } = useGenericFetchQueries(props.endpoint);
+    const eventBus = inject('eventBus');
 
     const loadItems = async () => {
-      const { products, categories, shelves, racks } = await fetchRelatedData();
+      try {
+        const data = await fetchRelatedData();
 
-      switch (props.endpoint) {
-        case 'products':
-          items.value = products.map(product => ({
-            ...product,
-            category_name: categories.find(category => category.id === product.category_id)?.name || '',
-            shelve_name: shelves.find(shelve => shelve.id === product.shelve_id)?.name || '',
-            rack_name: racks.find(rack => rack.id === product.rack_id)?.name || '',
-          }));
-          break;
-        case 'categories':
-          items.value = categories;
-          break;
-        case 'shelves':
-          items.value = shelves;
-          break;
-        case 'racks':
-          items.value = racks;
-          break;
-        default:
-          items.value = [];
-          break;
+        switch (props.endpoint) {
+          case 'products':
+            items.value = data.products.map(product => ({
+              ...product,
+              category_name: data.categories.find(category => category.id === product.category_id)?.name || '',
+              shelve_name: data.shelves.find(shelve => shelve.id === product.shelve_id)?.name || '',
+              rack_name: data.racks.find(rack => rack.id === product.rack_id)?.name || '',
+            }));
+            break;
+          case 'categories':
+            items.value = data.categories;
+            break;
+          case 'shelves':
+            items.value = data.shelves;
+            break;
+          case 'racks':
+            items.value = data.racks;
+            break;
+          default:
+            items.value = [];
+            break;
+        }
+      } catch (error) {
+        console.error('Error loading items:', error);
       }
     };
+
+    // Setup event listener with cleanup
+    onMounted(() => {
+      // Ensure initial load
+      loadItems();
+
+      // Setup event listener
+      eventBus.on('refreshData', async () => {
+
+        await loadItems();
+      });
+    });
 
     const handleClear = () => {
       props.formFields.forEach((field) => {
@@ -109,8 +126,6 @@ export default {
         });
       });
     });
-
-    loadItems();
 
     return () => h('div', [
       h(VToolbar, { class: 'ma-1' }, () => [

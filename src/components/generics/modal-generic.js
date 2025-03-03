@@ -1,5 +1,7 @@
 import { h, ref, watch, watchEffect, onMounted } from 'vue';
 import { VDialog, VCard, VCardTitle, VCardText, VCardActions, VTextField, VSelect, VBtn, VSpacer, VRow, VCol, VIcon } from 'vuetify/components';
+
+import { VFileUpload } from 'vuetify/labs/VFileUpload';
 import { getAll } from '../../api/indexeddb';
 
 export default {
@@ -51,12 +53,16 @@ export default {
         props.formFields.forEach((field) => {
           if (field.selector) {
             field.value = props.item[field.fk];
+          } else if (field.isFileUpload) {
+            field.value = []; // Initialize file field as empty array
           } else {
             field.value = field.ispassword ? '' : props.item[field.key];
           }
         });
       } else if (props.mode === 'create') {
-        props.formFields.forEach((field) => field.value = '');
+        props.formFields.forEach((field) => {
+          field.value = field.isFileUpload ? [] : '';
+        });
       }
     });
 
@@ -91,8 +97,14 @@ export default {
       default: () => h(VCard, {}, {
         default: () => [
           h(VCardTitle, {}, () => props.title),
-          h(VCardText, {}, () => props.mode !== 'delete'
-            ? h(VRow, {}, () => props.formFields.map(input =>
+          h(VCardText, {}, () => {
+            if (props.mode === 'delete') {
+              return h('div', {
+                class: 'text-h6 text-center pa-4',
+                style: 'min-height: 100px; display: flex; align-items: center; justify-content: center;'
+              }, '¿Quieres eliminar este registro?');
+            }
+            return h(VRow, {}, () => props.formFields.map(input =>
               h(VCol, { cols: '12', key: input.key }, () =>
                 input.selector
                   ? h(VSelect, {
@@ -104,23 +116,37 @@ export default {
                     modelValue: input.value,
                     'onUpdate:modelValue': (val) => input.value = val
                   })
-                  : h(VTextField, {
-                    modelValue: input.value,
-                    'onUpdate:modelValue': (val) => input.value = val,
-                    label: input.label,
-                    rules: input.rules,
-                    type: input.ispassword ? (visible.value ? 'text' : 'password') : input.type,
-                    variant: 'outlined',
-                    appendInnerIcon: input.ispassword ? (visible.value ? 'mdi-eye-off' : 'mdi-eye') : null,
-                    prependInnerIcon: input.ispassword ? 'mdi-lock-outline' : null,
-                    'onClick:appendInner': () => input.ispassword && (visible.value = !visible.value),
-                    'append-inner': input.ispassword ? () => h(VIcon, () => visible.value ? 'mdi-eye-off' : 'mdi-eye') : undefined,
-                    'prepend-inner': input.ispassword ? () => h(VIcon, () => 'mdi-lock-outline') : undefined
-                  })
+                  : input.isFileUpload
+                    ? h(VFileUpload, {
+                      modelValue: Array.isArray(input.value) ? input.value : [], // Ensure array
+                      'onUpdate:modelValue': (val) => input.value = val,
+                      accept: input.accept,
+                      label: input.label,
+
+                      density: 'comfortable',
+                      clearable: true,
+                      showSize: true,
+                      multiple: false, // Keep single file mode
+                      chips: true,
+                      hideDetails: false,
+                      counter: true
+                    })
+                    : h(VTextField, {
+                      modelValue: input.value,
+                      'onUpdate:modelValue': (val) => input.value = val,
+                      label: input.label,
+                      rules: input.rules,
+                      type: input.ispassword ? (visible.value ? 'text' : 'password') : input.type,
+                      variant: 'outlined',
+                      appendInnerIcon: input.ispassword ? (visible.value ? 'mdi-eye-off' : 'mdi-eye') : null,
+                      prependInnerIcon: input.ispassword ? 'mdi-lock-outline' : null,
+                      'onClick:appendInner': () => input.ispassword && (visible.value = !visible.value),
+                      'append-inner': input.ispassword ? () => h(VIcon, () => visible.value ? 'mdi-eye-off' : 'mdi-eye') : undefined,
+                      'prepend-inner': input.ispassword ? () => h(VIcon, () => 'mdi-lock-outline') : undefined
+                    })
               )
-            ))
-            : h('p', {}, () => 'Quieres eliminar este registro?')
-          ),
+            ));
+          }),
           slots.default && h(VCardText, {}, () => slots.default()),
           h(VCardActions, { class: 'flex justify-end gap-4' }, {
             default: () => [

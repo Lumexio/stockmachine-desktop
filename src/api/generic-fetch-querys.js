@@ -1,4 +1,4 @@
-import { getAll, add, update, remove, exportAllData } from './indexeddb';
+import { getAll, add, update, remove, exportAllData, getById } from './indexeddb';
 import * as XLSX from 'xlsx';
 
 export function useGenericFetchQueries(endpoint) {
@@ -87,27 +87,95 @@ export function useGenericFetchQueries(endpoint) {
     const reader = new FileReader();
     reader.onload = async (event) => {
       let data;
-      if (format === 'json') {
-        data = JSON.parse(event.target.result);
-      } else if (format === 'csv') {
-        const csv = event.target.result;
-        const rows = csv.split('\n');
-        const keys = rows[0].split(',');
-        data = rows.slice(1).map(row => {
-          const values = row.split(',');
-          return keys.reduce((obj, key, index) => ({ ...obj, [key]: values[index] }), {});
-        });
-      } else if (format === 'xlsx') {
-        const workbook = XLSX.read(event.target.result, { type: 'binary' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        data = XLSX.utils.sheet_to_json(worksheet);
-      }
-      for (const item of data) {
-        await add(endpoint, item);
+      try {
+        if (format === 'json' || format === 'csv') {
+          data = event.target.result;
+          if (format === 'json') {
+            data = JSON.parse(data);
+            if (Array.isArray(data)) {
+              // Single file import logic
+              for (const item of data) {
+                try {
+                  await add(endpoint, item);
+                } catch (err) {
+                  if (err.name === 'ConstraintError') {
+                    const existingItem = await getById(endpoint, item.id);
+                    const mergedItem = { ...existingItem, ...item };
+                    await update(endpoint, mergedItem);
+                  } else {
+                    throw err;
+                  }
+                }
+              }
+            } else {
+              // Full database import logic
+              for (const store in data) {
+                for (const item of data[store]) {
+                  try {
+                    await add(store, item);
+                  } catch (err) {
+                    if (err.name === 'ConstraintError') {
+                      const existingItem = await getById(store, item.id);
+                      const mergedItem = { ...existingItem, ...item };
+                      await update(store, mergedItem);
+                    } else {
+                      throw err;
+                    }
+                  }
+                }
+              }
+            }
+          } else {
+            // CSV processing
+            const rows = data.split('\n');
+            const keys = rows[0].split(',');
+            data = rows.slice(1).map(row => {
+              const values = row.split(',');
+              return keys.reduce((obj, key, index) => ({ ...obj, [key]: values[index] }), {});
+            });
+            for (const item of data) {
+              try {
+                await add(endpoint, item);
+              } catch (err) {
+                if (err.name === 'ConstraintError') {
+                  const existingItem = await getById(endpoint, item.id);
+                  const mergedItem = { ...existingItem, ...item };
+                  await update(endpoint, mergedItem);
+                } else {
+                  throw err;
+                }
+              }
+            }
+          }
+        } else if (format === 'xlsx') {
+          // Handle XLSX using ArrayBuffer
+          const arrayBuffer = event.target.result;
+          const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          data = XLSX.utils.sheet_to_json(worksheet);
+          for (const item of data) {
+            try {
+              await add(endpoint, item);
+            } catch (err) {
+              if (err.name === 'ConstraintError') {
+                const existingItem = await getById(endpoint, item.id);
+                const mergedItem = { ...existingItem, ...item };
+                await update(endpoint, mergedItem);
+              } else {
+                throw err;
+              }
+            }
+          }
+        }
+
+      } catch (error) {
+
+        throw error;
       }
     };
+
     if (format === 'xlsx') {
-      reader.readAsBinaryString(file);
+      reader.readAsArrayBuffer(file);
     } else {
       reader.readAsText(file);
     }

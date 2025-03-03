@@ -12,11 +12,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import NavDrawer from './components/generics/nav-drawer.vue'
-import useStore from './store'
-const store = useStore()
+import { provide, ref } from 'vue';
+import NavDrawer from './components/generics/nav-drawer.vue';
+import useStore from './store';
+import { useGenericFetchQueries } from './api/generic-fetch-querys';
+import { eventBus } from './utils/eventBus';
 
+const store = useStore();
+
+const { fetchRelatedData } = useGenericFetchQueries();
+const loadItems = async () => {
+ const { products, categories, shelves, racks } = await fetchRelatedData();
+ // This will refresh all data in the app
+ return { products, categories, shelves, racks };
+};
+
+// Provide eventBus at the App level
+provide('eventBus', eventBus);
 
 const list = ref([
  // { title: 'home', icon: 'mdi-home', to: '/' },

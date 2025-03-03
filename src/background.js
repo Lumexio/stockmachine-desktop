@@ -1,0 +1,6 @@
+// ...existing imports...
+
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
+app.commandLine.appendSwitch('disable-gpu-vsync');
+
+// ...rest of existing code...
