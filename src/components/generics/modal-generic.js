@@ -120,7 +120,7 @@ export default {
                 input.selector
                   ? h(VSelect, {
                     items: relationData.value[input.fk] || [],
-                    label: input.label,
+                    label: `${i18n.t(`forms.label.${getEndpoint(props.title)}.${input.key}`)}`,
                     placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
                     itemTitle: 'name',
                     itemValue: 'id',
@@ -136,7 +136,13 @@ export default {
                       modelValue: Array.isArray(input.value) ? input.value : [], // Ensure array
                       'onUpdate:modelValue': (val) => input.value = val,
                       accept: input.accept,
-                      label: input.label,
+                      label: `${input.label} (Max: ${input.maxSize}MB)`,
+                      rules: input.rules?.map(rule =>
+                        (v) => rule(v) || i18n.t('forms.validation.required')
+                      ),
+                      multiple: input.multiple,
+                      maxFiles: input.maxFiles,
+                      maxFileSize: input.maxSize * 1024 * 1024,
                       density: 'comfortable',
                       clearable: true,
                       showSize: true,
@@ -149,7 +155,7 @@ export default {
                     : h(VTextField, {
                       modelValue: input.value,
                       'onUpdate:modelValue': (val) => input.value = val,
-                      label: input.label,
+                      label: `${i18n.t(`forms.label.${getEndpoint(props.title)}.${input.key}`)}`,
                       placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
                       rules: input.rules?.map(rule =>
                         (v) => rule(v) || i18n.t('forms.validation.required')

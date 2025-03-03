@@ -82,8 +82,23 @@ export default {
    products: {
     name: 'Name',
     quantity: 'Quantity',
+    description: 'Description',
+    category_name: 'Category',
+    shelve_name: 'Shelve',
+    rack_name: 'Rack'
+   },
+   categories: {
+    name: 'Name',
+    description: 'Description'
+   },
+   shelves: {
+    name: 'Name'
+   },
+   racks: {
+    name: 'Name',
+    shelve_id: 'Shelve'
 
-   }
+   },
   },
   placeholders: {
    products: {

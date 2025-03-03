@@ -78,6 +78,26 @@ export default {
   }
  },
  forms: {
+  label: {
+   products: {
+    name: 'Nombre',
+    quantity: 'Cantidad',
+    description: 'Descripción',
+    category_name: 'Categoría',
+    shelve_name: 'Estante',
+    rack_name: 'Rack'
+   },
+   categories: {
+    name: 'Nombre',
+    description: 'Descripción'
+   },
+   shelves: {
+    name: 'Nombre'
+   },
+   racks: {
+    name: 'Nombre'
+   }
+  },
   placeholders: {
    products: {
     name: 'Ingrese nombre del producto',

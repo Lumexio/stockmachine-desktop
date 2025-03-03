@@ -18,7 +18,7 @@ import useStore from './store';
 import { useGenericFetchQueries } from './api/generic-fetch-querys';
 import { eventBus } from './utils/eventBus';
 import { useI18nStore } from './store/i18n';
-
+import { computed, watch } from 'vue';
 const store = useStore();
 const i18n = useI18nStore();
 
@@ -40,11 +40,26 @@ const loadItems = async () => {
 // Provide eventBus at the App level
 provide('eventBus', eventBus);
 
+// Change from computed to ref and create a function to update it
 const list = ref([
- // { title: 'home', icon: 'mdi-home', to: '/' },
- { title: "Products", icon: "mdi-package-variant-closed", to: "/products" },
- { title: "Categories", icon: "mdi-folder-multiple", to: "/category" },
- { title: "Racks", icon: "mdi-package-variant-closed", to: "/racks" },
- { title: 'Shelves', icon: 'mdi-package-variant-closed', to: '/shelves' },
+ { title: `${i18n.t('navigation.products')}`, icon: 'mdi-package-variant-closed', to: '/products' },
+ { title: `${i18n.t('navigation.categories')}`, icon: 'mdi-folder-multiple', to: '/category' },
+ { title: `${i18n.t('navigation.racks')}`, icon: 'mdi-package-variant-closed', to: '/racks' },
+ { title: `${i18n.t('navigation.shelves')}`, icon: 'mdi-package-variant-closed', to: '/shelves' },
 ]);
+
+const updateList = () => {
+ list.value = [
+  { title: `${i18n.t('navigation.products')}`, icon: 'mdi-package-variant-closed', to: '/products' },
+  { title: `${i18n.t('navigation.categories')}`, icon: 'mdi-folder-multiple', to: '/category' },
+  { title: `${i18n.t('navigation.racks')}`, icon: 'mdi-package-variant-closed', to: '/racks' },
+  { title: `${i18n.t('navigation.shelves')}`, icon: 'mdi-package-variant-closed', to: '/shelves' },
+ ];
+};
+
+// Watch for language changes and update list
+watch(() => i18n.currentLocale, () => {
+ updateList();
+}, { immediate: true });
+
 </script>

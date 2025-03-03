@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, inject, watch } from 'vue';
+import { ref, onMounted, computed, inject } from 'vue';
 import { useStore } from '../../store';
 import { useGenericFetchQueries } from "../../api/generic-fetch-querys";
 import ModalGeneric from './modal-generic.js';
@@ -135,18 +135,6 @@ async function handleFileUpload() {
   }
 }
 
-const list = computed(() => [
-  { title: i18n.t('navigation.products'), icon: 'mdi-package-variant-closed', to: '/products' },
-  { title: i18n.t('navigation.categories'), icon: 'mdi-folder-multiple', to: '/category' },
-  { title: i18n.t('navigation.racks'), icon: 'mdi-package-variant-closed', to: '/racks' },
-  { title: i18n.t('navigation.shelves'), icon: 'mdi-package-variant-closed', to: '/shelves' },
-]);
-
-// Watch for language changes
-watch(() => i18n.currentLocale, (newLocale) => {
-  // Force component update
-  list.value = [...list.value];
-}, { immediate: true });
 
 const menuItems = computed(() => [
   { ...MENU_ITEMS.EXPORT, title: i18n.t('actions.export') },
