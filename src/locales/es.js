@@ -100,6 +100,10 @@ export default {
  },
  forms: {
   label: {
+   import: {
+    title: 'Arrastra y suelta un archivo o haz clic para seleccionar',
+    selectFile: 'Seleccionar Archivo'
+   },
    products: {
     name: 'Nombre',
     quantity: 'Cantidad',
@@ -122,26 +126,13 @@ export default {
    }
   },
   placeholders: {
-   products: {
-    name: 'Ingrese nombre del producto',
-    quantity: 'Ingrese cantidad',
-    description: 'Ingrese descripción del producto',
-    category_id: 'Seleccione categoría',
-    shelve_id: 'Seleccione estante',
-    rack_id: 'Seleccione rack'
-   },
-   categories: {
-    name: 'Ingrese nombre de la categoría',
-    description: 'Ingrese descripción de la categoría'
-   },
-   shelves: {
-    name: 'Ingrese nombre del estante',
-    description: 'Ingrese descripción del estante'
-   },
-   racks: {
-    name: 'Ingrese nombre del rack',
-    description: 'Ingrese descripción del rack'
-   }
+   name: 'Ingrese nombre',
+   description: 'Ingrese descripción',
+   quantity: 'Ingrese cantidad',
+   price: 'Ingrese precio',
+   category: 'Seleccione categoría',
+   shelve: 'Seleccione estante',
+   rack: 'Seleccione rack'
   },
   validation: {
    required: 'Este campo es requerido'

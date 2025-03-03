@@ -100,6 +100,10 @@ export default {
  },
  forms: {
   label: {
+   import: {
+    title: 'Drag and drop a file here or click',
+    selectFile: 'Select File'
+   },
    products: {
     name: 'Name',
     quantity: 'Quantity',
@@ -123,26 +127,13 @@ export default {
    },
   },
   placeholders: {
-   products: {
-    name: 'Enter product name',
-    quantity: 'Enter quantity',
-    description: 'Enter product description',
-    category_id: 'Select category',
-    shelve_id: 'Select shelve',
-    rack_id: 'Select rack'
-   },
-   categories: {
-    name: 'Enter category name',
-    description: 'Enter category description'
-   },
-   shelves: {
-    name: 'Enter shelve name',
-    description: 'Enter shelve description'
-   },
-   racks: {
-    name: 'Enter rack name',
-    description: 'Enter rack description'
-   }
+   name: 'Enter name',
+   description: 'Enter description',
+   quantity: 'Enter quantity',
+   price: 'Enter price',
+   category: 'Select category',
+   shelve: 'Select shelve',
+   rack: 'Select rack'
   },
   validation: {
    required: 'This field is required'

@@ -21,7 +21,7 @@ export default {
   close: '閉じる',
   confirm: '確認',
   import: 'インポート',
-  export: 'エクスポート'
+  export: '在庫をエクスポート'
  },
  modals: {
   deleteConfirm: 'このレコードを削除しますか？',
@@ -36,12 +36,12 @@ export default {
    updated: 'レコードが正常に更新されました',
    deleted: 'レコードが正常に削除されました',
    imported: 'データが正常にインポートされ更新されました',
-   exported: 'データが正常にエクスポートされました'
+   exported: 'データが正常にエクスポートされ更新されました'
   },
   error: {
-   create: '作成中にエラーが発生しました',
-   update: '更新中にエラーが発生しました',
-   delete: '削除中にエラーが発生しました',
+   create: 'レコードの作成中にエラーが発生しました',
+   update: 'レコードの更新中にエラーが発生しました',
+   delete: 'レコードの削除中にエラーが発生しました',
    import: 'インポート中にエラーが発生しました',
    export: 'エクスポート中にエラーが発生しました'
   }
@@ -53,9 +53,9 @@ export default {
  tables: {
   products: {
    title: '製品管理',
-   create: '製品を作成',
-   edit: '製品を編集',
-   delete: '製品を削除',
+   create: '製品作成',
+   edit: '製品編集',
+   delete: '製品削除',
    columns: {
     name: '名前',
     category_name: 'カテゴリー',
@@ -67,9 +67,9 @@ export default {
   },
   categories: {
    title: 'カテゴリー管理',
-   create: 'カテゴリーを作成',
-   edit: 'カテゴリーを編集',
-   delete: 'カテゴリーを削除',
+   create: 'カテゴリー作成',
+   edit: 'カテゴリー編集',
+   delete: 'カテゴリー削除',
    columns: {
     id: 'ID',
     name: '名前',
@@ -77,31 +77,33 @@ export default {
    }
   },
   shelves: {
-   id: 'ID',
    title: '棚管理',
-   create: '棚を作成',
-   edit: '棚を編集',
-   delete: '棚を削除',
+   create: '棚作成',
+   edit: '棚編集',
+   delete: '棚削除',
    columns: {
+    id: 'ID',
     name: '名前'
    }
   },
   racks: {
-   id: 'ID',
    title: 'ラック管理',
-   create: 'ラックを作成',
-   edit: 'ラックを編集',
-   delete: 'ラックを削除',
+   create: 'ラック作成',
+   edit: 'ラック編集',
+   delete: 'ラック削除',
    columns: {
+    id: 'ID',
     name: '名前',
     shelve_name: '棚'
    }
   }
-
-
  },
  forms: {
   label: {
+   import: {
+    title: 'データのインポート',
+    selectFile: 'ファイルを選択'
+   },
    products: {
     name: '名前',
     quantity: '数量',
@@ -115,32 +117,22 @@ export default {
     description: '説明'
    },
    shelves: {
-    name: '名前'
+    name: '名前',
+    description: '説明'
    },
    racks: {
     name: '名前',
-    shelve_id: '棚'
+    description: '説明'
    }
   },
   placeholders: {
-   products: {
-    name: '製品名を入力',
-    quantity: '数量を入力',
-    description: '説明を入力',
-    category_id: 'カテゴリーを選択',
-    shelve_id: '棚を選択',
-    rack_id: 'ラックを選択'
-   },
-   categories: {
-    name: 'カテゴリー名を入力',
-    description: '説明を入力'
-   },
-   shelves: {
-    name: '棚名を入力'
-   },
-   racks: {
-    name: 'ラック名を入力'
-   }
+   name: '名前を入力',
+   description: '説明を入力',
+   quantity: '数量を入力',
+   price: '価格を入力',
+   category: 'カテゴリーを選択',
+   shelve: '棚を選択',
+   rack: 'ラックを選択'
   },
   validation: {
    required: 'この項目は必須です'

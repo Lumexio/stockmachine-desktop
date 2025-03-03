@@ -2,8 +2,8 @@ export default {
  app: {
   title: 'STOCKMACHINE',
   theme: {
-   dark: 'Mode Sombre',
-   light: 'Mode Clair'
+   dark: 'Mode sombre',
+   light: 'Mode clair'
   }
  },
  navigation: {
@@ -21,13 +21,13 @@ export default {
   close: 'Fermer',
   confirm: 'Confirmer',
   import: 'Importer',
-  export: 'Exporter stock'
+  export: 'Exporter le stock'
  },
  modals: {
   deleteConfirm: 'Voulez-vous supprimer cet enregistrement ?',
   import: {
-   title: 'Importer des Données',
-   selectFile: 'Sélectionner un Fichier'
+   title: 'Importer des données',
+   selectFile: 'Sélectionner un fichier'
   }
  },
  messages: {
@@ -52,72 +52,87 @@ export default {
  },
  tables: {
   products: {
-   title: 'Gestion des Produits',
-   create: 'Créer un Produit',
-   edit: 'Modifier le Produit',
-   delete: 'Supprimer le Produit',
+   title: 'Gestion des produits',
+   create: 'Créer un produit',
+   edit: 'Modifier le produit',
+   delete: 'Supprimer le produit',
    columns: {
     name: 'Nom',
     category_name: 'Catégorie',
-    shelve_name: 'Étagère',
-    rack_name: 'Rayon',
+    shelve_name: 'Rayon',
+    rack_name: 'Étagère',
     quantity: 'Quantité',
     description: 'Description'
    }
   },
   categories: {
-   title: 'Gestion des Catégories',
-   create: 'Créer une Catégorie',
-   edit: 'Modifier la Catégorie',
-   delete: 'Supprimer la Catégorie',
+   title: 'Gestion des catégories',
+   create: 'Créer une catégorie',
+   edit: 'Modifier la catégorie',
+   delete: 'Supprimer la catégorie',
    columns: {
     id: 'ID',
     name: 'Nom',
     description: 'Description'
    }
+  },
+  shelves: {
+   title: 'Gestion des rayons',
+   create: 'Créer un rayon',
+   edit: 'Modifier le rayon',
+   delete: 'Supprimer le rayon',
+   columns: {
+    id: 'ID',
+    name: 'Nom'
+   }
+  },
+  racks: {
+   title: 'Gestion des étagères',
+   create: 'Créer une étagère',
+   edit: 'Modifier l\'étagère',
+   delete: 'Supprimer l\'étagère',
+   columns: {
+    id: 'ID',
+    name: 'Nom',
+    shelve_name: 'Rayon'
+   }
   }
  },
  forms: {
   label: {
+   import: {
+    title: 'Importer des données',
+    selectFile: 'Sélectionner un fichier'
+   },
    products: {
     name: 'Nom',
     quantity: 'Quantité',
     description: 'Description',
     category_name: 'Catégorie',
-    shelve_name: 'Étagère',
-    rack_name: 'Rayon'
+    shelve_name: 'Rayon',
+    rack_name: 'Étagère'
    },
    categories: {
     name: 'Nom',
     description: 'Description'
    },
    shelves: {
-    name: 'Nom'
+    name: 'Nom',
+    description: 'Description'
    },
    racks: {
     name: 'Nom',
-    shelve_id: 'Étagère'
+    description: 'Description'
    }
   },
   placeholders: {
-   products: {
-    name: 'Entrez le nom du produit',
-    quantity: 'Entrez la quantité',
-    description: 'Entrez la description du produit',
-    category_id: 'Sélectionnez une catégorie',
-    shelve_id: 'Sélectionnez une étagère',
-    rack_id: 'Sélectionnez un rayon'
-   },
-   categories: {
-    name: 'Entrez le nom de la catégorie',
-    description: 'Entrez la description de la catégorie'
-   },
-   shelves: {
-    name: 'Entrez le nom de l\'étagère'
-   },
-   racks: {
-    name: 'Entrez le nom du rayon'
-   }
+   name: 'Entrez le nom',
+   description: 'Entrez la description',
+   quantity: 'Entrez la quantité',
+   price: 'Entrez le prix',
+   category: 'Sélectionnez la catégorie',
+   shelve: 'Sélectionnez le rayon',
+   rack: 'Sélectionnez l\'étagère'
   },
   validation: {
    required: 'Ce champ est obligatoire'

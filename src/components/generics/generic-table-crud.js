@@ -200,6 +200,7 @@ export default {
             : `${i18n.t(`tables.${props.endpoint}.delete`)}`,
         formFields: props.formFields,
         mode: mode.value,
+        endpoint: props.endpoint,
         item: selectedItem.value,
         relations: props.relations
       }, {

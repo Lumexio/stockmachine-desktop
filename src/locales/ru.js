@@ -2,8 +2,8 @@ export default {
  app: {
   title: 'STOCKMACHINE',
   theme: {
-   dark: 'Темная Тема',
-   light: 'Светлая Тема'
+   dark: 'Тёмная тема',
+   light: 'Светлая тема'
   }
  },
  navigation: {
@@ -21,13 +21,13 @@ export default {
   close: 'Закрыть',
   confirm: 'Подтвердить',
   import: 'Импорт',
-  export: 'Экспорт'
+  export: 'Экспорт товаров'
  },
  modals: {
   deleteConfirm: 'Вы хотите удалить эту запись?',
   import: {
-   title: 'Импорт Данных',
-   selectFile: 'Выбрать Файл'
+   title: 'Импорт данных',
+   selectFile: 'Выбрать файл'
   }
  },
  messages: {
@@ -36,12 +36,12 @@ export default {
    updated: 'Запись успешно обновлена',
    deleted: 'Запись успешно удалена',
    imported: 'Данные успешно импортированы и обновлены',
-   exported: 'Данные успешно экспортированы'
+   exported: 'Данные успешно экспортированы и обновлены'
   },
   error: {
-   create: 'Ошибка при создании',
-   update: 'Ошибка при обновлении',
-   delete: 'Ошибка при удалении',
+   create: 'Ошибка при создании записи',
+   update: 'Ошибка при обновлении записи',
+   delete: 'Ошибка при удалении записи',
    import: 'Ошибка при импорте',
    export: 'Ошибка при экспорте'
   }
@@ -52,10 +52,10 @@ export default {
  },
  tables: {
   products: {
-   title: 'Управление Товарами',
-   create: 'Создать Товар',
-   edit: 'Редактировать Товар',
-   delete: 'Удалить Товар',
+   title: 'Управление товарами',
+   create: 'Создать товар',
+   edit: 'Редактировать товар',
+   delete: 'Удалить товар',
    columns: {
     name: 'Название',
     category_name: 'Категория',
@@ -66,19 +66,44 @@ export default {
    }
   },
   categories: {
-   title: 'Управление Категориями',
-   create: 'Создать Категорию',
-   edit: 'Редактировать Категорию',
-   delete: 'Удалить Категорию',
+   title: 'Управление категориями',
+   create: 'Создать категорию',
+   edit: 'Редактировать категорию',
+   delete: 'Удалить категорию',
    columns: {
     id: 'ID',
     name: 'Название',
     description: 'Описание'
    }
+  },
+  shelves: {
+   title: 'Управление полками',
+   create: 'Создать полку',
+   edit: 'Редактировать полку',
+   delete: 'Удалить полку',
+   columns: {
+    id: 'ID',
+    name: 'Название'
+   }
+  },
+  racks: {
+   title: 'Управление стеллажами',
+   create: 'Создать стеллаж',
+   edit: 'Редактировать стеллаж',
+   delete: 'Удалить стеллаж',
+   columns: {
+    id: 'ID',
+    name: 'Название',
+    shelve_name: 'Полка'
+   }
   }
  },
  forms: {
   label: {
+   import: {
+    title: 'Импорт данных',
+    selectFile: 'Выбрать файл'
+   },
    products: {
     name: 'Название',
     quantity: 'Количество',
@@ -92,35 +117,25 @@ export default {
     description: 'Описание'
    },
    shelves: {
-    name: 'Название'
+    name: 'Название',
+    description: 'Описание'
    },
    racks: {
     name: 'Название',
-    shelve_id: 'Полка'
+    description: 'Описание'
    }
   },
   placeholders: {
-   products: {
-    name: 'Введите название товара',
-    quantity: 'Введите количество',
-    description: 'Введите описание товара',
-    category_id: 'Выберите категорию',
-    shelve_id: 'Выберите полку',
-    rack_id: 'Выберите стеллаж'
-   },
-   categories: {
-    name: 'Введите название категории',
-    description: 'Введите описание категории'
-   },
-   shelves: {
-    name: 'Введите название полки'
-   },
-   racks: {
-    name: 'Введите название стеллажа'
-   }
+   name: 'Введите название',
+   description: 'Введите описание',
+   quantity: 'Введите количество',
+   price: 'Введите цену',
+   category: 'Выберите категорию',
+   shelve: 'Выберите полку',
+   rack: 'Выберите стеллаж'
   },
   validation: {
-   required: 'Это поле обязательно для заполнения'
+   required: 'Это поле обязательно'
   }
  }
 };

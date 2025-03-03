@@ -9,6 +9,7 @@ export default {
   name: 'ModalGeneric',
   props: {
     title: String,
+    endpoint: String,
     formFields: Array,
     mode: String,
     item: Object,
@@ -50,6 +51,7 @@ export default {
     onMounted(fetchRelationData);
 
     watchEffect(() => {
+
       valueItem.value = { ...props.item };
       if (props.mode === 'edit') {
         props.formFields.forEach((field) => {
@@ -120,8 +122,8 @@ export default {
                 input.selector
                   ? h(VSelect, {
                     items: relationData.value[input.fk] || [],
-                    label: `${i18n.t(`forms.label.${getEndpoint(props.title)}.${input.key}`)}`,
-                    placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
+                    label: `${i18n.t(`forms.label.${getEndpoint(props.endpoint)}.${input.key}`)}`,
+                    placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.endpoint)}`)}`,
                     itemTitle: 'name',
                     itemValue: 'id',
                     variant: 'outlined',
@@ -140,6 +142,7 @@ export default {
                       rules: input.rules?.map(rule =>
                         (v) => rule(v) || i18n.t('forms.validation.required')
                       ),
+                      title: `${i18n.t(`forms.label.import.title`)}`,
                       multiple: input.multiple,
                       maxFiles: input.maxFiles,
                       maxFileSize: input.maxSize * 1024 * 1024,
@@ -150,12 +153,14 @@ export default {
                       chips: true,
                       hideDetails: false,
                       counter: true,
+
+
                       placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`
                     })
                     : h(VTextField, {
                       modelValue: input.value,
                       'onUpdate:modelValue': (val) => input.value = val,
-                      label: `${i18n.t(`forms.label.${getEndpoint(props.title)}.${input.key}`)}`,
+                      label: `${i18n.t(`forms.label.${getEndpoint(props.endpoint)}.${input.key}`)}`,
                       placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
                       rules: input.rules?.map(rule =>
                         (v) => rule(v) || i18n.t('forms.validation.required')
@@ -186,5 +191,6 @@ export default {
         ]
       })
     });
-  }
+  },
+
 };
