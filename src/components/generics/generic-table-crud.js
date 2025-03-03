@@ -60,14 +60,20 @@ export default {
 
     // Setup event listener with cleanup
     onMounted(() => {
-      // Ensure initial load
       loadItems();
 
-      // Setup event listener
-      eventBus.on('refreshData', async () => {
-
+      // Improved event listener with immediate execution
+      const handleRefresh = async () => {
         await loadItems();
-      });
+        items.value = [...items.value]; // Force reactivity update
+      };
+
+      eventBus.on('refreshData', handleRefresh);
+
+      // Clean up the event listener when component is unmounted
+      return () => {
+        eventBus.off('refreshData', handleRefresh);
+      };
     });
 
     const handleClear = () => {
@@ -87,12 +93,14 @@ export default {
         try {
           await createMutation(dialog.value?.valueItem);
           dialog.value?.handleClose();
-          toast.success('Registro creado correctamente');
+          toast.success(i18n.t('messages.success.created'));
           handleClear();
-          loadItems();
+          await loadItems();
+          items.value = [...items.value]; // Force reactivity update
+          eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to create data:', error);
-          toast.error('Se ha producido un error al crear el registro');
+          toast.error(i18n.t('messages.error.create'));
         }
       },
       async update() {
@@ -100,22 +108,26 @@ export default {
           await updateMutation(dialog.value?.valueItem);
           dialog.value?.handleClose();
           handleClear();
-          toast.success('Registro actualizado correctamente');
-          loadItems();
+          toast.success(i18n.t('messages.success.updated'));
+          await loadItems();
+          items.value = [...items.value]; // Force reactivity update
+          eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to update data:', error);
-          toast.error('Se ha producido un error al actualizar el registro');
+          toast.error(i18n.t('messages.error.update'));
         }
       },
       async delete() {
         try {
           await deleteMutation(selectedItem.value.id);
           dialog.value?.handleClose();
-          toast.success('Registro eliminado correctamente');
-          loadItems();
+          toast.success(i18n.t('messages.success.deleted'));
+          await loadItems();
+          items.value = [...items.value]; // Force reactivity update
+          eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to delete data:', error);
-          toast.error('Se ha producido un error al eliminar el registro');
+          toast.error(i18n.t('messages.error.delete'));
         }
       }
     };
