@@ -9,80 +9,10 @@
     <v-switch :prepend-icon="iconTheme" class="mr-3" @click="setDark" v-model="darkMode" hide-details inset></v-switch>
     <v-btn icon>
       <v-icon>mdi-content-save</v-icon>
-
       <v-menu offset-y activator="parent">
         <v-list>
-          <v-list-item link>
-            <template #title>
-              <v-icon>mdi-file-export</v-icon>
-              Export stock
-            </template>
-            <template #append>
-              <v-icon size="x-small">mdi-menu-right</v-icon>
-            </template>
-
-            <v-menu :open-on-focus="false" activator="parent" :open-on-hover="false" submenu>
-              <v-list>
-                <v-list-item @click="handleExport('json')">
-                  <template #title>
-                    <v-list-item-action>
-                      <v-icon>mdi-code-json</v-icon>
-                    </v-list-item-action>
-                    Json
-                  </template>
-                </v-list-item>
-                <v-list-item @click="handleExport('xlsx')">
-                  <template #title>
-                    <v-list-item-action>
-                      <v-icon>mdi-file-excel</v-icon>
-                    </v-list-item-action>
-                    Excel
-                  </template>
-                </v-list-item>
-                <v-list-item @click="handleExport('csv')">
-                  <template #title>
-                    <v-list-item-action>
-                      <v-icon>mdi-file-delimited</v-icon>
-                    </v-list-item-action>
-                    CSV
-                  </template>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-list-item>
-
-          <v-list-item link>
-            <template #title>
-              <v-icon>mdi-file-import</v-icon>
-              Import stock
-            </template>
-            <template #append>
-              <v-icon size="x-small">mdi-menu-right</v-icon>
-            </template>
-
-            <v-menu :open-on-focus="false" activator="parent" :open-on-hover="false" submenu>
-              <v-list>
-                <v-list-item @click="openImportModal('json')">
-                  <template #title>
-                    <v-icon>mdi-code-json</v-icon>
-                    Json
-                  </template>
-                </v-list-item>
-                <v-list-item @click="openImportModal('xlsx')">
-                  <template #title>
-                    <v-icon>mdi-file-excel</v-icon>
-                    Excel
-                  </template>
-                </v-list-item>
-                <v-list-item @click="openImportModal('csv')">
-                  <template #title>
-                    <v-icon>mdi-file-delimited</v-icon>
-                    CSV
-                  </template>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-list-item>
+          <FileMenuItem v-for="item in menuItems" :key="item.type" v-bind="item"
+            :menu-options="Object.values(FILE_FORMATS)" @action="handleMenuAction" />
         </v-list>
       </v-menu>
     </v-btn>
@@ -111,6 +41,8 @@ import { useStore } from '../../store';
 import { useGenericFetchQueries } from "../../api/generic-fetch-querys";
 import ModalGeneric from './modal-generic.js';
 import { useToast } from 'vue-toast-notification';
+import { FILE_FORMATS, MENU_ITEMS } from '../../constants/fileOperations';
+import FileMenuItem from '../menus/FileMenuItem.vue';
 
 const store = useStore();
 const props = defineProps({
@@ -199,4 +131,22 @@ async function handleFileUpload() {
     }
   }
 }
+
+const menuItems = [
+  MENU_ITEMS.EXPORT,
+  MENU_ITEMS.IMPORT
+];
+
+const handleMenuAction = async ({ type, format }) => {
+  try {
+    if (type === 'export') {
+      await handleExport(format);
+    } else {
+      openImportModal(format);
+    }
+  } catch (error) {
+    toast.error(`Error during ${type}`);
+    console.error(error);
+  }
+};
 </script>
