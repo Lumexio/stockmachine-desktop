@@ -1,13 +1,19 @@
 import { defineStore } from 'pinia';
 import en from '../locales/en';
 import es from '../locales/es';
+import fr from '../locales/fr';
+import ru from '../locales/ru';
+import ja from '../locales/ja';
 
 export const useI18nStore = defineStore('i18n', {
  state: () => ({
   locale: localStorage.getItem('language') || 'en',
   messages: {
    en,
-   es
+   es,
+   fr,
+   ru,
+   ja
   }
  }),
 

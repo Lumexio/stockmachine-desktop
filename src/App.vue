@@ -19,6 +19,8 @@ import { useGenericFetchQueries } from './api/generic-fetch-querys';
 import { eventBus } from './utils/eventBus';
 import { useI18nStore } from './store/i18n';
 import { computed, watch } from 'vue';
+import { NAV_ITEMS } from './constants/navigation';
+
 const store = useStore();
 const i18n = useI18nStore();
 
@@ -40,26 +42,16 @@ const loadItems = async () => {
 // Provide eventBus at the App level
 provide('eventBus', eventBus);
 
-// Change from computed to ref and create a function to update it
-const list = ref([
- { title: `${i18n.t('navigation.products')}`, icon: 'mdi-package-variant-closed', to: '/products' },
- { title: `${i18n.t('navigation.categories')}`, icon: 'mdi-folder-multiple', to: '/category' },
- { title: `${i18n.t('navigation.racks')}`, icon: 'mdi-package-variant-closed', to: '/racks' },
- { title: `${i18n.t('navigation.shelves')}`, icon: 'mdi-package-variant-closed', to: '/shelves' },
-]);
+const createNavItems = () => NAV_ITEMS.map(item => ({
+ ...item,
+ title: i18n.t(`navigation.${item.key}`)
+}));
 
-const updateList = () => {
- list.value = [
-  { title: `${i18n.t('navigation.products')}`, icon: 'mdi-package-variant-closed', to: '/products' },
-  { title: `${i18n.t('navigation.categories')}`, icon: 'mdi-folder-multiple', to: '/category' },
-  { title: `${i18n.t('navigation.racks')}`, icon: 'mdi-package-variant-closed', to: '/racks' },
-  { title: `${i18n.t('navigation.shelves')}`, icon: 'mdi-package-variant-closed', to: '/shelves' },
- ];
-};
+const list = ref(createNavItems());
 
 // Watch for language changes and update list
 watch(() => i18n.currentLocale, () => {
- updateList();
+ list.value = createNavItems();
 }, { immediate: true });
 
 </script>

@@ -1,0 +1,22 @@
+export const NAV_ITEMS = [
+ {
+  key: 'products',
+  icon: 'mdi-package-variant-closed',
+  to: '/products'
+ },
+ {
+  key: 'categories',
+  icon: 'mdi-folder-multiple',
+  to: '/category'
+ },
+ {
+  key: 'racks',
+  icon: 'mdi-package-variant-closed',
+  to: '/racks'
+ },
+ {
+  key: 'shelves',
+  icon: 'mdi-package-variant-closed',
+  to: '/shelves'
+ }
+];
