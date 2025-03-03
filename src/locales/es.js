@@ -75,6 +75,27 @@ export default {
     name: 'Nombre',
     description: 'Descripción'
    }
+  },
+  shelves: {
+   title: 'Gestión de Estantes',
+   create: 'Crear Estante',
+   edit: 'Editar Estante',
+   delete: 'Eliminar Estante',
+   columns: {
+    id: 'ID',
+    name: 'Nombre'
+   }
+  },
+  racks: {
+   title: 'Gestión de Racks',
+   create: 'Crear Rack',
+   edit: 'Editar Rack',
+   delete: 'Eliminar Rack',
+   columns: {
+    id: 'ID',
+    name: 'Nombre',
+    shelve_name: 'Estante'
+   }
   }
  },
  forms: {
@@ -92,10 +113,12 @@ export default {
     description: 'Descripción'
    },
    shelves: {
-    name: 'Nombre'
+    name: 'Nombre',
+    description: 'Descripción'
    },
    racks: {
-    name: 'Nombre'
+    name: 'Nombre',
+    description: 'Descripción'
    }
   },
   placeholders: {
@@ -112,10 +135,12 @@ export default {
     description: 'Ingrese descripción de la categoría'
    },
    shelves: {
-    name: 'Ingrese nombre del estante'
+    name: 'Ingrese nombre del estante',
+    description: 'Ingrese descripción del estante'
    },
    racks: {
-    name: 'Ingrese nombre del rack'
+    name: 'Ingrese nombre del rack',
+    description: 'Ingrese descripción del rack'
    }
   },
   validation: {

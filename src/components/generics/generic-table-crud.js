@@ -194,10 +194,10 @@ export default {
         ref: dialog,
         maxWidth: '500',
         title: mode.value === 'create'
-          ? i18n.t(`tables.${props.endpoint}.create`)
+          ? `${i18n.t(`tables.${props.endpoint}.create`)}`
           : mode.value === 'edit'
-            ? i18n.t(`tables.${props.endpoint}.edit`)
-            : i18n.t(`tables.${props.endpoint}.delete`),
+            ? `${i18n.t(`tables.${props.endpoint}.edit`)}`
+            : `${i18n.t(`tables.${props.endpoint}.delete`)}`,
         formFields: props.formFields,
         mode: mode.value,
         item: selectedItem.value,

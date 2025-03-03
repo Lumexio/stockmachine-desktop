@@ -75,7 +75,30 @@ export default {
     name: '名前',
     description: '説明'
    }
+  },
+  shelves: {
+   id: 'ID',
+   title: '棚管理',
+   create: '棚を作成',
+   edit: '棚を編集',
+   delete: '棚を削除',
+   columns: {
+    name: '名前'
+   }
+  },
+  racks: {
+   id: 'ID',
+   title: 'ラック管理',
+   create: 'ラックを作成',
+   edit: 'ラックを編集',
+   delete: 'ラックを削除',
+   columns: {
+    name: '名前',
+    shelve_name: '棚'
+   }
   }
+
+
  },
  forms: {
   label: {

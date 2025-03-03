@@ -75,6 +75,27 @@ export default {
     name: 'Name',
     description: 'Description'
    }
+  },
+  shelves: {
+   title: 'Shelves Management',
+   create: 'Create Shelve',
+   edit: 'Edit Shelve',
+   delete: 'Delete Shelve',
+   columns: {
+    id: 'ID',
+    name: 'Name'
+   }
+  },
+  racks: {
+   title: 'Racks Management',
+   create: 'Create Rack',
+   edit: 'Edit Rack',
+   delete: 'Delete Rack',
+   columns: {
+    id: 'ID',
+    name: 'Name',
+    shelve_name: 'Shelve'
+   }
   }
  },
  forms: {
@@ -92,12 +113,13 @@ export default {
     description: 'Description'
    },
    shelves: {
-    name: 'Name'
+    name: 'Name',
+    description: 'Description'
+
    },
    racks: {
     name: 'Name',
-    shelve_id: 'Shelve'
-
+    description: 'Description',
    },
   },
   placeholders: {
@@ -114,10 +136,12 @@ export default {
     description: 'Enter category description'
    },
    shelves: {
-    name: 'Enter shelve name'
+    name: 'Enter shelve name',
+    description: 'Enter shelve description'
    },
    racks: {
-    name: 'Enter rack name'
+    name: 'Enter rack name',
+    description: 'Enter rack description'
    }
   },
   validation: {
