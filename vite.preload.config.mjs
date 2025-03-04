@@ -13,10 +13,12 @@ export default defineConfig((env) => {
   /** @type {import('vite').UserConfig} */
   const config = {
     build: {
+      target: 'node18',
+      outDir: '.vite/build',
       rollupOptions: {
         external,
         // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
-        input: forgeConfigSelf.entry,
+        input: 'src/preload.js',
         output: {
           format: 'cjs',
           // It should not be split chunks.

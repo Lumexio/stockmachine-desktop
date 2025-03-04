@@ -4,6 +4,9 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './images/icon.ico', // Add icon for Windows
+    platform: 'win32',
+    arch: 'x64'
   },
   rebuildConfig: {},
   makers: [
@@ -12,29 +15,15 @@ module.exports = {
       config: {
         platforms: ['win32'],
         // An URL to an ICO file to use as the application icon (displayed in Control Panel > Programs and Features).
-        // iconUrl: 'https//images/icon.ico',
+        iconUrl: 'https://stockmachine.online/icon.ico', // Fixed URL
         noMsi: true,
         shortcutName: 'STOCKMACHINE',
         // The ICO file to use as the icon for the generated Setup.exe
-        setupIcon: './images/icon.ico'
+        setupIcon: './images/icon.ico',
+        loadingGif: './images/loading.gif', // Optional: Add a loading gif
+        setupExe: 'STOCKMACHINE-Setup.exe'
       },
-    },
-    {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
-    },
-    {
-      name: '@electron-forge/maker-deb',
-      config: {
-        options: {
-          icon: './images/icon.png'
-        }
-      },
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {},
-    },
+    }
   ],
   plugins: [
     {

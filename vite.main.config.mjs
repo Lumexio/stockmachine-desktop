@@ -22,6 +22,8 @@ export default defineConfig((env) => {
       rollupOptions: {
         external,
       },
+      target: 'node18',
+      outDir: '.vite/build',
     },
     plugins: [pluginHotRestart('restart')],
     define,
