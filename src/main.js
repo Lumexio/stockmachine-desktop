@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { join } from 'node:path';
 import squirrelStartup from 'electron-squirrel-startup';
-import { createPinia } from 'pinia'
+
 if (squirrelStartup) {
   app.quit();
 }

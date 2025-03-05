@@ -8,9 +8,18 @@
   },
   "scripts": {
     "lint": "echo \"No linting configured\"",
-    "make": "electron-forge make --platform=win32",
-    "package": "electron-forge package --platform=win32",
-    "publish": "electron-forge publish --platform=win32",
+    "make-win": "electron-forge make --platform=win32",
+    "make-linux": "electron-forge make --platform=linux",
+    "make-mac": "electron-forge make --platform=darwin",
+    "packag-win": "electron-forge package --platform=win32",
+    "package-linux": "electron-forge package --platform=linux",
+    "package-mac": "electron-forge package --platform=darwin",
+    "publish-win": "electron-forge publish --platform=win32",
+    "publish-linux": "electron-forge publish --platform=linux",
+    "publish-mac": "electron-forge publish --platform=darwin",
+    "make": "electron-forge make",
+    "package": "electron-forge package",
+    "publish": "electron-forge publish",
     "start": "electron-forge start"
   },
   "main": ".vite/build/main.js",
@@ -22,9 +31,11 @@
     "forge": "./forge.config.js"
   },
   "dependencies": {
+    "@electron-forge/maker-deb": "^7.7.0",
     "@mdi/font": "^7.4.47",
     "electron-squirrel-startup": "^1.0.1",
     "idb": "^8.0.0",
+    "minify-css-string": "^1.0.0",
     "pinia": "^2.1.4",
     "pinia-plugin-persistedstate": "^4.0.1",
     "vite-plugin-vuetify": "^2.0.4",

@@ -181,8 +181,8 @@ export default {
             default: () => [
               h(VSpacer),
               h(VBtn, {
-                variant: 'tonal',
-                color: 'info',
+                variant: 'elevated',
+
                 onClick: handleClose
               }, () => 'Close'),
               slots.buttonAction?.()

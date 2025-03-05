@@ -166,7 +166,8 @@ export default {
           class: 'ml-2 mr-2',
           onClick: () => openModal('create'),
           color: 'primary',
-          variant: 'tonal'
+          variant: 'elevated', // Change from tonal to elevated
+          elevation: '2'       // Add elevation
         }, () => i18n.t('actions.create'))
       ]),
 
@@ -190,11 +191,17 @@ export default {
                   onClick: () => openModal('edit', data),
                   density: 'comfortable',
                   color: 'primary',
+                  variant: 'elevated',  // Change to elevated
+                  class: 'mx-1',       // Add spacing
+                  elevation: '2'        // Add elevation
                 }, () => h(VIcon, () => 'mdi-pencil')),
                 h(VBtn, {
                   onClick: () => openModal('delete', data),
                   density: 'comfortable',
                   color: 'error',
+                  variant: 'elevated',  // Change to elevated
+                  class: 'mx-1',       // Add spacing
+                  elevation: '2'        // Add elevation
                 }, () => h(VIcon, () => 'mdi-delete'))
               ])
             ])
@@ -220,27 +227,33 @@ export default {
           ? h(VBtn, {
             onClick: handlers.create,
             color: 'primary',
-            variant: 'tonal'
+            variant: 'elevated',  // Change from tonal
+            elevation: '2',       // Add elevation
+            class: 'px-4'        // Add padding
           }, () => [
             i18n.t('actions.save'),
-            h(VIcon, () => 'mdi-check')
+            h(VIcon, { class: 'ml-2' }, () => 'mdi-check')
           ])
           : mode.value === 'edit'
             ? h(VBtn, {
               onClick: handlers.update,
               color: 'primary',
-              variant: 'tonal'
+              variant: 'elevated',  // Change from tonal
+              elevation: '2',       // Add elevation
+              class: 'px-4'        // Add padding
             }, () => [
               i18n.t('actions.save'),
-              h(VIcon, () => 'mdi-check')
+              h(VIcon, { class: 'ml-2' }, () => 'mdi-check')
             ])
             : h(VBtn, {
               onClick: handlers.delete,
-              color: 'error',
-              variant: 'tonal'
+              color: 'secondary',
+              variant: 'elevated',  // Change from tonal
+              elevation: '2',       // Add elevation
+              class: 'px-4'        // Add padding
             }, () => [
               i18n.t('actions.confirm'),
-              h(VIcon, () => 'mdi-check')
+              h(VIcon, { class: 'ml-2' }, () => 'mdi-check')
             ])
       })
     ]);
