@@ -7,6 +7,7 @@ export default {
     icon: './images/icon.ico',
     platform: ['win32', 'linux'],
     arch: 'x64',
+
     executableName: 'stockmachine',
     name: 'STOCKMACHINE'
   },
@@ -16,6 +17,7 @@ export default {
       name: '@electron-forge/maker-squirrel',
       config: {
         platforms: ['win32'],
+        authors: 'Lumexio',
         iconUrl: 'https://stockmachine.online/icon.ico',
         noMsi: true,
         shortcutName: 'STOCKMACHINE',
