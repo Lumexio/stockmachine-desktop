@@ -32,3 +32,6 @@ dist/
 out/
 
 dist/
+.env
+
+build-assets/*

@@ -10,6 +10,8 @@ export default {
 
     executableName: process.env.APP_NAME || 'stockmachine',
     name: process.env.APP_NAME || 'stockmachine',
+    // certificateFile: 'build-assets/stockmachine.pfx',
+    // certificatePassword: process.env.CERTIFICATE_PASSWORD || 'your-certificate-password',
   },
   rebuildConfig: {},
   makers: [
@@ -19,9 +21,8 @@ export default {
         platforms: ['win32'],
         authors: 'Lumexio',
         iconUrl: 'https://stockmachine.online/icon.ico',
-        noMsi: false,
+        noMsi: true,
         shortcutName: process.env.APP_NAME || 'stockmachine',
-        setupMsi: `${process.env.APP_NAME}.msi`,
         setupIcon: './images/icon.ico',
         description: 'Stock Management Application',
         loadingGif: './images/loading.gif',
