@@ -1,7 +1,7 @@
 {
   "name": "stock-machine",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Stock Management Application",
   "author": {
     "name": "Lumexio",
     "email": "fsmsoftdev@gmail.com"

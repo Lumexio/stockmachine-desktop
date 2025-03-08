@@ -22,6 +22,7 @@ export default {
         noMsi: true,
         shortcutName: 'STOCKMACHINE',
         setupIcon: './images/icon.ico',
+        description: 'Stock Management Application',
         loadingGif: './images/loading.gif',
         setupExe: 'STOCKMACHINE-Setup.exe'
       },
