@@ -1,14 +1,13 @@
 {
-  "name": "stockmachine",
+  "name": "stock-machine",
   "version": "1.0.0",
-  "description": "Stock Management Application",
+  "description": "My Electron application description",
   "author": {
     "name": "Lumexio",
     "email": "fsmsoftdev@gmail.com"
   },
   "scripts": {
     "lint": "echo \"No linting configured\"",
-    "build": "electron-builder build",
     "make-win": "electron-forge make --platform=win32",
     "make-linux": "electron-forge make --platform=linux",
     "make-mac": "electron-forge make --platform=darwin",
@@ -26,7 +25,7 @@
   "main": ".vite/build/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Lumexio/ps-electron.git"
+    "url": "https://github.com/yourusername/stock-machine.git"
   },
   "config": {
     "forge": "./forge.config.js"
@@ -39,7 +38,6 @@
     "minify-css-string": "^1.0.0",
     "pinia": "^2.1.4",
     "pinia-plugin-persistedstate": "^4.0.1",
-    "update-electron-app": "^3.1.1",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.4.38",
     "vue-query": "^1.26.0",
@@ -50,7 +48,7 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
-    "@electron-forge/maker-squirrel": "^7.7.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron-forge/plugin-vite": "^7.4.0",
@@ -58,7 +56,6 @@
     "@types/electron-squirrel-startup": "^1.0.2",
     "@vitejs/plugin-vue": "^5.1.3",
     "electron": "32.0.1",
-    "electron-builder": "^25.1.8",
     "vite": "^5.4.2",
     "vue-cli-plugin-pinia": "~0.2.4"
   },
@@ -77,14 +74,5 @@
     "inventory management system"
   ],
   "license": "MIT",
-  "productName": "stockmachine",
-  "build": {
-    "files": "!build-assets{/*}",
-    "win": {
-      "certificateFile": "./build-assets/stockmachine.pfx",
-      "certificatePassword": "password",
-      "publisherName": "Lumexio",
-      "verifyUpdateCodeSignature": true
-    }
-  }
+  "productName": "stockmachine"
 }

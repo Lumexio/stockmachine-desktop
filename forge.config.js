@@ -7,11 +7,8 @@ export default {
     icon: './images/icon.ico',
     platform: ['win32', 'linux'],
     arch: 'x64',
-
-    executableName: process.env.APP_NAME || 'stockmachine',
-    name: process.env.APP_NAME || 'stockmachine',
-    // certificateFile: 'build-assets/stockmachine.pfx',
-    // certificatePassword: process.env.CERTIFICATE_PASSWORD || 'your-certificate-password',
+    executableName: 'stockmachine',
+    name: 'stockmachine'
   },
   rebuildConfig: {},
   makers: [
@@ -19,14 +16,12 @@ export default {
       name: '@electron-forge/maker-squirrel',
       config: {
         platforms: ['win32'],
-        authors: 'Lumexio',
         iconUrl: 'https://stockmachine.online/icon.ico',
         noMsi: true,
-        shortcutName: process.env.APP_NAME || 'stockmachine',
+        shortcutName: 'stockmachine',
         setupIcon: './images/icon.ico',
-        description: 'Stock Management Application',
         loadingGif: './images/loading.gif',
-        setupExe: `${process.env.APP_NAME}.exe`
+        setupExe: 'stockmachine.exe'
       },
     },
     {
@@ -38,16 +33,15 @@ export default {
           icon: './images/icon.ico',
           categories: ['Utility'],
           description: 'Stock Management Application',
-          productName: process.env.APP_NAME || 'stockmachine',
-          executableName: process.env.APP_NAME || 'stockmachine',
-          filename: `${process.env.APP_NAME}.deb`,
+          productName: 'stockmachine',
+          executableName: 'stockmachine',
           desktop: {
-            Name: process.env.APP_NAME || 'stockmachine',
+            Name: 'stockmachine',
             Type: 'Application',
             Categories: 'Utility;'
           },
-          bin: process.env.APP_NAME || 'stockmachine',
-          name: process.env.APP_NAME || 'stockmachine',
+          bin: 'stockmachine',
+          name: 'stockmachine'
         },
       },
     },
