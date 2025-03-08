@@ -8,7 +8,7 @@ export default {
     platform: ['win32', 'linux'],
     arch: 'x64',
     executableName: 'stockmachine',
-    name: 'stockmachine'
+    name: 'STOCKMACHINE'
   },
   rebuildConfig: {},
   makers: [
@@ -18,25 +18,25 @@ export default {
         platforms: ['win32'],
         iconUrl: 'https://stockmachine.online/icon.ico',
         noMsi: true,
-        shortcutName: 'stockmachine',
+        shortcutName: 'STOCKMACHINE',
         setupIcon: './images/icon.ico',
         loadingGif: './images/loading.gif',
-        setupExe: 'stockmachine.exe'
+        setupExe: 'STOCKMACHINE-Setup.exe'
       },
     },
     {
       name: '@electron-forge/maker-deb',
       config: {
         options: {
-          maintainer: 'Lumexio',
+          maintainer: 'StockMachine',
           homepage: 'https://stockmachine.online',
           icon: './images/icon.ico',
           categories: ['Utility'],
           description: 'Stock Management Application',
-          productName: 'stockmachine',
+          productName: 'STOCKMACHINE',
           executableName: 'stockmachine',
           desktop: {
-            Name: 'stockmachine',
+            Name: 'STOCKMACHINE',
             Type: 'Application',
             Categories: 'Utility;'
           },
