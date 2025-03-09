@@ -1,7 +1,7 @@
 {
   "name": "stock-machine",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Stock Machine is a stock management system that helps you manage your inventory with ease.",
   "author": {
     "name": "Lumexio",
     "email": "fsmsoftdev@gmail.com"
