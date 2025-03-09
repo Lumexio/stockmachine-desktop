@@ -1,5 +1,9 @@
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import * as dotenv from 'dotenv';
+
+// Load .env file
+dotenv.config();
 
 export default {
   packagerConfig: {
@@ -7,6 +11,7 @@ export default {
     icon: './images/icon.ico',
     platform: ['win32', 'linux'],
     arch: 'x64',
+
     executableName: 'stockmachine',
     name: 'STOCKMACHINE'
   },
@@ -16,12 +21,13 @@ export default {
       name: '@electron-forge/maker-squirrel',
       config: {
         platforms: ['win32'],
+        authors: 'Lumexio',
         iconUrl: 'https://stockmachine.online/icon.ico',
         noMsi: true,
         shortcutName: 'STOCKMACHINE',
         setupIcon: './images/icon.ico',
         loadingGif: './images/loading.gif',
-        setupExe: 'STOCKMACHINE-Setup.exe'
+        setupExe: `STOCKMACHINE-${process.env.VERSION}-Setup.exe`
       },
     },
     {

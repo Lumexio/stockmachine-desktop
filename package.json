@@ -1,6 +1,6 @@
 {
   "name": "stock-machine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My Electron application description",
   "author": {
     "name": "Lumexio",
@@ -11,7 +11,7 @@
     "make-win": "electron-forge make --platform=win32",
     "make-linux": "electron-forge make --platform=linux",
     "make-mac": "electron-forge make --platform=darwin",
-    "packag-win": "electron-forge package --platform=win32",
+    "package-win": "electron-forge package --platform=win32",
     "package-linux": "electron-forge package --platform=linux",
     "package-mac": "electron-forge package --platform=darwin",
     "publish-win": "electron-forge publish --platform=win32",
@@ -23,21 +23,40 @@
     "start": "electron-forge start"
   },
   "main": ".vite/build/main.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/stock-machine.git"
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
   },
+  "repository": "https://github.com/Lumexio/ps-electron.git",
   "config": {
     "forge": "./forge.config.js"
+  },
+  "build": {
+    "appId": "com.lumexio.stockmachine",
+    "directories": {
+      "output": "dist"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
   },
   "dependencies": {
     "@electron-forge/maker-deb": "^7.7.0",
     "@mdi/font": "^7.4.47",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.3.9",
     "idb": "^8.0.0",
     "minify-css-string": "^1.0.0",
     "pinia": "^2.1.4",
     "pinia-plugin-persistedstate": "^4.0.1",
+    "update-electron-app": "^3.1.1",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.4.38",
     "vue-query": "^1.26.0",
