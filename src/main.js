@@ -2,13 +2,12 @@ import { app, BrowserWindow } from 'electron';
 import { join } from 'node:path';
 import squirrelStartup from 'electron-squirrel-startup';
 import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
-import { log } from 'electron-log'
+
 updateElectronApp({
   repo: 'Lumexio/ps-electron',
   updateInterval: '5 minutes',
   updateType: UpdateSourceType.ElectronPublicUpdateService,
-  notifyUser: true,
-  logger: log,
+  notifyUser: true
 });
 
 
