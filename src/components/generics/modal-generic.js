@@ -161,7 +161,7 @@ export default {
                       modelValue: input.value,
                       'onUpdate:modelValue': (val) => input.value = val,
                       label: `${i18n.t(`forms.label.${getEndpoint(props.endpoint)}.${input.key}`)}`,
-                      placeholder: `${i18n.t(`forms.placeholders.${getEndpoint(props.title)}.${input.key}`)}`,
+                      placeholder: `${i18n.t(`forms.placeholders.${input.key}`)}`,
                       rules: input.rules?.map(rule =>
                         (v) => rule(v) || i18n.t('forms.validation.required')
                       ),

@@ -4,10 +4,11 @@ import squirrelStartup from 'electron-squirrel-startup';
 import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
 
 updateElectronApp({
-  repo: 'Lumexio/ps-electron',
+  updateSource: {
+    repo: 'Lumexio/ps-electron',
+    type: UpdateSourceType.ElectronPublicUpdateService
+  },
   updateInterval: '5 minutes',
-  updateType: UpdateSourceType.ElectronPublicUpdateService,
-  notifyUser: true
 });
 
 
