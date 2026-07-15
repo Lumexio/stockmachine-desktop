@@ -10,7 +10,8 @@ export default {
   products: 'Productos',
   categories: 'Categorías',
   racks: 'Estantes',
-  shelves: 'Repisas'
+  shelves: 'Repisas',
+  settings: 'Ajustes'
  },
  actions: {
   create: 'Crear',
@@ -137,5 +138,35 @@ export default {
   validation: {
    required: 'Este campo es requerido'
   }
+ },
+ auth: {
+  login: 'Iniciar sesión',
+  register: 'Registrarse',
+  logout: 'Cerrar sesión',
+  email: 'Correo electrónico',
+  password: 'Contraseña',
+  name: 'Nombre completo',
+  orgName: 'Nombre de la organización',
+  orgNameHint: 'Déjelo en blanco para registrarse como individuo',
+  noAccount: '¿No tienes cuenta? Regístrate',
+  hasAccount: '¿Ya tienes cuenta? Inicia sesión',
+  invalidCredentials: 'Correo o contraseña incorrectos',
+  continueOffline: 'Continuar sin conexión'
+ },
+ settings: {
+  title: 'Ajustes',
+  backendUrl: 'URL del servidor',
+  testConnection: 'Probar conexión',
+  connectionSuccess: 'Conexión exitosa',
+  connectionFailed: 'Conexión fallida',
+  save: 'Guardar'
+ },
+ sync: {
+  pending: '{n} pendientes',
+  syncing: 'Sincronizando…',
+  complete: 'Sync: {synced} sincronizados, {failed} fallidos',
+  failed: 'Errores de sincronización',
+  online: 'En línea',
+  offline: 'Sin conexión'
  }
 };

@@ -10,7 +10,8 @@ export default {
   products: 'Products',
   categories: 'Categories',
   racks: 'Racks',
-  shelves: 'Shelves'
+  shelves: 'Shelves',
+  settings: 'Settings'
  },
  actions: {
   create: 'Create',
@@ -138,5 +139,35 @@ export default {
   validation: {
    required: 'This field is required'
   }
+ },
+ auth: {
+  login: 'Log In',
+  register: 'Register',
+  logout: 'Log Out',
+  email: 'Email',
+  password: 'Password',
+  name: 'Full Name',
+  orgName: 'Organization Name',
+  orgNameHint: 'Leave blank to sign up as an individual',
+  noAccount: "Don't have an account? Register",
+  hasAccount: 'Already have an account? Log In',
+  invalidCredentials: 'Invalid email or password',
+  continueOffline: 'Continue Offline'
+ },
+ settings: {
+  title: 'Settings',
+  backendUrl: 'Backend URL',
+  testConnection: 'Test Connection',
+  connectionSuccess: 'Connection successful',
+  connectionFailed: 'Connection failed',
+  save: 'Save'
+ },
+ sync: {
+  pending: '{n} pending',
+  syncing: 'Syncing…',
+  complete: 'Sync: {synced} synced, {failed} failed',
+  failed: 'Sync Errors',
+  online: 'Online',
+  offline: 'Offline'
  }
 };

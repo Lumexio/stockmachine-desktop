@@ -5,6 +5,16 @@
       {{ i18n.t('app.title') }}
     </v-toolbar-title>
     <v-spacer></v-spacer>
+    <!-- Online/offline + pending badge -->
+    <v-chip
+      :color="isOnline ? 'success' : 'default'"
+      :prepend-icon="isOnline ? 'mdi-wifi' : 'mdi-wifi-off'"
+      size="small"
+      class="mr-2"
+    >
+      {{ isOnline ? i18n.t('sync.online') : i18n.t('sync.offline') }}
+      <v-badge v-if="pendingCount > 0" :content="pendingCount" color="warning" floating />
+    </v-chip>
     <LanguageSelector @change-language="handleLanguageChange" />
     <v-switch :prepend-icon="iconTheme" class="mr-3" @click="setDark" v-model="darkMode" hide-details inset></v-switch>
     <v-btn icon>
@@ -16,6 +26,13 @@
         </v-list>
       </v-menu>
     </v-btn>
+    <!-- User info + logout -->
+    <template v-if="auth.isAuthenticated">
+      <v-chip size="small" class="mr-1" prepend-icon="mdi-account">{{ auth.user?.name }}</v-chip>
+      <v-btn icon size="small" @click="logout" :title="i18n.t('auth.logout')">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
+    </template>
   </v-app-bar>
   <v-navigation-drawer app v-model="drawer">
     <v-list>
@@ -38,6 +55,7 @@
 <script setup>
 import { ref, onMounted, computed, inject } from 'vue';
 import { useStore } from '../../store';
+import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from "../../api/generic-fetch-querys";
 import ModalGeneric from './modal-generic.js';
 import { useToast } from 'vue-toast-notification';
@@ -45,15 +63,34 @@ import { FILE_FORMATS, MENU_ITEMS } from '../../constants/fileOperations';
 import FileMenuItem from '../menus/FileMenuItem.vue';
 import LanguageSelector from '../language/LanguageSelector.vue';
 import { useI18nStore } from '../../store/i18n';
+import { useConnectivity } from '../../composables/use-connectivity';
+import { getQueueLength } from '../../api/indexeddb';
+import { useRouter } from 'vue-router';
 
 const store = useStore();
 const i18n = useI18nStore();
+const auth = useAuthStore();
+const router = useRouter();
+const { isOnline, canSync } = useConnectivity();
 const props = defineProps({
   items: Array,
 });
 
 const { exportDataToFile, importDataFromFile } = useGenericFetchQueries();
 let drawer = ref(false);
+
+// Pending sync queue count
+const pendingCount = ref(0);
+async function refreshPendingCount() {
+  pendingCount.value = await getQueueLength();
+}
+refreshPendingCount();
+setInterval(refreshPendingCount, 5000);
+
+async function logout() {
+  auth.logout();
+  router.push('/login');
+}
 
 let iconTheme = computed(() => (darkMode.value ? 'mdi-moon-waning-crescent' : 'mdi-white-balance-sunny'));
 const darkMode = computed({

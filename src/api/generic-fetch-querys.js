@@ -1,36 +1,76 @@
-import { getAll, add, update, remove, exportAllData, getById } from './indexeddb';
+import { getAll, add, update, remove, exportAllData, getById, enqueueOperation } from './indexeddb';
 import * as XLSX from 'xlsx';
+import { apiFetch } from './custom-fetch';
+import { eventBus } from '../utils/eventBus';
+import { useAuthStore } from '../store/auth';
+import { useSettingsStore } from '../store/settings';
 
 export function useGenericFetchQueries(endpoint) {
+  /** True when the user is authenticated and a backend URL is configured. */
+  const isSyncMode = () => {
+    try {
+      const auth = useAuthStore();
+      const settings = useSettingsStore();
+      return !!(auth.isAuthenticated && settings.backendUrl);
+    } catch {
+      return false;
+    }
+  };
+
+  /** Silently refresh one IndexedDB store from the backend. */
+  const refreshStoreFromBackend = async (store) => {
+    try {
+      const result = await apiFetch(`/${store}`);
+      const items = result.data ?? [];
+      const current = await getAll(store);
+      for (const item of current) {
+        try { await remove(store, item.id); } catch { /* ignore */ }
+      }
+      for (const item of items) {
+        try { await add(store, item); } catch { /* ignore */ }
+      }
+    } catch { /* background refresh is best-effort */ }
+  };
+
   const fetchQuery = async () => {
-    return await getAll(endpoint);
+    const cached = await getAll(endpoint);
+    // Stale-while-revalidate: update cache in background, then notify views
+    if (isSyncMode() && endpoint) {
+      refreshStoreFromBackend(endpoint).then(() => eventBus.emit('refreshData'));
+    }
+    return cached;
   };
 
   const fetchRelatedData = async () => {
-    const products = await getAll('products');
-
-    const categories = await getAll('categories');
-
-    const shelves = await getAll('shelves');
-    const racks = await getAll('racks');
-
-
+    const [products, categories, shelves, racks] = await Promise.all([
+      getAll('products'),
+      getAll('categories'),
+      getAll('shelves'),
+      getAll('racks'),
+    ]);
+    if (isSyncMode()) {
+      Promise.all(['products', 'categories', 'shelves', 'racks'].map(refreshStoreFromBackend))
+        .then(() => eventBus.emit('refreshData'));
+    }
     return { products, categories, shelves, racks };
   };
 
   const createMutation = async (newData) => {
-    // Sanitize the object to ensure it only contains serializable properties
     const sanitizedData = JSON.parse(JSON.stringify(newData));
-    await add(endpoint, sanitizedData);
+    sanitizedData._unsynced = true;
+    const localId = await add(endpoint, sanitizedData);
+    await enqueueOperation({ operation: 'create', endpoint, payload: { ...sanitizedData, id: localId }, localId });
   };
 
   const updateMutation = async (updatedData) => {
     const sanitizedData = JSON.parse(JSON.stringify(updatedData));
     await update(endpoint, sanitizedData);
+    await enqueueOperation({ operation: 'update', endpoint, payload: sanitizedData });
   };
 
   const deleteMutation = async (id) => {
     await remove(endpoint, id);
+    await enqueueOperation({ operation: 'delete', endpoint, payload: { id } });
   };
 
   const exportDataToFile = async (format = 'json') => {
@@ -46,7 +86,6 @@ export function useGenericFetchQueries(endpoint) {
       let mimeType;
 
       if (format === 'json') {
-        // Why null adn 2?
         blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         mimeType = 'application/json';
 
@@ -67,15 +106,12 @@ export function useGenericFetchQueries(endpoint) {
         mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       }
 
-      // Create download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', endpoint ? `${endpoint}.${format}` : `ps.${format}`);
       document.body.appendChild(link);
       link.click();
-
-      // Cleanup
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -93,31 +129,33 @@ export function useGenericFetchQueries(endpoint) {
           if (format === 'json') {
             data = JSON.parse(data);
             if (Array.isArray(data)) {
-              // Single file import logic
               for (const item of data) {
                 try {
-                  await add(endpoint, item);
+                  const localId = await add(endpoint, item);
+                  await enqueueOperation({ operation: 'create', endpoint, payload: { ...item, id: localId }, localId });
                 } catch (err) {
                   if (err.name === 'ConstraintError') {
                     const existingItem = await getById(endpoint, item.id);
                     const mergedItem = { ...existingItem, ...item };
                     await update(endpoint, mergedItem);
+                    await enqueueOperation({ operation: 'update', endpoint, payload: mergedItem });
                   } else {
                     throw err;
                   }
                 }
               }
             } else {
-              // Full database import logic
               for (const store in data) {
                 for (const item of data[store]) {
                   try {
-                    await add(store, item);
+                    const localId = await add(store, item);
+                    await enqueueOperation({ operation: 'create', endpoint: store, payload: { ...item, id: localId }, localId });
                   } catch (err) {
                     if (err.name === 'ConstraintError') {
                       const existingItem = await getById(store, item.id);
                       const mergedItem = { ...existingItem, ...item };
                       await update(store, mergedItem);
+                      await enqueueOperation({ operation: 'update', endpoint: store, payload: mergedItem });
                     } else {
                       throw err;
                     }
@@ -126,7 +164,6 @@ export function useGenericFetchQueries(endpoint) {
               }
             }
           } else {
-            // CSV processing
             const rows = data.split('\n');
             const keys = rows[0].split(',');
             data = rows.slice(1).map(row => {
@@ -135,12 +172,14 @@ export function useGenericFetchQueries(endpoint) {
             });
             for (const item of data) {
               try {
-                await add(endpoint, item);
+                const localId = await add(endpoint, item);
+                await enqueueOperation({ operation: 'create', endpoint, payload: { ...item, id: localId }, localId });
               } catch (err) {
                 if (err.name === 'ConstraintError') {
                   const existingItem = await getById(endpoint, item.id);
                   const mergedItem = { ...existingItem, ...item };
                   await update(endpoint, mergedItem);
+                  await enqueueOperation({ operation: 'update', endpoint, payload: mergedItem });
                 } else {
                   throw err;
                 }
@@ -148,28 +187,27 @@ export function useGenericFetchQueries(endpoint) {
             }
           }
         } else if (format === 'xlsx') {
-          // Handle XLSX using ArrayBuffer
           const arrayBuffer = event.target.result;
           const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
           const worksheet = workbook.Sheets[workbook.SheetNames[0]];
           data = XLSX.utils.sheet_to_json(worksheet);
           for (const item of data) {
             try {
-              await add(endpoint, item);
+              const localId = await add(endpoint, item);
+              await enqueueOperation({ operation: 'create', endpoint, payload: { ...item, id: localId }, localId });
             } catch (err) {
               if (err.name === 'ConstraintError') {
                 const existingItem = await getById(endpoint, item.id);
                 const mergedItem = { ...existingItem, ...item };
                 await update(endpoint, mergedItem);
+                await enqueueOperation({ operation: 'update', endpoint, payload: mergedItem });
               } else {
                 throw err;
               }
             }
           }
         }
-
       } catch (error) {
-
         throw error;
       }
     };

@@ -18,5 +18,10 @@ export const NAV_ITEMS = [
   key: 'shelves',
   icon: 'mdi-package-variant-closed',
   to: '/shelves'
+ },
+ {
+  key: 'settings',
+  icon: 'mdi-cog',
+  to: '/settings'
  }
 ];

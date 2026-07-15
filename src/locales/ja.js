@@ -10,7 +10,8 @@ export default {
   products: '製品',
   categories: 'カテゴリー',
   racks: 'ラック',
-  shelves: '棚'
+  shelves: '棚',
+  settings: '設定'
  },
  actions: {
   create: '作成',
@@ -137,5 +138,35 @@ export default {
   validation: {
    required: 'この項目は必須です'
   }
+ },
+ auth: {
+  login: 'ログイン',
+  register: '登録',
+  logout: 'ログアウト',
+  email: 'メールアドレス',
+  password: 'パスワード',
+  name: '氏名',
+  orgName: '組織名',
+  orgNameHint: '個人として登録する場合は空白にしてください',
+  noAccount: 'アカウントをお持ちでない方は登録してください',
+  hasAccount: 'アカウントをお持ちの方はログインしてください',
+  invalidCredentials: 'メールアドレスまたはパスワードが正しくありません',
+  continueOffline: 'オフラインで続行'
+ },
+ settings: {
+  title: '設定',
+  backendUrl: 'サーバーURL',
+  testConnection: '接続テスト',
+  connectionSuccess: '接続成功',
+  connectionFailed: '接続失敗',
+  save: '保存'
+ },
+ sync: {
+  pending: '{n}件保留中',
+  syncing: '同期中…',
+  complete: '同期: {synced}件成功, {failed}件失敗',
+  failed: '同期エラー',
+  online: 'オンライン',
+  offline: 'オフライン'
  }
 };

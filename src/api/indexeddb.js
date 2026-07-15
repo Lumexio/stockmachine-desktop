@@ -1,9 +1,10 @@
 import { openDB } from 'idb';
 
-const dbPromise = openDB('ps', 1, {
-  upgrade(db) {
-    // Create 'categories' object store and indexes
-    const categoriesStore = db.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
+const dbPromise = openDB('ps', 2, {
+  upgrade(db, oldVersion) {
+    if (oldVersion < 1) {
+      // Create 'categories' object store and indexes
+      const categoriesStore = db.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
     categoriesStore.createIndex('name', 'name', { unique: false });
     categoriesStore.createIndex('description', 'description', { unique: false });
     categoriesStore.createIndex('created_at', 'created_at', { unique: false });
@@ -39,6 +40,18 @@ const dbPromise = openDB('ps', 1, {
     statusStore.createIndex('name', 'name', { unique: false });
     statusStore.createIndex('created_at', 'created_at', { unique: false });
     statusStore.createIndex('updated_at', 'updated_at', { unique: false });
+    } // end oldVersion < 1
+
+    if (oldVersion < 2) {
+      // Sync queue: pending operations to replay to backend
+      const syncQueueStore = db.createObjectStore('sync_queue', { keyPath: 'id', autoIncrement: true });
+      syncQueueStore.createIndex('endpoint', 'endpoint', { unique: false });
+      syncQueueStore.createIndex('createdAt', 'createdAt', { unique: false });
+
+      // ID map: maps local IndexedDB IDs → backend-assigned IDs after a create syncs
+      const idMapStore = db.createObjectStore('id_map', { keyPath: 'id', autoIncrement: true });
+      idMapStore.createIndex('localId_endpoint', ['localId', 'endpoint'], { unique: false });
+    }
   },
 });
 
@@ -84,4 +97,92 @@ export const importAllData = async (data) => {
       await db.add(store, item);
     }
   }
+};
+
+// ── Sync queue helpers ────────────────────────────────────────────────────────
+
+/**
+ * Enqueue a pending operation.
+ * @param {{ operation: 'create'|'update'|'delete', endpoint: string, payload: object, localId?: number }} op
+ */
+export const enqueueOperation = async (op) => {
+  const db = await dbPromise;
+  return db.add('sync_queue', { ...op, retries: 0, createdAt: Date.now() });
+};
+
+/** Fetch all pending operations in creation order (FIFO). */
+export const getAllQueued = async () => {
+  const db = await dbPromise;
+  return db.getAllFromIndex('sync_queue', 'createdAt');
+};
+
+/** Remove a processed queue entry by its id. */
+export const dequeueOperation = async (id) => {
+  const db = await dbPromise;
+  return db.delete('sync_queue', id);
+};
+
+/** Increment retries count on a failed queue entry. */
+export const incrementRetries = async (id) => {
+  const db = await dbPromise;
+  const entry = await db.get('sync_queue', id);
+  if (entry) {
+    entry.retries = (entry.retries || 0) + 1;
+    await db.put('sync_queue', entry);
+  }
+};
+
+/** Count pending queue entries. */
+export const getQueueLength = async () => {
+  const db = await dbPromise;
+  return db.count('sync_queue');
+};
+
+// ── ID map helpers ────────────────────────────────────────────────────────────
+
+/**
+ * Save a mapping from a local IndexedDB ID to a backend-assigned ID.
+ * @param {{ localId: number, endpoint: string, backendId: number }} entry
+ */
+export const saveIdMap = async (entry) => {
+  const db = await dbPromise;
+  return db.add('id_map', entry);
+};
+
+/**
+ * Resolve a local ID to its backend ID. Returns null if not mapped.
+ * @param {string} endpoint
+ * @param {number} localId
+ */
+export const getIdMap = async (endpoint, localId) => {
+  const db = await dbPromise;
+  const results = await db.getAllFromIndex('id_map', 'localId_endpoint', [localId, endpoint]);
+  return results.length > 0 ? results[0] : null;
+};
+
+/** Remove a mapping once it's no longer needed (after full cache refresh). */
+export const clearIdMap = async (endpoint, localId) => {
+  const db = await dbPromise;
+  const results = await db.getAllFromIndex('id_map', 'localId_endpoint', [localId, endpoint]);
+  for (const r of results) {
+    await db.delete('id_map', r.id);
+  }
+};
+
+/** Clear ALL id_map entries (called after a successful full cache refresh). */
+export const clearAllIdMaps = async () => {
+  const db = await dbPromise;
+  return db.clear('id_map');
+};
+
+/**
+ * Replace a record's IndexedDB key with a new one (used after syncing a create).
+ * Deletes the old record and inserts a new one with the backend id.
+ */
+export const replaceRecordId = async (storeName, oldId, newRecord) => {
+  const db = await dbPromise;
+  const tx = db.transaction(storeName, 'readwrite');
+  await tx.store.delete(oldId);
+  await tx.store.put(newRecord);
+  await tx.done;
 };

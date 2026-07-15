@@ -10,7 +10,8 @@ export default {
   products: 'Товары',
   categories: 'Категории',
   racks: 'Стеллажи',
-  shelves: 'Полки'
+  shelves: 'Полки',
+  settings: 'Настройки'
  },
  actions: {
   create: 'Создать',
@@ -137,5 +138,35 @@ export default {
   validation: {
    required: 'Это поле обязательно'
   }
+ },
+ auth: {
+  login: 'Войти',
+  register: 'Зарегистрироваться',
+  logout: 'Выйти',
+  email: 'Электронная почта',
+  password: 'Пароль',
+  name: 'Полное имя',
+  orgName: 'Название организации',
+  orgNameHint: 'Оставьте пустым для регистрации как физическое лицо',
+  noAccount: 'Нет аккаунта? Зарегистрироваться',
+  hasAccount: 'Уже есть аккаунт? Войти',
+  invalidCredentials: 'Неверный email или пароль',
+  continueOffline: 'Продолжить оффлайн'
+ },
+ settings: {
+  title: 'Настройки',
+  backendUrl: 'URL сервера',
+  testConnection: 'Проверить соединение',
+  connectionSuccess: 'Соединение успешно',
+  connectionFailed: 'Ошибка соединения',
+  save: 'Сохранить'
+ },
+ sync: {
+  pending: '{n} ожидающих',
+  syncing: 'Синхронизация…',
+  complete: 'Синхронизация: {synced} успешно, {failed} неудачно',
+  failed: 'Ошибки синхронизации',
+  online: 'Онлайн',
+  offline: 'Оффлайн'
  }
 };

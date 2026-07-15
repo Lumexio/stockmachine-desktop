@@ -10,7 +10,8 @@ export default {
   products: 'Produits',
   categories: 'Catégories',
   racks: 'Étagères',
-  shelves: 'Rayons'
+  shelves: 'Rayons',
+  settings: 'Paramètres'
  },
  actions: {
   create: 'Créer',
@@ -137,5 +138,35 @@ export default {
   validation: {
    required: 'Ce champ est obligatoire'
   }
+ },
+ auth: {
+  login: 'Se connecter',
+  register: "S'inscrire",
+  logout: 'Se déconnecter',
+  email: 'E-mail',
+  password: 'Mot de passe',
+  name: 'Nom complet',
+  orgName: "Nom de l'organisation",
+  orgNameHint: "Laissez vide pour vous inscrire en tant qu'individu",
+  noAccount: "Pas de compte ? S'inscrire",
+  hasAccount: 'Déjà un compte ? Se connecter',
+  invalidCredentials: 'E-mail ou mot de passe incorrect',
+  continueOffline: 'Continuer hors ligne'
+ },
+ settings: {
+  title: 'Paramètres',
+  backendUrl: 'URL du serveur',
+  testConnection: 'Tester la connexion',
+  connectionSuccess: 'Connexion réussie',
+  connectionFailed: 'Échec de la connexion',
+  save: 'Enregistrer'
+ },
+ sync: {
+  pending: '{n} en attente',
+  syncing: 'Synchronisation…',
+  complete: 'Sync : {synced} synchronisés, {failed} échoués',
+  failed: 'Erreurs de synchronisation',
+  online: 'En ligne',
+  offline: 'Hors ligne'
  }
 };
