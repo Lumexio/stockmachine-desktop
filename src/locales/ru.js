@@ -22,7 +22,9 @@ export default {
   close: 'Закрыть',
   confirm: 'Подтвердить',
   import: 'Импорт',
-  export: 'Экспорт товаров'
+  export: 'Экспорт товаров',
+  entry: 'Приход',
+  withdrawal: 'Расход'
  },
  modals: {
   deleteConfirm: 'Вы хотите удалить эту запись?',
@@ -49,7 +51,8 @@ export default {
  },
  common: {
   search: 'Поиск',
-  actions: 'Действия'
+  actions: 'Действия',
+  notes: 'Заметки'
  },
  tables: {
   products: {

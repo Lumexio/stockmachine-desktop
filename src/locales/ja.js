@@ -22,7 +22,9 @@ export default {
   close: '閉じる',
   confirm: '確認',
   import: 'インポート',
-  export: '在庫をエクスポート'
+  export: '在庫をエクスポート',
+  entry: '入庫',
+  withdrawal: '出庫'
  },
  modals: {
   deleteConfirm: 'このレコードを削除しますか？',
@@ -49,7 +51,8 @@ export default {
  },
  common: {
   search: '検索',
-  actions: 'アクション'
+  actions: 'アクション',
+  notes: 'メモ'
  },
  tables: {
   products: {

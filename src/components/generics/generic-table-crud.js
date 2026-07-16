@@ -14,6 +14,7 @@ export default {
     formFields: Array,
     endpoint: String,
     relations: Array,
+    extraRowActions: Array, // [{ label, icon, color, event }] — emitted on eventBus with row data
   },
   setup(props) {
     const toast = useToast();
@@ -202,7 +203,19 @@ export default {
                   variant: 'elevated',  // Change to elevated
                   class: 'mx-1',       // Add spacing
                   elevation: '2'        // Add elevation
-                }, () => h(VIcon, () => 'mdi-delete'))
+                }, () => h(VIcon, () => 'mdi-delete')),
+                ...(props.extraRowActions || []).map(action =>
+                  h(VBtn, {
+                    key: action.event,
+                    onClick: () => eventBus.emit(action.event, data),
+                    density: 'comfortable',
+                    color: action.color || 'secondary',
+                    variant: 'elevated',
+                    class: 'mx-1',
+                    elevation: '2',
+                    title: action.label,
+                  }, () => h(VIcon, () => action.icon))
+                )
               ])
             ])
           ))

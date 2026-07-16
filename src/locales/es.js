@@ -22,7 +22,9 @@ export default {
   close: 'Cerrar',
   confirm: 'Confirmar',
   import: 'Importar',
-  export: 'Exportar stock'
+  export: 'Exportar stock',
+  entry: 'Entrada de stock',
+  withdrawal: 'Salida de stock'
  },
  modals: {
   deleteConfirm: '¿Quieres eliminar este registro?',
@@ -49,7 +51,8 @@ export default {
  },
  common: {
   search: 'Buscar',
-  actions: 'Acciones'
+  actions: 'Acciones',
+  notes: 'Notas'
  },
  tables: {
   products: {
