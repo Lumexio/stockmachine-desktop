@@ -1,175 +1,188 @@
 export default {
- app: {
-  title: 'STOCKMACHINE',
-  theme: {
-   dark: 'ダークモード',
-   light: 'ライトモード'
-  }
- },
- navigation: {
-  products: '製品',
-  categories: 'カテゴリー',
-  racks: 'ラック',
-  shelves: '棚',
-  settings: '設定'
- },
- actions: {
-  create: '作成',
-  edit: '編集',
-  delete: '削除',
-  save: '保存',
-  cancel: 'キャンセル',
-  close: '閉じる',
-  confirm: '確認',
-  import: 'インポート',
-  export: '在庫をエクスポート',
-  entry: '入庫',
-  withdrawal: '出庫'
- },
- modals: {
-  deleteConfirm: 'このレコードを削除しますか？',
-  import: {
-   title: 'データのインポート',
-   selectFile: 'ファイルを選択'
-  }
- },
- messages: {
-  success: {
-   created: 'レコードが正常に作成されました',
-   updated: 'レコードが正常に更新されました',
-   deleted: 'レコードが正常に削除されました',
-   imported: 'データが正常にインポートされ更新されました',
-   exported: 'データが正常にエクスポートされ更新されました'
+  app: {
+    title: 'STOCKMACHINE',
+    theme: {
+      dark: 'ダークモード',
+      light: 'ライトモード',
+    },
   },
-  error: {
-   create: 'レコードの作成中にエラーが発生しました',
-   update: 'レコードの更新中にエラーが発生しました',
-   delete: 'レコードの削除中にエラーが発生しました',
-   import: 'インポート中にエラーが発生しました',
-   export: 'エクスポート中にエラーが発生しました'
-  }
- },
- common: {
-  search: '検索',
-  actions: 'アクション',
-  notes: 'メモ'
- },
- tables: {
-  products: {
-   title: '製品管理',
-   create: '製品作成',
-   edit: '製品編集',
-   delete: '製品削除',
-   columns: {
-    name: '名前',
-    category_name: 'カテゴリー',
-    shelve_name: '棚',
-    rack_name: 'ラック',
-    quantity: '数量',
-    description: '説明'
-   }
+  navigation: {
+    products: '製品',
+    categories: 'カテゴリー',
+    racks: 'ラック',
+    shelves: '棚',
+    settings: '設定',
   },
-  categories: {
-   title: 'カテゴリー管理',
-   create: 'カテゴリー作成',
-   edit: 'カテゴリー編集',
-   delete: 'カテゴリー削除',
-   columns: {
-    id: 'ID',
-    name: '名前',
-    description: '説明'
-   }
+  actions: {
+    create: '作成',
+    edit: '編集',
+    delete: '削除',
+    save: '保存',
+    cancel: 'キャンセル',
+    close: '閉じる',
+    confirm: '確認',
+    import: 'インポート',
+    export: '在庫をエクスポート',
+    entry: '入庫',
+    withdrawal: '出庫',
   },
-  shelves: {
-   title: '棚管理',
-   create: '棚作成',
-   edit: '棚編集',
-   delete: '棚削除',
-   columns: {
-    id: 'ID',
-    name: '名前'
-   }
+  modals: {
+    deleteConfirm: 'このレコードを削除しますか？',
+    import: {
+      title: 'データのインポート',
+      selectFile: 'ファイルを選択',
+    },
   },
-  racks: {
-   title: 'ラック管理',
-   create: 'ラック作成',
-   edit: 'ラック編集',
-   delete: 'ラック削除',
-   columns: {
-    id: 'ID',
-    name: '名前',
-    shelve_name: '棚'
-   }
-  }
- },
- forms: {
-  label: {
-   import: {
-    title: 'データのインポート',
-    selectFile: 'ファイルを選択'
-   },
-   products: {
-    name: '名前',
-    quantity: '数量',
-    description: '説明',
-    category_name: 'カテゴリー',
-    shelve_name: '棚',
-    rack_name: 'ラック'
-   },
-   categories: {
-    name: '名前',
-    description: '説明'
-   },
-   shelves: {
-    name: '名前',
-    description: '説明'
-   },
-   racks: {
-    name: '名前',
-    description: '説明'
-   }
+  messages: {
+    success: {
+      created: 'レコードが正常に作成されました',
+      updated: 'レコードが正常に更新されました',
+      deleted: 'レコードが正常に削除されました',
+      imported: 'データが正常にインポートされ更新されました',
+      exported: 'データが正常にエクスポートされ更新されました',
+    },
+    error: {
+      create: 'レコードの作成中にエラーが発生しました',
+      update: 'レコードの更新中にエラーが発生しました',
+      delete: 'レコードの削除中にエラーが発生しました',
+      import: 'インポート中にエラーが発生しました',
+      export: 'エクスポート中にエラーが発生しました',
+    },
   },
-  placeholders: {
-   name: '名前を入力',
-   description: '説明を入力',
-   quantity: '数量を入力',
-   price: '価格を入力',
-   category: 'カテゴリーを選択',
-   shelve: '棚を選択',
-   rack: 'ラックを選択'
+  common: {
+    search: '検索',
+    actions: 'アクション',
+    notes: 'メモ',
   },
-  validation: {
-   required: 'この項目は必須です'
-  }
- },
- auth: {
-  login: 'ログイン',
-  register: '登録',
-  logout: 'ログアウト',
-  email: 'メールアドレス',
-  password: 'パスワード',
-  name: '氏名',
-  orgName: '組織名',
-  orgNameHint: '個人として登録する場合は空白にしてください',
-  noAccount: 'アカウントをお持ちでない方は登録してください',
-  hasAccount: 'アカウントをお持ちの方はログインしてください',
-  invalidCredentials: 'メールアドレスまたはパスワードが正しくありません',
-  continueOffline: 'オフラインで続行'
- },
- settings: {
-  title: '設定',
-  backendUrl: 'サーバーURL',
-  testConnection: '接続テスト',
-  connectionSuccess: '接続成功',
-  connectionFailed: '接続失敗',
-  save: '保存'
- },
- sync: {
-  pending: '{n}件保留中',
-  syncing: '同期中…',
-  complete: '同期: {synced}件成功, {failed}件失敗',
-  failed: '同期エラー',
-  online: 'オンライン',
-  offline: 'オフライン'
- }
+  tables: {
+    products: {
+      title: '製品管理',
+      create: '製品作成',
+      edit: '製品編集',
+      delete: '製品削除',
+      columns: {
+        name: '名前',
+        category_name: 'カテゴリー',
+        shelve_name: '棚',
+        rack_name: 'ラック',
+        quantity: '数量',
+        description: '説明',
+      },
+    },
+    categories: {
+      title: 'カテゴリー管理',
+      create: 'カテゴリー作成',
+      edit: 'カテゴリー編集',
+      delete: 'カテゴリー削除',
+      columns: {
+        id: 'ID',
+        name: '名前',
+        description: '説明',
+      },
+    },
+    shelves: {
+      title: '棚管理',
+      create: '棚作成',
+      edit: '棚編集',
+      delete: '棚削除',
+      columns: {
+        id: 'ID',
+        name: '名前',
+      },
+    },
+    racks: {
+      title: 'ラック管理',
+      create: 'ラック作成',
+      edit: 'ラック編集',
+      delete: 'ラック削除',
+      columns: {
+        id: 'ID',
+        name: '名前',
+        shelve_name: '棚',
+      },
+    },
+  },
+  forms: {
+    label: {
+      import: {
+        title: 'データのインポート',
+        selectFile: 'ファイルを選択',
+      },
+      products: {
+        name: '名前',
+        quantity: '数量',
+        description: '説明',
+        category_name: 'カテゴリー',
+        shelve_name: '棚',
+        rack_name: 'ラック',
+      },
+      categories: {
+        name: '名前',
+        description: '説明',
+      },
+      shelves: {
+        name: '名前',
+        description: '説明',
+      },
+      racks: {
+        name: '名前',
+        description: '説明',
+      },
+    },
+    placeholders: {
+      name: '名前を入力',
+      description: '説明を入力',
+      quantity: '数量を入力',
+      price: '価格を入力',
+      category: 'カテゴリーを選択',
+      shelve: '棚を選択',
+      rack: 'ラックを選択',
+    },
+    validation: {
+      required: 'この項目は必須です',
+    },
+  },
+  auth: {
+    login: 'ログイン',
+    register: '登録',
+    logout: 'ログアウト',
+    email: 'メールアドレス',
+    password: 'パスワード',
+    name: '氏名',
+    role: '役割',
+    orgName: '組織名',
+    orgNameHint: '個人として登録する場合は空白にしてください',
+    noAccount: 'アカウントをお持ちでない方は登録してください',
+    hasAccount: 'アカウントをお持ちの方はログインしてください',
+    invalidCredentials: 'メールアドレスまたはパスワードが正しくありません',
+    continueOffline: 'オフラインで続行',
+    createAccount: 'アカウント作成',
+    accountType: 'アカウントの種類',
+    individual: '個人',
+    individualDesc: '個人利用 — 1つの在庫',
+    organization: '組織',
+    orgDesc: 'チーム向け複数拠点の在庫管理',
+    forgotPassword: 'パスワードをお忘れですか？',
+  },
+  settings: {
+    title: '設定',
+    backendUrl: 'サーバーURL',
+    testConnection: '接続テスト',
+    connectionSuccess: '接続成功',
+    connectionFailed: '接続失敗',
+    save: '保存',
+    userProfile: 'ユーザープロフィール',
+    language: '言語',
+    appearance: '外観',
+    connection: '接続設定',
+    account: 'アカウント',
+  },
+  sync: {
+    pending: '{n}件保留中',
+    syncing: '同期中…',
+    complete: '同期: {synced}件成功, {failed}件失敗',
+    failed: '同期エラー',
+    online: 'オンライン',
+    offline: 'オフライン',
+  },
 };

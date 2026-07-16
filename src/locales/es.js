@@ -1,175 +1,188 @@
 export default {
- app: {
-  title: 'STOCKMACHINE',
-  theme: {
-   dark: 'Modo Oscuro',
-   light: 'Modo Claro'
-  }
- },
- navigation: {
-  products: 'Productos',
-  categories: 'Categorías',
-  racks: 'Estantes',
-  shelves: 'Repisas',
-  settings: 'Ajustes'
- },
- actions: {
-  create: 'Crear',
-  edit: 'Editar',
-  delete: 'Eliminar',
-  save: 'Guardar',
-  cancel: 'Cancelar',
-  close: 'Cerrar',
-  confirm: 'Confirmar',
-  import: 'Importar',
-  export: 'Exportar stock',
-  entry: 'Entrada de stock',
-  withdrawal: 'Salida de stock'
- },
- modals: {
-  deleteConfirm: '¿Quieres eliminar este registro?',
-  import: {
-   title: 'Importar Datos',
-   selectFile: 'Seleccionar Archivo'
-  }
- },
- messages: {
-  success: {
-   created: 'Registro creado correctamente',
-   updated: 'Registro actualizado correctamente',
-   deleted: 'Registro eliminado correctamente',
-   imported: 'Datos importados y actualizados correctamente',
-   exported: 'Datos exportados y actualizados correctamente'
+  app: {
+    title: 'STOCKMACHINE',
+    theme: {
+      dark: 'Modo Oscuro',
+      light: 'Modo Claro',
+    },
   },
-  error: {
-   create: 'Error al crear el registro',
-   update: 'Error al actualizar el registro',
-   delete: 'Error al eliminar el registro',
-   import: 'Error durante la importación',
-   export: 'Error durante la exportación'
-  }
- },
- common: {
-  search: 'Buscar',
-  actions: 'Acciones',
-  notes: 'Notas'
- },
- tables: {
-  products: {
-   title: 'Gestión de Productos',
-   create: 'Crear Producto',
-   edit: 'Editar Producto',
-   delete: 'Eliminar Producto',
-   columns: {
-    name: 'Nombre',
-    category_name: 'Categoría',
-    shelve_name: 'Estante',
-    rack_name: 'Rack',
-    quantity: 'Cantidad',
-    description: 'Descripción'
-   }
+  navigation: {
+    products: 'Productos',
+    categories: 'Categorías',
+    racks: 'Estantes',
+    shelves: 'Repisas',
+    settings: 'Ajustes',
   },
-  categories: {
-   title: 'Gestión de Categorías',
-   create: 'Crear Categoría',
-   edit: 'Editar Categoría',
-   delete: 'Eliminar Categoría',
-   columns: {
-    id: 'ID',
-    name: 'Nombre',
-    description: 'Descripción'
-   }
+  actions: {
+    create: 'Crear',
+    edit: 'Editar',
+    delete: 'Eliminar',
+    save: 'Guardar',
+    cancel: 'Cancelar',
+    close: 'Cerrar',
+    confirm: 'Confirmar',
+    import: 'Importar',
+    export: 'Exportar stock',
+    entry: 'Entrada de stock',
+    withdrawal: 'Salida de stock',
   },
-  shelves: {
-   title: 'Gestión de Estantes',
-   create: 'Crear Estante',
-   edit: 'Editar Estante',
-   delete: 'Eliminar Estante',
-   columns: {
-    id: 'ID',
-    name: 'Nombre'
-   }
+  modals: {
+    deleteConfirm: '¿Quieres eliminar este registro?',
+    import: {
+      title: 'Importar Datos',
+      selectFile: 'Seleccionar Archivo',
+    },
   },
-  racks: {
-   title: 'Gestión de Racks',
-   create: 'Crear Rack',
-   edit: 'Editar Rack',
-   delete: 'Eliminar Rack',
-   columns: {
-    id: 'ID',
-    name: 'Nombre',
-    shelve_name: 'Estante'
-   }
-  }
- },
- forms: {
-  label: {
-   import: {
-    title: 'Arrastra y suelta un archivo o haz clic para seleccionar',
-    selectFile: 'Seleccionar Archivo'
-   },
-   products: {
-    name: 'Nombre',
-    quantity: 'Cantidad',
-    description: 'Descripción',
-    category_name: 'Categoría',
-    shelve_name: 'Estante',
-    rack_name: 'Rack'
-   },
-   categories: {
-    name: 'Nombre',
-    description: 'Descripción'
-   },
-   shelves: {
-    name: 'Nombre',
-    description: 'Descripción'
-   },
-   racks: {
-    name: 'Nombre',
-    description: 'Descripción'
-   }
+  messages: {
+    success: {
+      created: 'Registro creado correctamente',
+      updated: 'Registro actualizado correctamente',
+      deleted: 'Registro eliminado correctamente',
+      imported: 'Datos importados y actualizados correctamente',
+      exported: 'Datos exportados y actualizados correctamente',
+    },
+    error: {
+      create: 'Error al crear el registro',
+      update: 'Error al actualizar el registro',
+      delete: 'Error al eliminar el registro',
+      import: 'Error durante la importación',
+      export: 'Error durante la exportación',
+    },
   },
-  placeholders: {
-   name: 'Ingrese nombre',
-   description: 'Ingrese descripción',
-   quantity: 'Ingrese cantidad',
-   price: 'Ingrese precio',
-   category: 'Seleccione categoría',
-   shelve: 'Seleccione estante',
-   rack: 'Seleccione rack'
+  common: {
+    search: 'Buscar',
+    actions: 'Acciones',
+    notes: 'Notas',
   },
-  validation: {
-   required: 'Este campo es requerido'
-  }
- },
- auth: {
-  login: 'Iniciar sesión',
-  register: 'Registrarse',
-  logout: 'Cerrar sesión',
-  email: 'Correo electrónico',
-  password: 'Contraseña',
-  name: 'Nombre completo',
-  orgName: 'Nombre de la organización',
-  orgNameHint: 'Déjelo en blanco para registrarse como individuo',
-  noAccount: '¿No tienes cuenta? Regístrate',
-  hasAccount: '¿Ya tienes cuenta? Inicia sesión',
-  invalidCredentials: 'Correo o contraseña incorrectos',
-  continueOffline: 'Continuar sin conexión'
- },
- settings: {
-  title: 'Ajustes',
-  backendUrl: 'URL del servidor',
-  testConnection: 'Probar conexión',
-  connectionSuccess: 'Conexión exitosa',
-  connectionFailed: 'Conexión fallida',
-  save: 'Guardar'
- },
- sync: {
-  pending: '{n} pendientes',
-  syncing: 'Sincronizando…',
-  complete: 'Sync: {synced} sincronizados, {failed} fallidos',
-  failed: 'Errores de sincronización',
-  online: 'En línea',
-  offline: 'Sin conexión'
- }
+  tables: {
+    products: {
+      title: 'Gestión de Productos',
+      create: 'Crear Producto',
+      edit: 'Editar Producto',
+      delete: 'Eliminar Producto',
+      columns: {
+        name: 'Nombre',
+        category_name: 'Categoría',
+        shelve_name: 'Estante',
+        rack_name: 'Rack',
+        quantity: 'Cantidad',
+        description: 'Descripción',
+      },
+    },
+    categories: {
+      title: 'Gestión de Categorías',
+      create: 'Crear Categoría',
+      edit: 'Editar Categoría',
+      delete: 'Eliminar Categoría',
+      columns: {
+        id: 'ID',
+        name: 'Nombre',
+        description: 'Descripción',
+      },
+    },
+    shelves: {
+      title: 'Gestión de Estantes',
+      create: 'Crear Estante',
+      edit: 'Editar Estante',
+      delete: 'Eliminar Estante',
+      columns: {
+        id: 'ID',
+        name: 'Nombre',
+      },
+    },
+    racks: {
+      title: 'Gestión de Racks',
+      create: 'Crear Rack',
+      edit: 'Editar Rack',
+      delete: 'Eliminar Rack',
+      columns: {
+        id: 'ID',
+        name: 'Nombre',
+        shelve_name: 'Estante',
+      },
+    },
+  },
+  forms: {
+    label: {
+      import: {
+        title: 'Arrastra y suelta un archivo o haz clic para seleccionar',
+        selectFile: 'Seleccionar Archivo',
+      },
+      products: {
+        name: 'Nombre',
+        quantity: 'Cantidad',
+        description: 'Descripción',
+        category_name: 'Categoría',
+        shelve_name: 'Estante',
+        rack_name: 'Rack',
+      },
+      categories: {
+        name: 'Nombre',
+        description: 'Descripción',
+      },
+      shelves: {
+        name: 'Nombre',
+        description: 'Descripción',
+      },
+      racks: {
+        name: 'Nombre',
+        description: 'Descripción',
+      },
+    },
+    placeholders: {
+      name: 'Ingrese nombre',
+      description: 'Ingrese descripción',
+      quantity: 'Ingrese cantidad',
+      price: 'Ingrese precio',
+      category: 'Seleccione categoría',
+      shelve: 'Seleccione estante',
+      rack: 'Seleccione rack',
+    },
+    validation: {
+      required: 'Este campo es requerido',
+    },
+  },
+  auth: {
+    login: 'Iniciar sesión',
+    register: 'Registrarse',
+    logout: 'Cerrar sesión',
+    email: 'Correo electrónico',
+    password: 'Contraseña',
+    name: 'Nombre completo',
+    role: 'Rol',
+    orgName: 'Nombre de la organización',
+    orgNameHint: 'Déjelo en blanco para registrarse como individuo',
+    noAccount: '¿No tienes cuenta? Regístrate',
+    hasAccount: '¿Ya tienes cuenta? Inicia sesión',
+    invalidCredentials: 'Correo o contraseña incorrectos',
+    continueOffline: 'Continuar sin conexión',
+    createAccount: 'Crear cuenta',
+    accountType: 'Tipo de cuenta',
+    individual: 'Individual',
+    individualDesc: 'Uso personal — un inventario',
+    organization: 'Organización',
+    orgDesc: 'Inventario multi-ubicación para equipos',
+    forgotPassword: '¿Olvidaste tu contraseña?',
+  },
+  settings: {
+    title: 'Ajustes',
+    backendUrl: 'URL del servidor',
+    testConnection: 'Probar conexión',
+    connectionSuccess: 'Conexión exitosa',
+    connectionFailed: 'Conexión fallida',
+    save: 'Guardar',
+    userProfile: 'Perfil de usuario',
+    language: 'Idioma',
+    appearance: 'Apariencia',
+    connection: 'Conexión',
+    account: 'Cuenta',
+  },
+  sync: {
+    pending: '{n} pendientes',
+    syncing: 'Sincronizando…',
+    complete: 'Sync: {synced} sincronizados, {failed} fallidos',
+    failed: 'Errores de sincronización',
+    online: 'En línea',
+    offline: 'Sin conexión',
+  },
 };

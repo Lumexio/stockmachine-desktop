@@ -1,175 +1,188 @@
 export default {
- app: {
-  title: 'STOCKMACHINE',
-  theme: {
-   dark: 'Тёмная тема',
-   light: 'Светлая тема'
-  }
- },
- navigation: {
-  products: 'Товары',
-  categories: 'Категории',
-  racks: 'Стеллажи',
-  shelves: 'Полки',
-  settings: 'Настройки'
- },
- actions: {
-  create: 'Создать',
-  edit: 'Редактировать',
-  delete: 'Удалить',
-  save: 'Сохранить',
-  cancel: 'Отмена',
-  close: 'Закрыть',
-  confirm: 'Подтвердить',
-  import: 'Импорт',
-  export: 'Экспорт товаров',
-  entry: 'Приход',
-  withdrawal: 'Расход'
- },
- modals: {
-  deleteConfirm: 'Вы хотите удалить эту запись?',
-  import: {
-   title: 'Импорт данных',
-   selectFile: 'Выбрать файл'
-  }
- },
- messages: {
-  success: {
-   created: 'Запись успешно создана',
-   updated: 'Запись успешно обновлена',
-   deleted: 'Запись успешно удалена',
-   imported: 'Данные успешно импортированы и обновлены',
-   exported: 'Данные успешно экспортированы и обновлены'
+  app: {
+    title: 'STOCKMACHINE',
+    theme: {
+      dark: 'Тёмная тема',
+      light: 'Светлая тема',
+    },
   },
-  error: {
-   create: 'Ошибка при создании записи',
-   update: 'Ошибка при обновлении записи',
-   delete: 'Ошибка при удалении записи',
-   import: 'Ошибка при импорте',
-   export: 'Ошибка при экспорте'
-  }
- },
- common: {
-  search: 'Поиск',
-  actions: 'Действия',
-  notes: 'Заметки'
- },
- tables: {
-  products: {
-   title: 'Управление товарами',
-   create: 'Создать товар',
-   edit: 'Редактировать товар',
-   delete: 'Удалить товар',
-   columns: {
-    name: 'Название',
-    category_name: 'Категория',
-    shelve_name: 'Полка',
-    rack_name: 'Стеллаж',
-    quantity: 'Количество',
-    description: 'Описание'
-   }
+  navigation: {
+    products: 'Товары',
+    categories: 'Категории',
+    racks: 'Стеллажи',
+    shelves: 'Полки',
+    settings: 'Настройки',
   },
-  categories: {
-   title: 'Управление категориями',
-   create: 'Создать категорию',
-   edit: 'Редактировать категорию',
-   delete: 'Удалить категорию',
-   columns: {
-    id: 'ID',
-    name: 'Название',
-    description: 'Описание'
-   }
+  actions: {
+    create: 'Создать',
+    edit: 'Редактировать',
+    delete: 'Удалить',
+    save: 'Сохранить',
+    cancel: 'Отмена',
+    close: 'Закрыть',
+    confirm: 'Подтвердить',
+    import: 'Импорт',
+    export: 'Экспорт товаров',
+    entry: 'Приход',
+    withdrawal: 'Расход',
   },
-  shelves: {
-   title: 'Управление полками',
-   create: 'Создать полку',
-   edit: 'Редактировать полку',
-   delete: 'Удалить полку',
-   columns: {
-    id: 'ID',
-    name: 'Название'
-   }
+  modals: {
+    deleteConfirm: 'Вы хотите удалить эту запись?',
+    import: {
+      title: 'Импорт данных',
+      selectFile: 'Выбрать файл',
+    },
   },
-  racks: {
-   title: 'Управление стеллажами',
-   create: 'Создать стеллаж',
-   edit: 'Редактировать стеллаж',
-   delete: 'Удалить стеллаж',
-   columns: {
-    id: 'ID',
-    name: 'Название',
-    shelve_name: 'Полка'
-   }
-  }
- },
- forms: {
-  label: {
-   import: {
-    title: 'Импорт данных',
-    selectFile: 'Выбрать файл'
-   },
-   products: {
-    name: 'Название',
-    quantity: 'Количество',
-    description: 'Описание',
-    category_name: 'Категория',
-    shelve_name: 'Полка',
-    rack_name: 'Стеллаж'
-   },
-   categories: {
-    name: 'Название',
-    description: 'Описание'
-   },
-   shelves: {
-    name: 'Название',
-    description: 'Описание'
-   },
-   racks: {
-    name: 'Название',
-    description: 'Описание'
-   }
+  messages: {
+    success: {
+      created: 'Запись успешно создана',
+      updated: 'Запись успешно обновлена',
+      deleted: 'Запись успешно удалена',
+      imported: 'Данные успешно импортированы и обновлены',
+      exported: 'Данные успешно экспортированы и обновлены',
+    },
+    error: {
+      create: 'Ошибка при создании записи',
+      update: 'Ошибка при обновлении записи',
+      delete: 'Ошибка при удалении записи',
+      import: 'Ошибка при импорте',
+      export: 'Ошибка при экспорте',
+    },
   },
-  placeholders: {
-   name: 'Введите название',
-   description: 'Введите описание',
-   quantity: 'Введите количество',
-   price: 'Введите цену',
-   category: 'Выберите категорию',
-   shelve: 'Выберите полку',
-   rack: 'Выберите стеллаж'
+  common: {
+    search: 'Поиск',
+    actions: 'Действия',
+    notes: 'Заметки',
   },
-  validation: {
-   required: 'Это поле обязательно'
-  }
- },
- auth: {
-  login: 'Войти',
-  register: 'Зарегистрироваться',
-  logout: 'Выйти',
-  email: 'Электронная почта',
-  password: 'Пароль',
-  name: 'Полное имя',
-  orgName: 'Название организации',
-  orgNameHint: 'Оставьте пустым для регистрации как физическое лицо',
-  noAccount: 'Нет аккаунта? Зарегистрироваться',
-  hasAccount: 'Уже есть аккаунт? Войти',
-  invalidCredentials: 'Неверный email или пароль',
-  continueOffline: 'Продолжить оффлайн'
- },
- settings: {
-  title: 'Настройки',
-  backendUrl: 'URL сервера',
-  testConnection: 'Проверить соединение',
-  connectionSuccess: 'Соединение успешно',
-  connectionFailed: 'Ошибка соединения',
-  save: 'Сохранить'
- },
- sync: {
-  pending: '{n} ожидающих',
-  syncing: 'Синхронизация…',
-  complete: 'Синхронизация: {synced} успешно, {failed} неудачно',
-  failed: 'Ошибки синхронизации',
-  online: 'Онлайн',
-  offline: 'Оффлайн'
- }
+  tables: {
+    products: {
+      title: 'Управление товарами',
+      create: 'Создать товар',
+      edit: 'Редактировать товар',
+      delete: 'Удалить товар',
+      columns: {
+        name: 'Название',
+        category_name: 'Категория',
+        shelve_name: 'Полка',
+        rack_name: 'Стеллаж',
+        quantity: 'Количество',
+        description: 'Описание',
+      },
+    },
+    categories: {
+      title: 'Управление категориями',
+      create: 'Создать категорию',
+      edit: 'Редактировать категорию',
+      delete: 'Удалить категорию',
+      columns: {
+        id: 'ID',
+        name: 'Название',
+        description: 'Описание',
+      },
+    },
+    shelves: {
+      title: 'Управление полками',
+      create: 'Создать полку',
+      edit: 'Редактировать полку',
+      delete: 'Удалить полку',
+      columns: {
+        id: 'ID',
+        name: 'Название',
+      },
+    },
+    racks: {
+      title: 'Управление стеллажами',
+      create: 'Создать стеллаж',
+      edit: 'Редактировать стеллаж',
+      delete: 'Удалить стеллаж',
+      columns: {
+        id: 'ID',
+        name: 'Название',
+        shelve_name: 'Полка',
+      },
+    },
+  },
+  forms: {
+    label: {
+      import: {
+        title: 'Импорт данных',
+        selectFile: 'Выбрать файл',
+      },
+      products: {
+        name: 'Название',
+        quantity: 'Количество',
+        description: 'Описание',
+        category_name: 'Категория',
+        shelve_name: 'Полка',
+        rack_name: 'Стеллаж',
+      },
+      categories: {
+        name: 'Название',
+        description: 'Описание',
+      },
+      shelves: {
+        name: 'Название',
+        description: 'Описание',
+      },
+      racks: {
+        name: 'Название',
+        description: 'Описание',
+      },
+    },
+    placeholders: {
+      name: 'Введите название',
+      description: 'Введите описание',
+      quantity: 'Введите количество',
+      price: 'Введите цену',
+      category: 'Выберите категорию',
+      shelve: 'Выберите полку',
+      rack: 'Выберите стеллаж',
+    },
+    validation: {
+      required: 'Это поле обязательно',
+    },
+  },
+  auth: {
+    login: 'Войти',
+    register: 'Зарегистрироваться',
+    logout: 'Выйти',
+    email: 'Электронная почта',
+    password: 'Пароль',
+    name: 'Полное имя',
+    role: 'Роль',
+    orgName: 'Название организации',
+    orgNameHint: 'Оставьте пустым для регистрации как физическое лицо',
+    noAccount: 'Нет аккаунта? Зарегистрироваться',
+    hasAccount: 'Уже есть аккаунт? Войти',
+    invalidCredentials: 'Неверный email или пароль',
+    continueOffline: 'Продолжить оффлайн',
+    createAccount: 'Создать аккаунт',
+    accountType: 'Тип аккаунта',
+    individual: 'Физическое лицо',
+    individualDesc: 'Личное использование — один склад',
+    organization: 'Организация',
+    orgDesc: 'Многоуровневый склад для команд',
+    forgotPassword: 'Забыли пароль?',
+  },
+  settings: {
+    title: 'Настройки',
+    backendUrl: 'URL сервера',
+    testConnection: 'Проверить соединение',
+    connectionSuccess: 'Соединение успешно',
+    connectionFailed: 'Ошибка соединения',
+    save: 'Сохранить',
+    userProfile: 'Профиль пользователя',
+    language: 'Язык',
+    appearance: 'Внешний вид',
+    connection: 'Подключение',
+    account: 'Аккаунт',
+  },
+  sync: {
+    pending: '{n} ожидающих',
+    syncing: 'Синхронизация…',
+    complete: 'Синхронизация: {synced} успешно, {failed} неудачно',
+    failed: 'Ошибки синхронизации',
+    online: 'Онлайн',
+    offline: 'Оффлайн',
+  },
 };
