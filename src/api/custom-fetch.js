@@ -20,7 +20,9 @@ const saveAccessToken = (token) => {
     const state = getAuthState();
     state.accessToken = token;
     localStorage.setItem('auth', JSON.stringify(state));
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
 };
 
 let isRefreshing = false;
@@ -31,10 +33,12 @@ const onRefreshed = (newToken) => {
   refreshQueue = [];
 };
 
+const BACKEND_URL = (
+  import.meta.env.VITE_API_BASE_URL || 'http://165.227.205.129:8080/api/v1'
+).replace(/\/$/, '');
+
 export const apiFetch = async (path, options = {}) => {
-  const settingsRaw = localStorage.getItem('settings');
-  const { backendUrl } = settingsRaw ? JSON.parse(settingsRaw) : {};
-  const base = (backendUrl || 'http://localhost:3000/api/v1').replace(/\/$/, '');
+  const base = BACKEND_URL;
   const { accessToken } = getAuthState();
 
   const buildHeaders = (token) => ({

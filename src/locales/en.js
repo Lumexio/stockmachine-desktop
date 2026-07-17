@@ -166,16 +166,21 @@ export default {
   },
   settings: {
     title: 'Settings',
-    backendUrl: 'Backend URL',
-    testConnection: 'Test Connection',
-    connectionSuccess: 'Connection successful',
-    connectionFailed: 'Connection failed',
-    save: 'Save',
     userProfile: 'User Profile',
     language: 'Language',
     appearance: 'Appearance',
-    connection: 'Connection',
     account: 'Account',
+    connectAccount: 'Connect Account',
+    loginToSync: 'Log in to sync your inventory across devices.',
+    registerOnWeb: 'Register on Web',
+  },
+  welcome: {
+    title: 'Welcome to STOCKMACHINE',
+    subtitle:
+      'Connect your account to sync inventory across devices, or continue working offline.',
+    loginBtn: 'Log In',
+    registerBtn: 'Register Online',
+    offlineBtn: 'Continue Offline',
   },
   sync: {
     pending: '{n} pending',

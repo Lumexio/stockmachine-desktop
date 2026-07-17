@@ -166,16 +166,21 @@ export default {
   },
   settings: {
     title: '設定',
-    backendUrl: 'サーバーURL',
-    testConnection: '接続テスト',
-    connectionSuccess: '接続成功',
-    connectionFailed: '接続失敗',
-    save: '保存',
     userProfile: 'ユーザープロフィール',
     language: '言語',
     appearance: '外観',
-    connection: '接続設定',
     account: 'アカウント',
+    connectAccount: 'アカウントを接続',
+    loginToSync: 'デバイス間で在庫を同期するにはログインしてください。',
+    registerOnWeb: 'ウェブで登録',
+  },
+  welcome: {
+    title: 'STOCKMACHINEへようこそ',
+    subtitle:
+      'アカウントを接続してデバイス間で在庫を同期するか、オフラインで作業を続けてください。',
+    loginBtn: 'ログイン',
+    registerBtn: 'オンラインで登録',
+    offlineBtn: 'オフラインで続行',
   },
   sync: {
     pending: '{n}件保留中',

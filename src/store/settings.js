@@ -1,13 +1,11 @@
 import { defineStore } from 'pinia';
 
+const BACKEND_URL = (
+  import.meta.env.VITE_API_BASE_URL || 'http://165.227.205.129:8080/api/v1'
+).replace(/\/$/, '');
+
 export const useSettingsStore = defineStore('settings', {
-  persist: true,
-  state: () => ({
-    backendUrl: 'http://localhost:3000/api/v1',
-  }),
-  actions: {
-    setBackendUrl(url) {
-      this.backendUrl = url.replace(/\/$/, '');
-    },
+  getters: {
+    backendUrl: () => BACKEND_URL,
   },
 });

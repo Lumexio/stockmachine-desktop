@@ -78,52 +78,7 @@
       </v-card-text>
     </v-card>
 
-    <!-- Section 4: Connection -->
-    <v-card class="mb-6">
-      <v-card-title class="text-h6 pa-4">{{
-        i18n.t('settings.connection')
-      }}</v-card-title>
-      <v-divider />
-      <v-card-text class="pa-4">
-        <v-text-field
-          v-model="backendUrlInput"
-          :label="i18n.t('settings.backendUrl')"
-          variant="outlined"
-          density="comfortable"
-          clearable
-          class="mb-4"
-        />
-        <div class="d-flex align-center gap-3">
-          <v-btn
-            color="primary"
-            variant="tonal"
-            :loading="testing"
-            @click="testConnection"
-          >
-            {{ i18n.t('settings.testConnection') }}
-          </v-btn>
-          <v-btn color="secondary" variant="tonal" @click="save">
-            {{ i18n.t('settings.save') }}
-          </v-btn>
-          <v-chip
-            v-if="connectionStatus === 'ok'"
-            color="success"
-            prepend-icon="mdi-check-circle"
-          >
-            {{ i18n.t('settings.connectionSuccess') }}
-          </v-chip>
-          <v-chip
-            v-else-if="connectionStatus === 'fail'"
-            color="error"
-            prepend-icon="mdi-alert-circle"
-          >
-            {{ i18n.t('settings.connectionFailed') }}
-          </v-chip>
-        </div>
-      </v-card-text>
-    </v-card>
-
-    <!-- Section 5: Account -->
+    <!-- Section 4: Account -->
     <v-card v-if="auth.isAuthenticated">
       <v-card-title class="text-h6 pa-4">{{
         i18n.t('settings.account')
@@ -140,26 +95,52 @@
         </v-btn>
       </v-card-text>
     </v-card>
+
+    <!-- Section 5: Connect account (shown when offline / not logged in) -->
+    <v-card v-else>
+      <v-card-title class="text-h6 pa-4">{{
+        i18n.t('settings.connectAccount')
+      }}</v-card-title>
+      <v-divider />
+      <v-card-text class="pa-4">
+        <p class="text-body-2 text-medium-emphasis mb-4">
+          {{ i18n.t('settings.loginToSync') }}
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <v-btn
+            color="primary"
+            variant="elevated"
+            elevation="2"
+            prepend-icon="mdi-login"
+            @click="router.push('/login')"
+          >
+            {{ i18n.t('auth.login') }}
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="outlined"
+            prepend-icon="mdi-open-in-new"
+            @click="openRegister"
+          >
+            {{ i18n.t('settings.registerOnWeb') }}
+          </v-btn>
+        </div>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
 <script setup>
-  import { ref, computed } from 'vue';
+  import { computed } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useSettingsStore } from '../../store/settings';
   import { useI18nStore } from '../../store/i18n';
   import { useAuthStore } from '../../store/auth';
   import { useStore } from '../../store/index';
 
   const router = useRouter();
-  const settings = useSettingsStore();
   const i18n = useI18nStore();
   const auth = useAuthStore();
   const store = useStore();
-
-  const backendUrlInput = ref(settings.backendUrl);
-  const testing = ref(false);
-  const connectionStatus = ref(null); // null | 'ok' | 'fail'
 
   const languages = [
     { code: 'en', label: 'EN' },
@@ -174,26 +155,11 @@
     set: () => store.setDarkMode(),
   });
 
-  async function testConnection() {
-    testing.value = true;
-    connectionStatus.value = null;
-    const url = backendUrlInput.value.replace(/\/$/, '');
-    try {
-      const res = await fetch(`${url}/auth/me`, {
-        method: 'GET',
-        signal: AbortSignal.timeout(5000),
-      });
-      // 401 means backend is reachable (just not authenticated)
-      connectionStatus.value = res.status === 401 || res.ok ? 'ok' : 'fail';
-    } catch {
-      connectionStatus.value = 'fail';
-    } finally {
-      testing.value = false;
-    }
-  }
-
-  function save() {
-    settings.setBackendUrl(backendUrlInput.value);
+  function openRegister() {
+    window.api.send('toMain', {
+      type: 'openExternal',
+      url: 'http://165.227.205.129:8080/register',
+    });
   }
 
   function logout() {

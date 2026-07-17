@@ -166,16 +166,22 @@ export default {
   },
   settings: {
     title: 'Настройки',
-    backendUrl: 'URL сервера',
-    testConnection: 'Проверить соединение',
-    connectionSuccess: 'Соединение успешно',
-    connectionFailed: 'Ошибка соединения',
-    save: 'Сохранить',
     userProfile: 'Профиль пользователя',
     language: 'Язык',
     appearance: 'Внешний вид',
-    connection: 'Подключение',
     account: 'Аккаунт',
+    connectAccount: 'Подключить аккаунт',
+    loginToSync:
+      'Войдите, чтобы синхронизировать инвентарь между устройствами.',
+    registerOnWeb: 'Зарегистрироваться на сайте',
+  },
+  welcome: {
+    title: 'Добро пожаловать в STOCKMACHINE',
+    subtitle:
+      'Подключите аккаунт для синхронизации инвентаря между устройствами или продолжите работу оффлайн.',
+    loginBtn: 'Войти',
+    registerBtn: 'Зарегистрироваться онлайн',
+    offlineBtn: 'Продолжить оффлайн',
   },
   sync: {
     pending: '{n} ожидающих',

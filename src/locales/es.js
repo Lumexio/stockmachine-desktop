@@ -166,16 +166,22 @@ export default {
   },
   settings: {
     title: 'Ajustes',
-    backendUrl: 'URL del servidor',
-    testConnection: 'Probar conexión',
-    connectionSuccess: 'Conexión exitosa',
-    connectionFailed: 'Conexión fallida',
-    save: 'Guardar',
     userProfile: 'Perfil de usuario',
     language: 'Idioma',
     appearance: 'Apariencia',
-    connection: 'Conexión',
     account: 'Cuenta',
+    connectAccount: 'Conectar cuenta',
+    loginToSync:
+      'Inicia sesión para sincronizar tu inventario entre dispositivos.',
+    registerOnWeb: 'Registrarse en la web',
+  },
+  welcome: {
+    title: 'Bienvenido a STOCKMACHINE',
+    subtitle:
+      'Conecta tu cuenta para sincronizar el inventario entre dispositivos, o continúa trabajando sin conexión.',
+    loginBtn: 'Iniciar sesión',
+    registerBtn: 'Registrarse en línea',
+    offlineBtn: 'Continuar sin conexión',
   },
   sync: {
     pending: '{n} pendientes',
