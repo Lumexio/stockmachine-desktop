@@ -56,7 +56,7 @@
 import { ref, onMounted, computed, inject } from 'vue';
 import { useStore } from '../../store';
 import { useAuthStore } from '../../store/auth';
-import { useGenericFetchQueries } from "../../api/generic-fetch-querys";
+import { useGenericFetchQueries } from "../../api/generic-fetch-queries";
 import ModalGeneric from './modal-generic.js';
 import { useToast } from 'vue-toast-notification';
 import { FILE_FORMATS, MENU_ITEMS } from '../../constants/fileOperations';

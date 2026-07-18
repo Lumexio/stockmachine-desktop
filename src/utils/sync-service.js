@@ -84,6 +84,15 @@ export async function runSync() {
       } else if (operation === 'delete') {
         const backendId = await resolveId(endpoint, payload.id);
         await apiFetch(`/${endpoint}/${backendId}`, { method: 'DELETE' });
+      } else if (operation === 'entry' || operation === 'withdrawal') {
+        const backendId = await resolveId(endpoint, payload.id);
+        await apiFetch(`/${endpoint}/${backendId}/${operation}`, {
+          method: 'POST',
+          body: JSON.stringify({
+            quantity: payload.quantity,
+            notes: payload.notes,
+          }),
+        });
       }
 
       await dequeueOperation(queueId);
@@ -111,6 +120,23 @@ export async function runSync() {
         }
       })
     );
+
+    // Sync operation history
+    try {
+      const historyResult = await apiFetch('/history');
+      const historyItems = historyResult.data ?? [];
+      const db = await import('../api/indexeddb');
+      const currentHistory = await getAll('operation_history');
+      for (const item of currentHistory) {
+        try { await db.remove('operation_history', item.id); } catch { /* ignore */ }
+      }
+      for (const item of historyItems) {
+        try { await db.add('operation_history', item); } catch { /* ignore */ }
+      }
+    } catch (e) {
+      console.error('Failed to sync operation history:', e);
+    }
+
     await clearAllIdMaps();
   } catch { /* cache refresh is best-effort */ }
 

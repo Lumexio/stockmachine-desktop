@@ -1,193 +1,229 @@
 export default {
-  app: {
-    title: 'STOCKMACHINE',
-    theme: {
-      dark: 'ダークモード',
-      light: 'ライトモード',
+  "app": {
+    "title": "STOCKMACHINE",
+    "theme": {
+      "dark": "ダークモード",
+      "light": "ライトモード"
+    }
+  },
+  "navigation": {
+    "products": "製品",
+    "categories": "カテゴリー",
+    "racks": "ラック",
+    "shelves": "棚",
+    "settings": "設定",
+    "dashboard": "ダッシュボード",
+    "history": "履歴"
+  },
+  "actions": {
+    "create": "作成",
+    "edit": "編集",
+    "delete": "削除",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirm": "確認",
+    "import": "インポート",
+    "export": "在庫をエクスポート",
+    "entry": "入庫",
+    "withdrawal": "出庫"
+  },
+  "modals": {
+    "deleteConfirm": "このレコードを削除しますか？",
+    "import": {
+      "title": "データのインポート",
+      "selectFile": "ファイルを選択"
+    }
+  },
+  "messages": {
+    "success": {
+      "created": "レコードが正常に作成されました",
+      "updated": "レコードが正常に更新されました",
+      "deleted": "レコードが正常に削除されました",
+      "imported": "データが正常にインポートされ更新されました",
+      "exported": "データが正常にエクスポートされ更新されました"
     },
+    "error": {
+      "create": "レコードの作成中にエラーが発生しました",
+      "update": "レコードの更新中にエラーが発生しました",
+      "delete": "レコードの削除中にエラーが発生しました",
+      "import": "インポート中にエラーが発生しました",
+      "export": "エクスポート中にエラーが発生しました"
+    }
   },
-  navigation: {
-    products: '製品',
-    categories: 'カテゴリー',
-    racks: 'ラック',
-    shelves: '棚',
-    settings: '設定',
+  "common": {
+    "search": "検索",
+    "actions": "アクション",
+    "notes": "メモ"
   },
-  actions: {
-    create: '作成',
-    edit: '編集',
-    delete: '削除',
-    save: '保存',
-    cancel: 'キャンセル',
-    close: '閉じる',
-    confirm: '確認',
-    import: 'インポート',
-    export: '在庫をエクスポート',
-    entry: '入庫',
-    withdrawal: '出庫',
-  },
-  modals: {
-    deleteConfirm: 'このレコードを削除しますか？',
-    import: {
-      title: 'データのインポート',
-      selectFile: 'ファイルを選択',
+  "tables": {
+    "products": {
+      "title": "製品管理",
+      "create": "製品作成",
+      "edit": "製品編集",
+      "delete": "製品削除",
+      "columns": {
+        "name": "名前",
+        "category_name": "カテゴリー",
+        "shelve_name": "棚",
+        "rack_name": "ラック",
+        "quantity": "数量",
+        "description": "説明"
+      }
     },
-  },
-  messages: {
-    success: {
-      created: 'レコードが正常に作成されました',
-      updated: 'レコードが正常に更新されました',
-      deleted: 'レコードが正常に削除されました',
-      imported: 'データが正常にインポートされ更新されました',
-      exported: 'データが正常にエクスポートされ更新されました',
+    "categories": {
+      "title": "カテゴリー管理",
+      "create": "カテゴリー作成",
+      "edit": "カテゴリー編集",
+      "delete": "カテゴリー削除",
+      "columns": {
+        "id": "ID",
+        "name": "名前",
+        "description": "説明"
+      }
     },
-    error: {
-      create: 'レコードの作成中にエラーが発生しました',
-      update: 'レコードの更新中にエラーが発生しました',
-      delete: 'レコードの削除中にエラーが発生しました',
-      import: 'インポート中にエラーが発生しました',
-      export: 'エクスポート中にエラーが発生しました',
+    "shelves": {
+      "title": "棚管理",
+      "create": "棚作成",
+      "edit": "棚編集",
+      "delete": "棚削除",
+      "columns": {
+        "id": "ID",
+        "name": "名前"
+      }
     },
+    "racks": {
+      "title": "ラック管理",
+      "create": "ラック作成",
+      "edit": "ラック編集",
+      "delete": "ラック削除",
+      "columns": {
+        "id": "ID",
+        "name": "名前",
+        "shelve_name": "棚"
+      }
+    },
+    "history": {
+      "title": "操作履歴",
+      "columns": {
+        "entity_type": "エンティティ種別",
+        "operation": "操作",
+        "quantity_before": "変更前数量",
+        "quantity_after": "変更後数量",
+        "notes": "メモ",
+        "created_at": "日時",
+        "user": "ユーザー",
+        "entity": "エンティティ",
+        "qty_change": "数量変更"
+      }
+    }
   },
-  common: {
-    search: '検索',
-    actions: 'アクション',
-    notes: 'メモ',
-  },
-  tables: {
-    products: {
-      title: '製品管理',
-      create: '製品作成',
-      edit: '製品編集',
-      delete: '製品削除',
-      columns: {
-        name: '名前',
-        category_name: 'カテゴリー',
-        shelve_name: '棚',
-        rack_name: 'ラック',
-        quantity: '数量',
-        description: '説明',
+  "forms": {
+    "label": {
+      "import": {
+        "title": "データのインポート",
+        "selectFile": "ファイルを選択"
       },
-    },
-    categories: {
-      title: 'カテゴリー管理',
-      create: 'カテゴリー作成',
-      edit: 'カテゴリー編集',
-      delete: 'カテゴリー削除',
-      columns: {
-        id: 'ID',
-        name: '名前',
-        description: '説明',
+      "products": {
+        "name": "名前",
+        "quantity": "数量",
+        "description": "説明",
+        "category_name": "カテゴリー",
+        "shelve_name": "棚",
+        "rack_name": "ラック"
       },
-    },
-    shelves: {
-      title: '棚管理',
-      create: '棚作成',
-      edit: '棚編集',
-      delete: '棚削除',
-      columns: {
-        id: 'ID',
-        name: '名前',
+      "categories": {
+        "name": "名前",
+        "description": "説明"
       },
-    },
-    racks: {
-      title: 'ラック管理',
-      create: 'ラック作成',
-      edit: 'ラック編集',
-      delete: 'ラック削除',
-      columns: {
-        id: 'ID',
-        name: '名前',
-        shelve_name: '棚',
+      "shelves": {
+        "name": "名前",
+        "description": "説明"
       },
+      "racks": {
+        "name": "名前",
+        "description": "説明"
+      }
     },
+    "placeholders": {
+      "name": "名前を入力",
+      "description": "説明を入力",
+      "quantity": "数量を入力",
+      "price": "価格を入力",
+      "category": "カテゴリーを選択",
+      "shelve": "棚を選択",
+      "rack": "ラックを選択"
+    },
+    "validation": {
+      "required": "この項目は必須です"
+    }
   },
-  forms: {
-    label: {
-      import: {
-        title: 'データのインポート',
-        selectFile: 'ファイルを選択',
-      },
-      products: {
-        name: '名前',
-        quantity: '数量',
-        description: '説明',
-        category_name: 'カテゴリー',
-        shelve_name: '棚',
-        rack_name: 'ラック',
-      },
-      categories: {
-        name: '名前',
-        description: '説明',
-      },
-      shelves: {
-        name: '名前',
-        description: '説明',
-      },
-      racks: {
-        name: '名前',
-        description: '説明',
-      },
-    },
-    placeholders: {
-      name: '名前を入力',
-      description: '説明を入力',
-      quantity: '数量を入力',
-      price: '価格を入力',
-      category: 'カテゴリーを選択',
-      shelve: '棚を選択',
-      rack: 'ラックを選択',
-    },
-    validation: {
-      required: 'この項目は必須です',
-    },
+  "auth": {
+    "login": "ログイン",
+    "register": "登録",
+    "logout": "ログアウト",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "name": "氏名",
+    "role": "役割",
+    "orgName": "組織名",
+    "orgNameHint": "個人として登録する場合は空白にしてください",
+    "noAccount": "アカウントをお持ちでない方は登録してください",
+    "hasAccount": "アカウントをお持ちの方はログインしてください",
+    "invalidCredentials": "メールアドレスまたはパスワードが正しくありません",
+    "continueOffline": "オフラインで続行",
+    "createAccount": "アカウント作成",
+    "accountType": "アカウントの種類",
+    "individual": "個人",
+    "individualDesc": "個人利用 — 1つの在庫",
+    "organization": "組織",
+    "orgDesc": "チーム向け複数拠点の在庫管理",
+    "forgotPassword": "パスワードをお忘れですか？"
   },
-  auth: {
-    login: 'ログイン',
-    register: '登録',
-    logout: 'ログアウト',
-    email: 'メールアドレス',
-    password: 'パスワード',
-    name: '氏名',
-    role: '役割',
-    orgName: '組織名',
-    orgNameHint: '個人として登録する場合は空白にしてください',
-    noAccount: 'アカウントをお持ちでない方は登録してください',
-    hasAccount: 'アカウントをお持ちの方はログインしてください',
-    invalidCredentials: 'メールアドレスまたはパスワードが正しくありません',
-    continueOffline: 'オフラインで続行',
-    createAccount: 'アカウント作成',
-    accountType: 'アカウントの種類',
-    individual: '個人',
-    individualDesc: '個人利用 — 1つの在庫',
-    organization: '組織',
-    orgDesc: 'チーム向け複数拠点の在庫管理',
-    forgotPassword: 'パスワードをお忘れですか？',
+  "settings": {
+    "title": "設定",
+    "userProfile": "ユーザープロフィール",
+    "language": "言語",
+    "appearance": "外観",
+    "account": "アカウント",
+    "connectAccount": "アカウントを接続",
+    "loginToSync": "デバイス間で在庫を同期するにはログインしてください。",
+    "registerOnWeb": "ウェブで登録",
+    "colorSchemes": "カラースキーム"
   },
-  settings: {
-    title: '設定',
-    userProfile: 'ユーザープロフィール',
-    language: '言語',
-    appearance: '外観',
-    account: 'アカウント',
-    connectAccount: 'アカウントを接続',
-    loginToSync: 'デバイス間で在庫を同期するにはログインしてください。',
-    registerOnWeb: 'ウェブで登録',
+  "welcome": {
+    "title": "STOCKMACHINEへようこそ",
+    "subtitle": "アカウントを接続してデバイス間で在庫を同期するか、オフラインで作業を続けてください。",
+    "loginBtn": "ログイン",
+    "registerBtn": "オンラインで登録",
+    "offlineBtn": "オフラインで続行"
   },
-  welcome: {
-    title: 'STOCKMACHINEへようこそ',
-    subtitle:
-      'アカウントを接続してデバイス間で在庫を同期するか、オフラインで作業を続けてください。',
-    loginBtn: 'ログイン',
-    registerBtn: 'オンラインで登録',
-    offlineBtn: 'オフラインで続行',
+  "sync": {
+    "pending": "{n}件保留中",
+    "syncing": "同期中…",
+    "complete": "同期: {synced}件成功, {failed}件失敗",
+    "failed": "同期エラー",
+    "online": "オンライン",
+    "offline": "オフライン"
   },
-  sync: {
-    pending: '{n}件保留中',
-    syncing: '同期中…',
-    complete: '同期: {synced}件成功, {failed}件失敗',
-    failed: '同期エラー',
-    online: 'オンライン',
-    offline: 'オフライン',
+  "dashboard": {
+    "title": "ダッシュボード",
+    "totalProducts": "総製品数",
+    "lowStock": "在庫不足",
+    "movementsToday": "本日の動き",
+    "totalEntries": "入庫合計 (数量)",
+    "totalWithdrawals": "出庫合計 (数量)",
+    "topProducts": "主要製品",
+    "stockMovements": "在庫移動（30日）",
+    "recentOperations": "最近の操作履歴",
+    "noData": "データなし",
+    "lowStockAlert": "在庫不足アラート",
+    "categoryStock": "カテゴリ別の在庫レベル"
   },
+  "entityTypes": {
+    "product": "製品",
+    "category": "カテゴリー",
+    "rack": "ラック",
+    "shelf": "棚"
+  }
 };

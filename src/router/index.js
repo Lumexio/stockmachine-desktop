@@ -5,12 +5,12 @@ import { useSettingsStore } from '../store/settings';
 const routes = [
  {
   path: '/',
-  component: () => import('../views/products/products-main.vue')
+  component: () => import('../views/dashboard/DashboardView.vue')
  },
  {
   path: '/category',
   name: 'Category',
-  component: () => import('../views/categorys/category-main.vue')
+  component: () => import('../views/categories/category-main.vue')
  },
  {
   path: '/racks',

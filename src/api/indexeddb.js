@@ -1,45 +1,45 @@
 import { openDB } from 'idb';
 
-const dbPromise = openDB('ps', 2, {
+const dbPromise = openDB('ps', 3, {
   upgrade(db, oldVersion) {
     if (oldVersion < 1) {
       // Create 'categories' object store and indexes
       const categoriesStore = db.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
-    categoriesStore.createIndex('name', 'name', { unique: false });
-    categoriesStore.createIndex('description', 'description', { unique: false });
-    categoriesStore.createIndex('created_at', 'created_at', { unique: false });
-    categoriesStore.createIndex('updated_at', 'updated_at', { unique: false });
+      categoriesStore.createIndex('name', 'name', { unique: false });
+      categoriesStore.createIndex('description', 'description', { unique: false });
+      categoriesStore.createIndex('created_at', 'created_at', { unique: false });
+      categoriesStore.createIndex('updated_at', 'updated_at', { unique: false });
 
-    // Create 'racks' object store and indexes
-    const racksStore = db.createObjectStore('racks', { keyPath: 'id', autoIncrement: true });
-    racksStore.createIndex('name', 'name', { unique: false });
-    racksStore.createIndex('created_at', 'created_at', { unique: false });
-    racksStore.createIndex('updated_at', 'updated_at', { unique: false });
+      // Create 'racks' object store and indexes
+      const racksStore = db.createObjectStore('racks', { keyPath: 'id', autoIncrement: true });
+      racksStore.createIndex('name', 'name', { unique: false });
+      racksStore.createIndex('created_at', 'created_at', { unique: false });
+      racksStore.createIndex('updated_at', 'updated_at', { unique: false });
 
-    // Create 'products' object store and indexes
-    const productsStore = db.createObjectStore('products', { keyPath: 'id', autoIncrement: true });
-    productsStore.createIndex('name', 'name', { unique: false });
-    productsStore.createIndex('quantity', 'quantity', { unique: false });
-    productsStore.createIndex('description', 'description', { unique: false });
-    productsStore.createIndex('category_id', 'category_id', { unique: false });
-    productsStore.createIndex('shelve_id', 'shelve_id', { unique: false });
-    productsStore.createIndex('rack_id', 'rack_id', { unique: false });
-    productsStore.createIndex('status_id', 'status_id', { unique: false });
-    productsStore.createIndex('foto_product', 'foto_product', { unique: false });
-    productsStore.createIndex('created_at', 'created_at', { unique: false });
-    productsStore.createIndex('updated_at', 'updated_at', { unique: false });
+      // Create 'products' object store and indexes
+      const productsStore = db.createObjectStore('products', { keyPath: 'id', autoIncrement: true });
+      productsStore.createIndex('name', 'name', { unique: false });
+      productsStore.createIndex('quantity', 'quantity', { unique: false });
+      productsStore.createIndex('description', 'description', { unique: false });
+      productsStore.createIndex('category_id', 'category_id', { unique: false });
+      productsStore.createIndex('shelve_id', 'shelve_id', { unique: false });
+      productsStore.createIndex('rack_id', 'rack_id', { unique: false });
+      productsStore.createIndex('status_id', 'status_id', { unique: false });
+      productsStore.createIndex('foto_product', 'foto_product', { unique: false });
+      productsStore.createIndex('created_at', 'created_at', { unique: false });
+      productsStore.createIndex('updated_at', 'updated_at', { unique: false });
 
-    // Create 'shelves' object store and indexes
-    const shelvesStore = db.createObjectStore('shelves', { keyPath: 'id', autoIncrement: true });
-    shelvesStore.createIndex('name', 'name', { unique: false });
-    shelvesStore.createIndex('created_at', 'created_at', { unique: false });
-    shelvesStore.createIndex('updated_at', 'updated_at', { unique: false });
+      // Create 'shelves' object store and indexes
+      const shelvesStore = db.createObjectStore('shelves', { keyPath: 'id', autoIncrement: true });
+      shelvesStore.createIndex('name', 'name', { unique: false });
+      shelvesStore.createIndex('created_at', 'created_at', { unique: false });
+      shelvesStore.createIndex('updated_at', 'updated_at', { unique: false });
 
-    // Create 'status' object store and indexes
-    const statusStore = db.createObjectStore('status', { keyPath: 'id', autoIncrement: true });
-    statusStore.createIndex('name', 'name', { unique: false });
-    statusStore.createIndex('created_at', 'created_at', { unique: false });
-    statusStore.createIndex('updated_at', 'updated_at', { unique: false });
+      // Create 'status' object store and indexes
+      const statusStore = db.createObjectStore('status', { keyPath: 'id', autoIncrement: true });
+      statusStore.createIndex('name', 'name', { unique: false });
+      statusStore.createIndex('created_at', 'created_at', { unique: false });
+      statusStore.createIndex('updated_at', 'updated_at', { unique: false });
     } // end oldVersion < 1
 
     if (oldVersion < 2) {
@@ -51,6 +51,11 @@ const dbPromise = openDB('ps', 2, {
       // ID map: maps local IndexedDB IDs → backend-assigned IDs after a create syncs
       const idMapStore = db.createObjectStore('id_map', { keyPath: 'id', autoIncrement: true });
       idMapStore.createIndex('localId_endpoint', ['localId', 'endpoint'], { unique: false });
+    }
+
+    if (oldVersion < 3) {
+      const historyStore = db.createObjectStore('operation_history', { keyPath: 'id', autoIncrement: true });
+      historyStore.createIndex('created_at', 'created_at', { unique: false });
     }
   },
 });

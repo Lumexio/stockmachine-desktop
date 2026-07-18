@@ -1,5 +1,5 @@
 import { h, ref, computed, onMounted, inject } from 'vue';
-import { useGenericFetchQueries } from '../../api/generic-fetch-querys';
+import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
 import ModalGeneric from './modal-generic';
 import { useToast } from 'vue-toast-notification';
 import {
@@ -225,9 +225,16 @@ export default {
                     'tbody',
                     filteredItems.value.map((data) =>
                       h('tr', { key: data.id }, [
-                        ...props.columns.map((column) =>
-                          h('td', { key: column.id }, data[column.key]),
-                        ),
+                        ...props.columns.map((column) => {
+                          const val = data[column.key];
+                          if (column.key === 'quantity' && Number(val) < 10) {
+                            return h('td', { key: column.id }, [
+                              h('span', {}, String(val)),
+                              h(VIcon, { color: 'warning', class: 'ml-2' }, () => 'mdi-alert'),
+                            ]);
+                          }
+                          return h('td', { key: column.id }, val);
+                        }),
                         h('td', [
                           h(
                             VBtn,

@@ -1,5 +1,10 @@
 export const NAV_ITEMS = [
  {
+  key: 'dashboard',
+  icon: 'mdi-view-dashboard',
+  to: '/'
+ },
+ {
   key: 'products',
   icon: 'mdi-package-variant-closed',
   to: '/products'

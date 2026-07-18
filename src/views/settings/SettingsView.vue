@@ -64,7 +64,7 @@
       }}</v-card-title>
       <v-divider />
       <v-card-text class="pa-4">
-        <div class="d-flex align-center justify-space-between">
+        <div class="d-flex align-center justify-space-between mb-4">
           <span>{{
             isDark ? i18n.t('app.theme.dark') : i18n.t('app.theme.light')
           }}</span>
@@ -72,8 +72,25 @@
             v-model="isDark"
             color="primary"
             hide-details
-            @update:model-value="store.setDarkMode()"
           />
+        </div>
+        <v-divider class="my-4" />
+        <div class="text-subtitle-1 mb-2 font-weight-medium">
+          {{ i18n.t('settings.colorSchemes') }}
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <v-btn
+            v-for="scheme in colorSchemes"
+            :key="scheme.value"
+            :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
+            :variant="
+              store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
+            "
+            size="small"
+            @click="store.setColorScheme(scheme.value)"
+          >
+            {{ scheme.label }}
+          </v-btn>
         </div>
       </v-card-text>
     </v-card>
@@ -148,6 +165,14 @@
     { code: 'fr', label: 'FR' },
     { code: 'ja', label: 'JA' },
     { code: 'ru', label: 'RU' },
+  ];
+
+  const colorSchemes = [
+    { value: 'light', label: 'Default Light' },
+    { value: 'dark', label: 'Default Dark' },
+    { value: 'electric', label: 'Electric Neon' },
+    { value: 'tokyo', label: 'Tokyo Night' },
+    { value: 'newspaper', label: 'Newspaper' },
   ];
 
   const isDark = computed({
