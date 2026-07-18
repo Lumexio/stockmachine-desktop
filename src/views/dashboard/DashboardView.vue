@@ -26,6 +26,20 @@
         </v-card>
       </v-col>
       <v-col cols="12" sm="4">
+        <v-card color="green-darken-1" variant="elevated" elevation="3">
+          <v-card-text class="text-center pa-6">
+            <v-icon size="40" color="white" class="mb-2">mdi-currency-usd</v-icon>
+            <div class="text-h4 font-weight-bold text-white">
+              <v-skeleton-loader v-if="loading" type="text" color="green-darken-1" />
+              <span v-else>${{ formatCurrency(summary?.total_value) }}</span>
+            </div>
+            <div class="text-body-2 text-white mt-1">
+              {{ i18n.t('dashboard.totalValue') }}
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="4">
         <v-card color="warning" variant="elevated" elevation="3" link style="cursor: pointer;" @click="showLowStockDialog = true">
           <v-card-text class="text-center pa-6">
             <v-icon size="40" color="white" class="mb-2"
@@ -273,7 +287,7 @@
         getAll('categories'),
       ]);
       lowStockProducts.value = allProducts
-        .filter(p => Number(p.quantity || 0) < 10)
+        .filter(p => Number(p.quantity || 0) < Number(p.min_stock ?? 10))
         .map(p => ({
           ...p,
           category_name: allCategories.find(c => c.id === p.category_id)?.name || '',
@@ -421,6 +435,11 @@
     return `${sign}${diff} (${before} → ${after})`;
   };
 
+  const formatCurrency = (val) => {
+    if (val === undefined || val === null) return '0.00';
+    return Number(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   async function loadDashboard() {
     loading.value = true;
     isOfflineMode.value = false;
@@ -528,7 +547,8 @@
 
       const totalProducts = localProducts.length;
       const totalStock = localProducts.reduce((sum, p) => sum + Number(p.quantity || 0), 0);
-      const lowStockCount = localProducts.filter(p => Number(p.quantity || 0) < 10).length;
+      const lowStockCount = localProducts.filter(p => Number(p.quantity || 0) < Number(p.min_stock ?? 10)).length;
+      const totalValue = localProducts.reduce((sum, p) => sum + Number(p.quantity || 0) * Number(p.cost_price || 0), 0);
 
       const allHistory = await getAll('operation_history');
       allHistoryList.value = allHistory;
@@ -545,7 +565,8 @@
         total_products: totalProducts,
         total_stock: totalStock,
         low_stock_count: lowStockCount,
-        movements_today: movementsTodayCount
+        movements_today: movementsTodayCount,
+        total_value: totalValue
       };
 
       // Set historyItems from allHistory sorted by created_at desc

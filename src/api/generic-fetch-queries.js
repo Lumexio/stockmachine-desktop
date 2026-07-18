@@ -42,17 +42,18 @@ export function useGenericFetchQueries(endpoint) {
   };
 
   const fetchRelatedData = async () => {
-    const [products, categories, shelves, racks] = await Promise.all([
+    const [products, categories, shelves, racks, suppliers] = await Promise.all([
       getAll('products'),
       getAll('categories'),
       getAll('shelves'),
       getAll('racks'),
+      getAll('suppliers'),
     ]);
     if (isSyncMode()) {
-      Promise.all(['products', 'categories', 'shelves', 'racks'].map(refreshStoreFromBackend))
+      Promise.all(['products', 'categories', 'shelves', 'racks', 'suppliers'].map(refreshStoreFromBackend))
         .then(() => eventBus.emit('refreshData'));
     }
-    return { products, categories, shelves, racks };
+    return { products, categories, shelves, racks, suppliers };
   };
 
   const createMutation = async (newData) => {
@@ -61,13 +62,14 @@ export function useGenericFetchQueries(endpoint) {
     const localId = await add(endpoint, sanitizedData);
     await enqueueOperation({ operation: 'create', endpoint, payload: { ...sanitizedData, id: localId }, localId });
 
-    const storesToLog = ['products', 'categories', 'racks', 'shelves'];
+    const storesToLog = ['products', 'categories', 'racks', 'shelves', 'suppliers'];
     if (storesToLog.includes(endpoint)) {
       const entityTypeMap = {
         products: 'product',
         categories: 'category',
         racks: 'rack',
-        shelves: 'shelf'
+        shelves: 'shelf',
+        suppliers: 'supplier'
       };
       const historyEntry = {
         entity_type: entityTypeMap[endpoint],
@@ -85,7 +87,7 @@ export function useGenericFetchQueries(endpoint) {
 
   const updateMutation = async (updatedData) => {
     const sanitizedData = JSON.parse(JSON.stringify(updatedData));
-    const storesToLog = ['products', 'categories', 'racks', 'shelves'];
+    const storesToLog = ['products', 'categories', 'racks', 'shelves', 'suppliers'];
     let quantityBefore = undefined;
     let quantityAfter = undefined;
     if (storesToLog.includes(endpoint)) {
@@ -104,7 +106,8 @@ export function useGenericFetchQueries(endpoint) {
         products: 'product',
         categories: 'category',
         racks: 'rack',
-        shelves: 'shelf'
+        shelves: 'shelf',
+        suppliers: 'supplier'
       };
       const historyEntry = {
         entity_type: entityTypeMap[endpoint],
@@ -121,7 +124,7 @@ export function useGenericFetchQueries(endpoint) {
   };
 
   const deleteMutation = async (id) => {
-    const storesToLog = ['products', 'categories', 'racks', 'shelves'];
+    const storesToLog = ['products', 'categories', 'racks', 'shelves', 'suppliers'];
     let quantityBefore = undefined;
     let quantityAfter = undefined;
     if (storesToLog.includes(endpoint)) {
@@ -140,7 +143,8 @@ export function useGenericFetchQueries(endpoint) {
         products: 'product',
         categories: 'category',
         racks: 'rack',
-        shelves: 'shelf'
+        shelves: 'shelf',
+        suppliers: 'supplier'
       };
       const historyEntry = {
         entity_type: entityTypeMap[endpoint],

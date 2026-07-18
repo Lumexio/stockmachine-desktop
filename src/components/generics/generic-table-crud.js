@@ -62,6 +62,9 @@ export default {
               rack_name:
                 data.racks.find((rack) => rack.id === product.rack_id)?.name ||
                 '',
+              supplier_name:
+                data.suppliers.find((supplier) => supplier.id === product.supplier_id)?.name ||
+                '',
             }));
             break;
           case 'categories':

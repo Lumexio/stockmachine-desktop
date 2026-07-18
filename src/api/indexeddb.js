@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 
-const dbPromise = openDB('ps', 3, {
+const dbPromise = openDB('ps', 4, {
   upgrade(db, oldVersion) {
     if (oldVersion < 1) {
       // Create 'categories' object store and indexes
@@ -56,6 +56,13 @@ const dbPromise = openDB('ps', 3, {
     if (oldVersion < 3) {
       const historyStore = db.createObjectStore('operation_history', { keyPath: 'id', autoIncrement: true });
       historyStore.createIndex('created_at', 'created_at', { unique: false });
+    }
+
+    if (oldVersion < 4) {
+      const suppliersStore = db.createObjectStore('suppliers', { keyPath: 'id', autoIncrement: true });
+      suppliersStore.createIndex('name', 'name', { unique: false });
+      suppliersStore.createIndex('created_at', 'created_at', { unique: false });
+      suppliersStore.createIndex('updated_at', 'updated_at', { unique: false });
     }
   },
 });

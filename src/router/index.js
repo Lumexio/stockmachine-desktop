@@ -33,6 +33,11 @@ const routes = [
   component: () => import('../views/settings/SettingsView.vue')
  },
  {
+  path: '/suppliers',
+  name: 'Suppliers',
+  component: () => import('../views/suppliers/suppliers-main.vue')
+ },
+ {
   path: '/login',
   name: 'Login',
   component: () => import('../views/auth/LoginView.vue'),

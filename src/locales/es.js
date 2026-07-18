@@ -11,6 +11,7 @@ export default {
     "categories": "Categorías",
     "racks": "Estantes",
     "shelves": "Repisas",
+    "suppliers": "Proveedores",
     "settings": "Ajustes",
     "dashboard": "Panel",
     "history": "Historial"
@@ -68,7 +69,25 @@ export default {
         "shelve_name": "Estante",
         "rack_name": "Rack",
         "quantity": "Cantidad",
-        "description": "Descripción"
+        "description": "Descripción",
+        "supplier_name": "Proveedor",
+        "cost_price": "Costo",
+        "selling_price": "Precio",
+        "min_stock": "Stock Mín"
+      }
+    },
+    "suppliers": {
+      "title": "Gestión de Proveedores",
+      "create": "Crear Proveedor",
+      "edit": "Editar Proveedor",
+      "delete": "Eliminar Proveedor",
+      "columns": {
+        "id": "ID",
+        "name": "Nombre",
+        "contact_name": "Nombre de Contacto",
+        "email": "Correo Electrónico",
+        "phone": "Teléfono",
+        "address": "Dirección"
       }
     },
     "categories": {
@@ -130,7 +149,18 @@ export default {
         "description": "Descripción",
         "category_name": "Categoría",
         "shelve_name": "Estante",
-        "rack_name": "Rack"
+        "rack_name": "Rack",
+        "supplier_name": "Proveedor",
+        "cost_price": "Precio de Costo",
+        "selling_price": "Precio de Venta",
+        "min_stock": "Límite de Stock Mínimo"
+      },
+      "suppliers": {
+        "name": "Nombre",
+        "contact_name": "Nombre de Contacto",
+        "email": "Correo Electrónico",
+        "phone": "Teléfono",
+        "address": "Dirección"
       },
       "categories": {
         "name": "Nombre",
@@ -218,12 +248,14 @@ export default {
     "recentOperations": "Historial de operaciones recientes",
     "noData": "Sin datos disponibles",
     "lowStockAlert": "Alerta de stock bajo",
-    "categoryStock": "Niveles de stock por categoría"
+    "categoryStock": "Niveles de stock por categoría",
+    "totalValue": "Valor Total de Stock"
   },
   "entityTypes": {
     "product": "Producto",
     "category": "Categoría",
     "rack": "Estante",
-    "shelf": "Repisa"
+    "shelf": "Repisa",
+    "supplier": "Proveedor"
   }
 };

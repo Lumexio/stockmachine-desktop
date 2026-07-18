@@ -11,6 +11,7 @@ export default {
     "categories": "Categories",
     "racks": "Racks",
     "shelves": "Shelves",
+    "suppliers": "Suppliers",
     "settings": "Settings",
     "dashboard": "Dashboard",
     "history": "History"
@@ -68,7 +69,25 @@ export default {
         "shelve_name": "Shelve",
         "rack_name": "Rack",
         "quantity": "Quantity",
-        "description": "Description"
+        "description": "Description",
+        "supplier_name": "Supplier",
+        "cost_price": "Cost",
+        "selling_price": "Price",
+        "min_stock": "Min Stock"
+      }
+    },
+    "suppliers": {
+      "title": "Suppliers Management",
+      "create": "Create Supplier",
+      "edit": "Edit Supplier",
+      "delete": "Delete Supplier",
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "contact_name": "Contact Name",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address"
       }
     },
     "categories": {
@@ -130,7 +149,18 @@ export default {
         "description": "Description",
         "category_name": "Category",
         "shelve_name": "Shelve",
-        "rack_name": "Rack"
+        "rack_name": "Rack",
+        "supplier_name": "Supplier",
+        "cost_price": "Cost Price",
+        "selling_price": "Selling Price",
+        "min_stock": "Min Stock Threshold"
+      },
+      "suppliers": {
+        "name": "Name",
+        "contact_name": "Contact Name",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address"
       },
       "categories": {
         "name": "Name",
@@ -218,12 +248,14 @@ export default {
     "recentOperations": "Recent Operations History",
     "noData": "No data available",
     "lowStockAlert": "Low Stock Alert",
-    "categoryStock": "Category Stock Levels"
+    "categoryStock": "Category Stock Levels",
+    "totalValue": "Total Stock Value"
   },
   "entityTypes": {
     "product": "Product",
     "category": "Category",
     "rack": "Rack",
-    "shelf": "Shelf"
+    "shelf": "Shelf",
+    "supplier": "Supplier"
   }
 };

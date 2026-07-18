@@ -25,6 +25,11 @@ export const NAV_ITEMS = [
   to: '/shelves'
  },
  {
+  key: 'suppliers',
+  icon: 'mdi-handshake',
+  to: '/suppliers'
+ },
+ {
   key: 'settings',
   icon: 'mdi-cog',
   to: '/settings'
