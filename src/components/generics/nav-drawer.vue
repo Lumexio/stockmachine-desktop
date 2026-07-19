@@ -26,20 +26,59 @@
         </v-list>
       </v-menu>
     </v-btn>
-    <!-- User info + logout -->
+    <!-- User Profile & Settings side-by-side buttons -->
     <template v-if="auth.isAuthenticated">
-      <v-chip size="small" class="mr-1" prepend-icon="mdi-account">{{ auth.user?.name }}</v-chip>
-      <v-btn icon size="small" @click="logout" :title="i18n.t('auth.logout')">
-        <v-icon>mdi-logout</v-icon>
+      <v-chip
+        to="/profile"
+        size="small"
+        class="mr-2"
+        prepend-icon="mdi-account"
+        variant="outlined"
+      >
+        {{ auth.user?.name }}
+      </v-chip>
+      <v-btn icon size="small" to="/settings" title="Settings" class="mr-2">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
+    </template>
+
+    <template v-else>
+      <v-btn to="/login" variant="outlined" size="small" class="mr-2" prepend-icon="mdi-login">
+        {{ i18n.t('welcome.loginBtn') }}
+      </v-btn>
+      <v-btn icon size="small" to="/settings" title="Settings" class="mr-2">
+        <v-icon>mdi-cog</v-icon>
       </v-btn>
     </template>
   </v-app-bar>
   <v-navigation-drawer app v-model="drawer">
-    <v-list>
+    <v-list nav density="compact">
       <v-list-item :append-icon="item.icon" v-for="item in items" :key="item.title" :to="item.to">
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
+
+    <template #append>
+      <v-divider />
+      <div v-if="auth.isAuthenticated" class="pa-3 d-flex align-center justify-space-between">
+        <v-list-item
+          to="/profile"
+          prepend-icon="mdi-account-circle"
+          :title="auth.user?.name ?? ''"
+          density="compact"
+          class="pa-0 flex-grow-1"
+        >
+          <template #subtitle>
+            <v-chip size="x-small" color="primary" class="mt-1">{{
+              auth.user?.role
+            }}</v-chip>
+          </template>
+        </v-list-item>
+        <v-btn icon size="small" to="/settings" variant="text" title="Settings">
+          <v-icon>mdi-cog</v-icon>
+        </v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 
   <modal-generic ref="modalRef" :title="i18n.t('modals.import.title')" :form-fields="fileUploadFields" mode="create">
