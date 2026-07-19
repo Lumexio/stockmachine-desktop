@@ -34,7 +34,7 @@ const onRefreshed = (newToken) => {
 };
 
 const BACKEND_URL = (
-  import.meta.env.VITE_API_BASE_URL || 'http://165.227.205.129:8080/api/v1'
+  import.meta.env.VITE_API_BASE_URL || 'https://api.stockmachine.online/api/v1'
 ).replace(/\/$/, '');
 
 export const apiFetch = async (path, options = {}) => {

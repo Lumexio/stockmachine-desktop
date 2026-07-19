@@ -183,7 +183,7 @@
   function openRegister() {
     window.api.send('toMain', {
       type: 'openExternal',
-      url: 'http://165.227.205.129:8080/register',
+      url: 'https://app.stockmachine.online/register',
     });
   }
 
