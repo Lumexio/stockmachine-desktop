@@ -6,13 +6,22 @@ export interface User {
   name: string;
   email: string;
   role: string;
+  account_type?: 'individual' | 'team';
+  photo_url?: string | null;
   org_id: number | null;
+  organization?: {
+    id: number;
+    name: string;
+    plan_id: 'free' | 'pro' | 'max';
+    account_type: 'individual' | 'team';
+  } | null;
 }
 
 export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
+  isOfflineMode: boolean;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -21,11 +30,16 @@ export const useAuthStore = defineStore('auth', {
     accessToken: null,
     refreshToken: null,
     user: null,
+    isOfflineMode: true,
   }),
   getters: {
     isAuthenticated: (state): boolean => !!state.accessToken && !!state.user,
   },
   actions: {
+    setOfflineMode(status: boolean): void {
+      this.isOfflineMode = status;
+    },
+
     async login(email: string, password: string): Promise<void> {
       const { backendUrl } = useSettingsStore();
       const res = await fetch(`${backendUrl}/auth/login`, {
@@ -45,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
       this.accessToken = data.access_token;
       this.refreshToken = data.refresh_token;
       this.user = data.user;
+      this.isOfflineMode = false;
     },
 
     async register(dto: {
@@ -71,6 +86,7 @@ export const useAuthStore = defineStore('auth', {
       this.accessToken = data.access_token;
       this.refreshToken = data.refresh_token;
       this.user = data.user;
+      this.isOfflineMode = false;
     },
 
     async refreshTokens(): Promise<void> {
@@ -94,6 +110,7 @@ export const useAuthStore = defineStore('auth', {
       this.accessToken = null;
       this.refreshToken = null;
       this.user = null;
+      this.isOfflineMode = true;
     },
   },
 });

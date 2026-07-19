@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-  import { provide, ref, watch, onMounted, onUnmounted } from 'vue';
+  import { provide, ref, computed, watch, onMounted, onUnmounted } from 'vue';
   import NavDrawer from './components/generics/nav-drawer.vue';
   import WelcomeModal from './components/welcome-modal.vue';
   import useStore from './store';
@@ -71,17 +71,25 @@
   const router = useRouter();
   const { canSync } = useConnectivity();
 
-  const showWelcome = ref(!store.hasSeenWelcome);
+  const showWelcome = computed({
+    get: () => !store.hasSeenWelcome && !auth.isAuthenticated && !auth.isOfflineMode,
+    set: (val) => {
+      if (!val) {
+        store.setHasSeenWelcome();
+      }
+    },
+  });
 
   function onWelcomeLogin() {
     store.setHasSeenWelcome();
-    showWelcome.value = false;
+    auth.setOfflineMode(false);
     router.push('/login');
   }
 
   function onWelcomeOffline() {
     store.setHasSeenWelcome();
-    showWelcome.value = false;
+    auth.setOfflineMode(true);
+    router.push('/');
   }
 
   // Sync state
