@@ -9,30 +9,30 @@ describe('Main Store', () => {
 
   it('should initialize with default light scheme', () => {
     const store = useStore();
-    expect(store.isDarkMode).toBe('light');
-    expect(store.hasDarkMode).toBe('light');
+    expect(store.isDarkMode).toBe('default-light');
+    expect(store.hasDarkMode).toBe('default-light');
   });
 
   it('should toggle dark mode state', () => {
     const store = useStore();
     store.setDarkMode();
-    expect(store.isDarkMode).toBe('dark');
-    expect(store.hasDarkMode).toBe('dark');
+    expect(store.isDarkMode).toBe('default-dark');
+    expect(store.hasDarkMode).toBe('default-dark');
 
     store.setDarkMode();
-    expect(store.isDarkMode).toBe('light');
+    expect(store.isDarkMode).toBe('default-light');
   });
 
   it('should set custom color scheme', () => {
     const store = useStore();
-    store.setColorScheme('electric');
-    expect(store.isDarkMode).toBe('electric');
-    expect(store.hasDarkMode).toBe('electric');
+    store.setColorScheme('electron-neon-dark');
+    expect(store.isDarkMode).toBe('electron-neon-dark');
+    expect(store.hasDarkMode).toBe('electron-neon-dark');
 
-    store.setColorScheme('tokyo');
-    expect(store.isDarkMode).toBe('tokyo');
+    store.setColorScheme('tokyo-night');
+    expect(store.isDarkMode).toBe('tokyo-night');
 
-    store.setColorScheme('newspaper');
-    expect(store.isDarkMode).toBe('newspaper');
+    store.setColorScheme('newspaper-dark');
+    expect(store.isDarkMode).toBe('newspaper-dark');
   });
 });

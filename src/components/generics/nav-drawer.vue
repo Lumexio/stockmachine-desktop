@@ -16,7 +16,7 @@
       <v-badge v-if="pendingCount > 0" :content="pendingCount" color="warning" floating />
     </v-chip>
     <LanguageSelector @change-language="handleLanguageChange" />
-    <v-switch :prepend-icon="iconTheme" class="mr-3" @click="setDark" v-model="darkMode" hide-details inset></v-switch>
+    <v-switch :prepend-icon="iconTheme" class="mr-3" v-model="darkMode" hide-details inset></v-switch>
     <v-btn icon>
       <v-icon>mdi-content-save</v-icon>
       <v-menu offset-y activator="parent">
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, inject } from 'vue';
+import { ref, computed, inject } from 'vue';
 import { useStore } from '../../store';
 import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from "../../api/generic-fetch-queries";
@@ -71,7 +71,7 @@ const store = useStore();
 const i18n = useI18nStore();
 const auth = useAuthStore();
 const router = useRouter();
-const { isOnline, canSync } = useConnectivity();
+const { isOnline } = useConnectivity();
 const props = defineProps({
   items: Array,
 });
@@ -92,27 +92,17 @@ async function logout() {
   router.push('/login');
 }
 
-let iconTheme = computed(() => (darkMode.value ? 'mdi-moon-waning-crescent' : 'mdi-white-balance-sunny'));
+const iconTheme = computed(() => (darkMode.value ? 'mdi-moon-waning-crescent' : 'mdi-white-balance-sunny'));
 const darkMode = computed({
   get() {
-    return store.hasDarkMode === 'dark';
+    return store.isDarkActive;
   },
-  set(value) {
-    store.setDarkMode(value ? 'dark' : 'light');
+  set(val) {
+    if (val !== store.isDarkActive) {
+      store.setDarkMode();
+    }
   }
 });
-
-onMounted(() => {
-  hasDarkMode();
-});
-
-function setDark() {
-  store.setDarkMode(darkMode.value ? 'light' : 'dark');
-}
-
-function hasDarkMode() {
-  return store.hasDarkMode === 'dark';
-}
 
 const toast = useToast();
 const eventBus = inject('eventBus');
@@ -133,7 +123,7 @@ const fileUploadFields = ref([
   {
     key: 'file',
     label: 'Select File',
-    value: [], // Initialize as empty array
+    value: [],
     type: 'file',
     rules: [v => !!v?.length || 'File is required'],
     isFileUpload: true,
@@ -164,14 +154,13 @@ async function handleFileUpload() {
       await new Promise(resolve => setTimeout(resolve, 100));
       eventBus.emit('refreshData');
       toast.success('Data imported and refreshed successfully');
-      fileUploadFields.value[0].value = []; // Reset as empty array
+      fileUploadFields.value[0].value = [];
     } catch (error) {
       toast.error('Error during import');
       console.error(error);
     }
   }
 }
-
 
 const menuItems = computed(() => [
   { ...MENU_ITEMS.EXPORT, title: i18n.t('actions.export') },
@@ -191,10 +180,8 @@ const handleMenuAction = async ({ type, format }) => {
   }
 };
 
-// Add language handling
 const handleLanguageChange = (languageCode) => {
   i18n.setLocale(languageCode);
-  // Emit a custom event for language change
   eventBus.emit('languageChanged', languageCode);
 };
 </script>

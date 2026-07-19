@@ -1,43 +1,117 @@
-import colors from 'vuetify/lib/util/colors'
-
 export default {
- defaultTheme: 'light',
- themes: {
-  light: {
-   dark: false,
-   colors: {
-    primary: colors.red.base,
-    secondary: colors.grey.base,
-    accent: colors.red.accent2,
-    error: colors.red.accent4,
-    info: colors.blue.base,
-    success: colors.green.base,
-    warning: colors.orange.darken1,
-    background: colors.red.lighten5,
-    surface: colors.shades.white,
-    'primary-darken-1': colors.red.darken1,
-    'primary-darken-2': colors.red.darken2,
-    'primary-lighten-1': colors.red.lighten1,
-    'primary-lighten-2': colors.red.lighten2,
-   }
+  defaultTheme: 'default-light',
+  themes: {
+    'default-light': {
+      dark: false,
+      colors: {
+        primary: '#F44336',
+        secondary: '#9E9E9E',
+        accent: '#FF5252',
+        error: '#B71C1C',
+        info: '#2196F3',
+        success: '#4CAF50',
+        warning: '#F57C00',
+        background: '#FFEBEE',
+        surface: '#FFFFFF',
+      },
+    },
+    'default-dark': {
+      dark: true,
+      colors: {
+        primary: '#EF5350',
+        secondary: '#616161',
+        accent: '#FF5252',
+        error: '#B71C1C',
+        info: '#2196F3',
+        success: '#4CAF50',
+        warning: '#F57C00',
+        background: '#1A0F0D',
+        surface: '#2C1814',
+      },
+    },
+    'electron-neon-light': {
+      dark: false,
+      colors: {
+        primary: '#00B4D8',
+        secondary: '#0077B6',
+        accent: '#00F5D4',
+        error: '#D00000',
+        info: '#00B4D8',
+        success: '#38B000',
+        warning: '#FF9209',
+        background: '#E0F7FA',
+        surface: '#FFFFFF',
+      },
+    },
+    'electron-neon-dark': {
+      dark: true,
+      colors: {
+        primary: '#00F5D4',
+        secondary: '#7B2CBF',
+        accent: '#FF007F',
+        error: '#FF0054',
+        info: '#00F5D4',
+        success: '#00F5D4',
+        warning: '#FFBD00',
+        background: '#0A0F1D',
+        surface: '#131B2E',
+      },
+    },
+    'tokyo-day': {
+      dark: false,
+      colors: {
+        primary: '#34548A',
+        secondary: '#89DDF3',
+        accent: '#8839EF',
+        error: '#F7768E',
+        info: '#0DB9D7',
+        success: '#41A6B5',
+        warning: '#E0AF68',
+        background: '#E1E2E7',
+        surface: '#F2F3F7',
+      },
+    },
+    'tokyo-night': {
+      dark: true,
+      colors: {
+        primary: '#7AA2F7',
+        secondary: '#565F89',
+        accent: '#BB9AF7',
+        error: '#F7768E',
+        info: '#7DCFFF',
+        success: '#9ECE6A',
+        warning: '#E0AF68',
+        background: '#1A1B26',
+        surface: '#24283B',
+      },
+    },
+    'newspaper-light': {
+      dark: false,
+      colors: {
+        primary: '#111111',
+        secondary: '#555555',
+        accent: '#000000',
+        error: '#990000',
+        info: '#333333',
+        success: '#227722',
+        warning: '#CC6600',
+        background: '#F4F4F0',
+        surface: '#FFFFFF',
+      },
+    },
+    'newspaper-dark': {
+      dark: true,
+      colors: {
+        primary: '#EAEAEA',
+        secondary: '#AAAAAA',
+        accent: '#FFFFFF',
+        error: '#FF4444',
+        info: '#CCCCCC',
+        success: '#44CC44',
+        warning: '#FFBB33',
+        background: '#121212',
+        surface: '#1E1E1E',
+      },
+    },
   },
-  dark: {
-   dark: true,
-   colors: {
-    primary: colors.red.lighten1,
-    secondary: colors.grey.darken1,
-    accent: colors.red.accent2,
-    error: colors.red.accent4,
-    info: colors.blue.base,
-    success: colors.green.base,
-    warning: colors.orange.darken1,
-    background: '#1A0F0D',
-    surface: '#2C1814',
-    'primary-darken-1': colors.red.darken1,
-    'primary-darken-2': colors.red.darken2,
-    'primary-lighten-1': colors.red.lighten2,
-    'primary-lighten-2': colors.red.lighten3,
-   }
-  }
- }
-}
+};

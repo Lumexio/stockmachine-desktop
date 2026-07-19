@@ -11,10 +11,10 @@ const _isOnline = ref(navigator.onLine);
 async function pingBackend() {
   const settings = useSettingsStore();
   try {
-    const res = await fetch(`${settings.backendUrl}/auth/me`, {
+    const res = await fetch(`${settings.backendUrl}/health`, {
       signal: AbortSignal.timeout(3000),
     });
-    _isOnline.value = res.status === 401 || res.ok;
+    _isOnline.value = res.ok || res.status === 401;
   } catch {
     _isOnline.value = false;
   }

@@ -59,11 +59,10 @@ const router = createRouter({
 /** Check if backend is reachable (non-blocking, 3s timeout). */
 async function isBackendReachable(backendUrl) {
   try {
-    const res = await fetch(`${backendUrl}/auth/me`, {
+    const res = await fetch(`${backendUrl}/health`, {
       signal: AbortSignal.timeout(3000),
     });
-    // 401 = backend is up, just not authenticated
-    return res.status === 401 || res.ok;
+    return res.ok || res.status === 401;
   } catch {
     return false;
   }

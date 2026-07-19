@@ -40,7 +40,7 @@
       }}</v-card-title>
       <v-divider />
       <v-card-text class="pa-4">
-        <div class="d-flex gap-2 flex-wrap">
+        <div class="d-flex ga-2 flex-wrap">
           <v-btn
             v-for="lang in languages"
             :key="lang.code"
@@ -57,7 +57,7 @@
       </v-card-text>
     </v-card>
 
-    <!-- Section 3: Appearance -->
+    <!-- Section 3: Appearance & Dual-Column Color Schemes -->
     <v-card class="mb-6">
       <v-card-title class="text-h6 pa-4">{{
         i18n.t('settings.appearance')
@@ -65,7 +65,7 @@
       <v-divider />
       <v-card-text class="pa-4">
         <div class="d-flex align-center justify-space-between mb-4">
-          <span>{{
+          <span class="font-weight-medium">{{
             isDark ? i18n.t('app.theme.dark') : i18n.t('app.theme.light')
           }}</span>
           <v-switch
@@ -78,20 +78,52 @@
         <div class="text-subtitle-1 mb-2 font-weight-medium">
           {{ i18n.t('settings.colorSchemes') }}
         </div>
-        <div class="d-flex gap-2 flex-wrap">
-          <v-btn
-            v-for="scheme in colorSchemes"
-            :key="scheme.value"
-            :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
-            :variant="
-              store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
-            "
-            size="small"
-            @click="store.setColorScheme(scheme.value)"
-          >
-            {{ scheme.label }}
-          </v-btn>
-        </div>
+
+        <v-row class="mt-1">
+          <!-- Light Themes Column -->
+          <v-col cols="6">
+            <div class="text-subtitle-2 mb-2 font-weight-bold text-medium-emphasis">
+              Light Schemes
+            </div>
+            <div class="d-flex flex-column ga-2">
+              <v-btn
+                v-for="scheme in lightSchemes"
+                :key="scheme.value"
+                :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
+                :variant="
+                  store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
+                "
+                size="small"
+                class="justify-start text-none"
+                @click="store.setColorScheme(scheme.value)"
+              >
+                {{ scheme.label }}
+              </v-btn>
+            </div>
+          </v-col>
+
+          <!-- Dark Themes Column -->
+          <v-col cols="6">
+            <div class="text-subtitle-2 mb-2 font-weight-bold text-medium-emphasis">
+              Dark Schemes
+            </div>
+            <div class="d-flex flex-column ga-2">
+              <v-btn
+                v-for="scheme in darkSchemes"
+                :key="scheme.value"
+                :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
+                :variant="
+                  store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
+                "
+                size="small"
+                class="justify-start text-none"
+                @click="store.setColorScheme(scheme.value)"
+              >
+                {{ scheme.label }}
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
 
@@ -123,7 +155,7 @@
         <p class="text-body-2 text-medium-emphasis mb-4">
           {{ i18n.t('settings.loginToSync') }}
         </p>
-        <div class="d-flex gap-3 flex-wrap">
+        <div class="d-flex ga-3 flex-wrap">
           <v-btn
             color="primary"
             variant="elevated"
@@ -167,17 +199,27 @@
     { code: 'ru', label: 'RU' },
   ];
 
-  const colorSchemes = [
-    { value: 'light', label: 'Default Light' },
-    { value: 'dark', label: 'Default Dark' },
-    { value: 'electric', label: 'Electric Neon' },
-    { value: 'tokyo', label: 'Tokyo Night' },
-    { value: 'newspaper', label: 'Newspaper' },
+  const lightSchemes = [
+    { value: 'default-light', label: 'Default Light' },
+    { value: 'electron-neon-light', label: 'Electron Neon Light' },
+    { value: 'tokyo-day', label: 'Tokyo Day' },
+    { value: 'newspaper-light', label: 'Newspaper Light' },
+  ];
+
+  const darkSchemes = [
+    { value: 'default-dark', label: 'Default Dark' },
+    { value: 'electron-neon-dark', label: 'Electron Neon Dark' },
+    { value: 'tokyo-night', label: 'Tokyo Night' },
+    { value: 'newspaper-dark', label: 'Newspaper Dark' },
   ];
 
   const isDark = computed({
-    get: () => store.isDarkMode === 'dark',
-    set: () => store.setDarkMode(),
+    get: () => store.isDarkActive,
+    set: (val) => {
+      if (val !== store.isDarkActive) {
+        store.setDarkMode();
+      }
+    },
   });
 
   function openRegister() {
