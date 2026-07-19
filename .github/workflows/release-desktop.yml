@@ -1,0 +1,111 @@
+name: Desktop — Release
+
+# Triggered when a version tag is pushed: git tag v1.2.0 && git push --tags
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.2.0)'
+        required: true
+
+jobs:
+  # ── Build Windows installer ──────────────────────────────────────────────────
+  build-windows:
+    name: Build Windows (.exe)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: stockmachine-desktop/package-lock.json
+
+      - name: Install
+        working-directory: stockmachine-desktop
+        run: npm ci
+
+      - name: Build Windows installer
+        working-directory: stockmachine-desktop
+        run: npm run make-win
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: stockmachine-desktop/out/make/**/*.exe
+          retention-days: 3
+
+  # ── Build Linux package ──────────────────────────────────────────────────────
+  build-linux:
+    name: Build Linux (.deb)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: stockmachine-desktop/package-lock.json
+
+      - name: Install
+        working-directory: stockmachine-desktop
+        run: npm ci
+
+      - name: Build Linux package
+        working-directory: stockmachine-desktop
+        run: npm run make-linux
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-package
+          path: stockmachine-desktop/out/make/**/*.deb
+          retention-days: 3
+
+  # ── Create GitHub Release ────────────────────────────────────────────────────
+  release:
+    name: Publish GitHub Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release-assets/windows
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-package
+          path: release-assets/linux
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name || inputs.tag }}
+          name: STOCKMACHINE ${{ github.ref_name || inputs.tag }}
+          generate_release_notes: true
+          files: |
+            release-assets/windows/**/*.exe
+            release-assets/linux/**/*.deb
+          body: |
+            ## STOCKMACHINE ${{ github.ref_name || inputs.tag }}
+
+            ### Downloads
+            | Platform | File |
+            |----------|------|
+            | Windows  | `STOCKMACHINE-*-Setup.exe` |
+            | Linux    | `stockmachine_*_amd64.deb` |
+
+            ### Install
+            **Windows**: Run the `.exe` installer.
+            **Linux**: `sudo dpkg -i stockmachine_*_amd64.deb`
