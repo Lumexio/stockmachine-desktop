@@ -152,27 +152,47 @@
                 </div>
                 
                 <div class="d-flex flex-column ga-3 flex-grow-1 justify-center">
-                  <v-btn
-                    v-if="currentPlan === 'free'"
-                    color="info"
-                    size="large"
-                    variant="tonal"
-                    class="rounded-lg font-weight-bold"
-                    @click="triggerStripeCheckout('pro', userAccountType)"
-                  >
-                    Upgrade to Pro <span class="ml-1 opacity-70">(${{ userAccountType === 'individual' ? '4' : '7' }}/mo)</span>
-                  </v-btn>
+                  <div v-if="currentPlan === 'free'" class="d-flex flex-column ga-2">
+                    <v-btn
+                      color="info"
+                      size="large"
+                      variant="tonal"
+                      class="rounded-lg font-weight-bold w-100"
+                      @click="triggerStripeCheckout('pro', 'individual')"
+                    >
+                      Upgrade to Pro Solo <span class="ml-1 opacity-70">($4/mo)</span>
+                    </v-btn>
+                    <v-btn
+                      color="info"
+                      size="large"
+                      variant="tonal"
+                      class="rounded-lg font-weight-bold w-100"
+                      @click="triggerStripeCheckout('pro', 'team')"
+                    >
+                      Upgrade to Pro Team <span class="ml-1 opacity-70">($7/mo)</span>
+                    </v-btn>
+                  </div>
 
-                  <v-btn
-                    v-if="currentPlan !== 'max'"
-                    color="success"
-                    size="large"
-                    class="rounded-lg font-weight-bold text-white premium-btn shadow-success"
-                    @click="triggerStripeCheckout('max', userAccountType)"
-                  >
-                    Upgrade to Max <span class="ml-1 opacity-90">(${{ userAccountType === 'individual' ? '11.99' : '19.99' }}/mo)</span>
-                    <v-icon right size="small" class="ml-2">mdi-star-four-points</v-icon>
-                  </v-btn>
+                  <div v-if="currentPlan !== 'max'" class="d-flex flex-column ga-2 mt-2">
+                    <v-btn
+                      color="success"
+                      size="large"
+                      class="rounded-lg font-weight-bold text-white premium-btn shadow-success w-100"
+                      @click="triggerStripeCheckout('max', 'individual')"
+                    >
+                      Upgrade to Max Solo <span class="ml-1 opacity-90">($11.99/mo)</span>
+                      <v-icon right size="small" class="ml-2">mdi-star-four-points</v-icon>
+                    </v-btn>
+                    <v-btn
+                      color="success"
+                      size="large"
+                      class="rounded-lg font-weight-bold text-white premium-btn shadow-success w-100"
+                      @click="triggerStripeCheckout('max', 'team')"
+                    >
+                      Upgrade to Max Team <span class="ml-1 opacity-90">($19.99/mo)</span>
+                      <v-icon right size="small" class="ml-2">mdi-star-four-points</v-icon>
+                    </v-btn>
+                  </div>
                   
                   <div v-if="currentPlan === 'max'" class="d-flex align-center justify-center py-8 text-success font-weight-bold text-h6 tracking-tight">
                     <v-icon left size="large" class="mr-2">mdi-check-decagram</v-icon>
@@ -314,9 +334,9 @@ async function applyUpgradeAfterCheckout(targetPlan: 'pro' | 'max', targetAccoun
   try {
     await apiFetch('/billing/upgrade', {
       method: 'POST',
-      body: JSON.stringify({ plan_id: targetPlan, account_type: targetAccountType }), 
+      body: JSON.stringify({ plan_id: targetPlan, account_type: targetAccountType }), // In a real app we'd pass sessionId and verify via webhook or backend API
     });
-    await (auth as any).fetchUser();
+    await auth.fetchUser();
     alert('Subscription upgraded successfully!');
   } catch (e) {
     console.error('Failed to apply upgrade:', e);
@@ -325,7 +345,7 @@ async function applyUpgradeAfterCheckout(targetPlan: 'pro' | 'max', targetAccoun
 
 async function fetchProfile() {
   try {
-    const me = await apiFetch('/auth/me') as { name?: string; photo_url?: string };
+    const me = (await apiFetch('/auth/me')) as { name?: string; photo_url?: string };
     if (me) {
       profileForm.value.name = me.name || auth.user?.name || '';
       profileForm.value.photo_url = me.photo_url || '';
@@ -350,7 +370,7 @@ function onFileChange(event: Event) {
 
 async function fetchTeamMembers() {
   try {
-    const res = await apiFetch('/users') as { data?: Array<any> };
+    const res = (await apiFetch('/users')) as { data?: Array<any> };
     if (res?.data) {
       teamMembers.value = res.data;
     }
@@ -366,7 +386,7 @@ async function updateProfile() {
       method: 'POST',
       body: JSON.stringify(profileForm.value),
     });
-    await (auth as any).fetchUser();
+    await auth.fetchUser();
   } catch (e) {
     console.error(e);
   } finally {
@@ -397,14 +417,14 @@ async function changePassword() {
 
 async function triggerStripeCheckout(targetPlan: 'pro' | 'max', targetAccountType: 'individual' | 'team') {
   try {
-    const res = await apiFetch('/billing/checkout-session', {
+    const res = (await apiFetch('/billing/checkout-session', {
       method: 'POST',
       body: JSON.stringify({ 
         target_plan: targetPlan, 
         target_account_type: targetAccountType,
         return_url: window.location.href.split('?')[0] + '?session_id={CHECKOUT_SESSION_ID}&plan=' + targetPlan + '&type=' + targetAccountType
       }),
-    }) as { checkout_url?: string; client_secret?: string };
+    })) as { checkout_url?: string; client_secret?: string };
     if (res?.client_secret) {
       checkoutClientSecret.value = res.client_secret;
       checkoutModalOpen.value = true;
@@ -425,7 +445,7 @@ async function switchAccountType(targetType: 'individual' | 'team') {
       method: 'POST',
       body: JSON.stringify({ account_type: targetType }),
     });
-    await (auth as any).fetchUser();
+    await auth.fetchUser();
     if (targetType === 'team' && isOwnerOrAdmin.value) {
       fetchTeamMembers();
     }

@@ -40,6 +40,24 @@ export const useAuthStore = defineStore('auth', {
       this.isOfflineMode = status;
     },
 
+    async fetchUser(): Promise<void> {
+      if (!this.accessToken) return;
+      const { backendUrl } = useSettingsStore();
+      try {
+        const res = await fetch(`${backendUrl}/auth/me`, {
+          headers: { Authorization: `Bearer ${this.accessToken}` },
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json?.data) {
+            this.user = json.data;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch current user', e);
+      }
+    },
+
     async login(email: string, password: string): Promise<void> {
       const { backendUrl } = useSettingsStore();
       const res = await fetch(`${backendUrl}/auth/login`, {
@@ -60,6 +78,7 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = data.refresh_token;
       this.user = data.user;
       this.isOfflineMode = false;
+      await this.fetchUser();
     },
 
     async register(dto: {
@@ -87,6 +106,7 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = data.refresh_token;
       this.user = data.user;
       this.isOfflineMode = false;
+      await this.fetchUser();
     },
 
     async refreshTokens(): Promise<void> {
