@@ -38,7 +38,7 @@ const createWindow = () => {
         responseHeaders: {
           ...details.responseHeaders,
           'Content-Security-Policy': [
-            "default-src 'self'; script-src 'self' 'unsafe-eval' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.stripe.com https://api.stockmachine.online http://165.227.205.129:8080 http://localhost:3000; frame-src 'self' https://js.stripe.com https://hooks.stripe.com; font-src 'self' data:;",
+            "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://*.stripe.com; connect-src 'self' https://api.stripe.com https://api.stockmachine.online http://165.227.205.129:8080 http://localhost:3000 https://*.stripe.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://*.stripe.com; font-src 'self' data: https://fonts.gstatic.com;",
           ],
         },
       });
