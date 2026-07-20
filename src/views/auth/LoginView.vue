@@ -62,7 +62,7 @@
         <v-btn variant="text" size="small" @click="router.push('/register')">
           {{ i18n.t('auth.noAccount') }}
         </v-btn>
-        <v-btn variant="text" size="small" @click="router.push('/')">
+        <v-btn variant="text" size="small" @click="continueOffline">
           {{ i18n.t('auth.continueOffline') }}
         </v-btn>
       </v-card-actions>
@@ -103,5 +103,10 @@
     } finally {
       loading.value = false;
     }
+  }
+
+  function continueOffline() {
+    auth.setOfflineMode(true);
+    router.push('/');
   }
 </script>

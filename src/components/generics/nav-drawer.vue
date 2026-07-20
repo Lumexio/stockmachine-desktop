@@ -5,14 +5,13 @@
       {{ i18n.t('app.title') }}
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <!-- Online/offline + pending badge -->
     <v-chip
-      :color="isOnline ? 'success' : 'default'"
-      :prepend-icon="isOnline ? 'mdi-wifi' : 'mdi-wifi-off'"
+      :color="(isOnline && !auth.isOfflineMode) ? 'success' : 'default'"
+      :prepend-icon="(isOnline && !auth.isOfflineMode) ? 'mdi-wifi' : 'mdi-wifi-off'"
       size="small"
       class="mr-2"
     >
-      {{ isOnline ? i18n.t('sync.online') : i18n.t('sync.offline') }}
+      {{ (isOnline && !auth.isOfflineMode) ? i18n.t('sync.online') : i18n.t('sync.offline') }}
       <v-badge v-if="pendingCount > 0" :content="pendingCount" color="warning" floating />
     </v-chip>
     <LanguageSelector @change-language="handleLanguageChange" />
@@ -22,7 +21,7 @@
       <v-menu offset-y activator="parent">
         <v-list>
           <FileMenuItem v-for="item in menuItems" :key="item.type" v-bind="item"
-            :menu-options="Object.values(FILE_FORMATS)" @action="handleMenuAction" />
+            :menu-options="getAllowedFileFormats(item.type)" @action="handleMenuAction" />
         </v-list>
       </v-menu>
     </v-btn>
@@ -37,7 +36,7 @@
       >
         {{ auth.user?.name }}
       </v-chip>
-      <v-btn icon size="small" to="/settings" title="Settings" class="mr-2">
+     <v-btn icon size="small" to="/settings" title="Settings" class="mr-2">
         <v-icon>mdi-cog</v-icon>
       </v-btn>
     </template>
@@ -60,18 +59,18 @@
 
     <template #append>
       <v-divider />
-      <div v-if="auth.isAuthenticated" class="pa-3 d-flex align-center justify-space-between">
+      <div v-if="auth.isAuthenticated" class="ma-2 d-flex align-center justify-space-between">
         <v-list-item
           to="/profile"
+          rounded="xl"
           prepend-icon="mdi-account-circle"
           :title="auth.user?.name ?? ''"
-          density="compact"
-          class="pa-0 flex-grow-1"
+          class="pa-2 flex-grow-1"
         >
           <template #subtitle>
-            <v-chip size="x-small" color="primary" class="mt-1">{{
-              auth.user?.role
-            }}</v-chip>
+            <v-chip size="x-small" color="primary" class="mt-1">
+              {{ auth.user?.account_type === 'individual' ? 'Individual' : (auth.user?.role || '') }}
+            </v-chip>
           </template>
         </v-list-item>
         <v-btn icon size="small" to="/settings" variant="text" title="Settings">
@@ -205,6 +204,16 @@ const menuItems = computed(() => [
   { ...MENU_ITEMS.EXPORT, title: i18n.t('actions.export') },
   { ...MENU_ITEMS.IMPORT, title: i18n.t('actions.import') }
 ]);
+
+const getAllowedFileFormats = (type) => {
+  const formats = Object.values(FILE_FORMATS);
+  if (type === 'import') return formats;
+  const plan = auth.user?.organization?.plan_id || 'free';
+  if (plan === 'free') {
+    return formats.filter(f => f.format === 'xlsx');
+  }
+  return formats;
+};
 
 const handleMenuAction = async ({ type, format }) => {
   try {

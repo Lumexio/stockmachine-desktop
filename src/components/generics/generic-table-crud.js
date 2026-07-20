@@ -129,7 +129,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to create data:', error);
-          toast.error(i18n.t('messages.error.create'));
+          toast.error(error.message || i18n.t('messages.error.create'));
         }
       },
       async update() {
@@ -143,7 +143,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to update data:', error);
-          toast.error(i18n.t('messages.error.update'));
+          toast.error(error.message || i18n.t('messages.error.update'));
         }
       },
       async delete() {
@@ -156,7 +156,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to delete data:', error);
-          toast.error(i18n.t('messages.error.delete'));
+          toast.error(error.message || i18n.t('messages.error.delete'));
         }
       },
     };
