@@ -38,7 +38,7 @@ const createWindow = () => {
         responseHeaders: {
           ...details.responseHeaders,
           'Content-Security-Policy': [
-            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.stockmachine.online http://165.227.205.129:8080 http://localhost:3000; font-src 'self' data:;",
+            "default-src 'self'; script-src 'self' 'unsafe-eval' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' https://api.stripe.com https://api.stockmachine.online http://165.227.205.129:8080 http://localhost:3000; frame-src 'self' https://js.stripe.com https://hooks.stripe.com; font-src 'self' data:;",
           ],
         },
       });

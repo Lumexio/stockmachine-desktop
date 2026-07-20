@@ -1,22 +1,48 @@
 <template>
-  <v-dialog v-model="isOpen" max-width="600" persistent>
-    <v-card>
-      <v-card-title class="d-flex justify-space-between align-center px-4 py-3">
-        <span class="text-h6">Complete Subscription</span>
-        <v-btn icon="mdi-close" variant="text" size="small" @click="closeModal" />
+  <v-dialog v-model="isOpen" max-width="600" persistent transition="dialog-bottom-transition">
+    <v-card class="glass-modal rounded-xl border-thin">
+      <v-card-title class="d-flex justify-space-between align-center px-6 py-4">
+        <span class="text-h5 font-weight-bold tracking-tight">Complete Subscription</span>
+        <v-btn icon="mdi-close" variant="tonal" size="small" rounded="lg" @click="closeModal" />
       </v-card-title>
       
-      <v-divider />
+      <v-divider class="opacity-20" />
 
-      <v-card-text class="pa-4" style="min-height: 400px;">
-        <div v-if="loading" class="d-flex justify-center py-8">
-          <v-progress-circular indeterminate color="primary" />
+      <v-card-text class="pa-6" style="min-height: 400px; position: relative;">
+        <!-- Premium Skeleton Loader -->
+        <div v-if="loading" class="skeleton-wrapper position-absolute w-100 h-100 top-0 left-0 pa-6">
+          <v-skeleton-loader type="list-item-two-line, image, list-item-three-line, actions" class="bg-transparent" />
         </div>
-        <div id="checkout-mount-point"></div>
+        
+        <!-- Stripe Elements Mount Point -->
+        <div id="checkout-mount-point" :class="{'opacity-0': loading, 'checkout-ready': !loading}"></div>
       </v-card-text>
     </v-card>
   </v-dialog>
 </template>
+
+<style scoped>
+.glass-modal {
+  background: rgba(var(--v-theme-surface), 0.75) !important;
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.1);
+}
+
+.tracking-tight {
+  letter-spacing: -0.025em !important;
+}
+
+.skeleton-wrapper {
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.checkout-ready {
+  transition: opacity 0.5s ease 0.1s;
+}
+</style>
 
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
