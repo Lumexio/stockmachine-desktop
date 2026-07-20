@@ -57,6 +57,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
   (e: 'closed'): void;
+  (e: 'success'): void;
 }>();
 
 const isOpen = ref(props.modelValue);
@@ -84,6 +85,10 @@ async function initializeCheckout() {
 
     checkoutInstance = await (stripe as any).initEmbeddedCheckout({
       clientSecret: props.clientSecret,
+      onComplete: () => {
+        emit('success');
+        closeModal();
+      }
     });
     
     checkoutInstance?.mount('#checkout-mount-point');

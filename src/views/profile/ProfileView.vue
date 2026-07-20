@@ -209,8 +209,13 @@
     <!-- Team Administration (Visible ONLY for Team Accounts & Owner/Admin) -->
     <v-card v-if="auth.isAuthenticated && userAccountType === 'team' && isOwnerOrAdmin" class="mb-6">
       <v-card-title class="text-h6 pa-4 d-flex align-center justify-space-between">
-        <span>Team Member Administration</span>
-        <v-chip color="info" size="small">{{ teamMembers.length }} Members</v-chip>
+        <div class="d-flex align-center">
+          <span>Team Member Administration</span>
+          <v-chip color="info" size="small" class="ml-3">{{ teamMembers.length }} Members</v-chip>
+        </div>
+        <v-btn color="primary" size="small" prepend-icon="mdi-account-plus" @click="inviteModalOpen = true">
+          Invite Member
+        </v-btn>
       </v-card-title>
       <v-divider />
       <v-card-text class="pa-4">
@@ -254,7 +259,56 @@
       v-model="checkoutModalOpen"
       :clientSecret="checkoutClientSecret"
       @closed="onCheckoutClosed"
+      @success="onCheckoutSuccess"
     />
+
+    <!-- Invite Member Modal -->
+    <v-dialog v-model="inviteModalOpen" max-width="500">
+      <v-card>
+        <v-card-title class="text-h6 pa-4 bg-primary text-white d-flex justify-space-between align-center">
+          Invite a Team Member
+          <v-btn icon="mdi-close" variant="text" size="small" @click="inviteModalOpen = false"></v-btn>
+        </v-card-title>
+        <v-card-text class="pa-6">
+          <v-form @submit.prevent="sendInvite" ref="inviteFormRef">
+            <p class="text-body-2 mb-4">
+              Send an email invitation. They will receive a 6-character code to join your team.
+            </p>
+            <v-text-field
+              v-model="inviteForm.email"
+              label="Email Address"
+              type="email"
+              variant="outlined"
+              density="comfortable"
+              class="mb-3"
+              required
+            />
+            <v-select
+              v-model="inviteForm.role"
+              :items="[{title: 'Member', value: 'member'}, {title: 'Admin', value: 'admin'}]"
+              label="Role"
+              variant="outlined"
+              density="comfortable"
+              class="mb-4"
+              required
+            />
+            <v-alert v-if="inviteSuccess" type="success" variant="tonal" class="mb-4 text-caption">
+              Invitation sent successfully! Code: <strong>{{ inviteCode }}</strong>
+              <div v-if="invitePreviewUrl" class="mt-2">
+                <a :href="invitePreviewUrl" target="_blank">View Test Email</a>
+              </div>
+            </v-alert>
+            <v-alert v-if="inviteError" type="error" variant="tonal" class="mb-4 text-caption">
+              {{ inviteError }}
+            </v-alert>
+            <div class="d-flex justify-end ga-2 mt-4">
+              <v-btn variant="text" @click="inviteModalOpen = false">Cancel</v-btn>
+              <v-btn color="primary" type="submit" :loading="sendingInvite">Send Invite</v-btn>
+            </div>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -275,7 +329,18 @@ const savingProfile = ref(false);
 const savingPassword = ref(false);
 const checkoutModalOpen = ref(false);
 const checkoutClientSecret = ref<string | null>(null);
+const activeTargetPlan = ref<'pro' | 'max' | null>(null);
+const activeTargetAccountType = ref<'individual' | 'team' | null>(null);
 const teamMembers = ref<Array<{ id: number; name: string; email: string; role: string }>>([]);
+
+const inviteFormRef = ref(null);
+const inviteModalOpen = ref(false);
+const sendingInvite = ref(false);
+const inviteSuccess = ref(false);
+const inviteCode = ref('');
+const invitePreviewUrl = ref('');
+const inviteError = ref('');
+const inviteForm = ref({ email: '', role: 'member' });
 
 const profileForm = ref({
   name: auth.user?.name || '',
@@ -416,13 +481,15 @@ async function changePassword() {
 }
 
 async function triggerStripeCheckout(targetPlan: 'pro' | 'max', targetAccountType: 'individual' | 'team') {
+  activeTargetPlan.value = targetPlan;
+  activeTargetAccountType.value = targetAccountType;
   try {
     const res = (await apiFetch('/billing/checkout-session', {
       method: 'POST',
       body: JSON.stringify({ 
         target_plan: targetPlan, 
         target_account_type: targetAccountType,
-        return_url: window.location.href.split('?')[0] + '?session_id={CHECKOUT_SESSION_ID}&plan=' + targetPlan + '&type=' + targetAccountType
+        return_url: 'https://stockmachine.online/app/return' // Fallback for backend validation
       }),
     })) as { checkout_url?: string; client_secret?: string };
     if (res?.client_secret) {
@@ -437,6 +504,15 @@ async function triggerStripeCheckout(targetPlan: 'pro' | 'max', targetAccountTyp
 
 function onCheckoutClosed() {
   checkoutClientSecret.value = null;
+  activeTargetPlan.value = null;
+  activeTargetAccountType.value = null;
+}
+
+async function onCheckoutSuccess() {
+  if (activeTargetPlan.value && activeTargetAccountType.value) {
+    await applyUpgradeAfterCheckout(activeTargetPlan.value, activeTargetAccountType.value, 'embedded-success');
+    checkoutModalOpen.value = false;
+  }
 }
 
 async function switchAccountType(targetType: 'individual' | 'team') {
@@ -451,6 +527,43 @@ async function switchAccountType(targetType: 'individual' | 'team') {
     }
   } catch (e) {
     console.error(e);
+  }
+}
+
+async function sendInvite() {
+  inviteSuccess.value = false;
+  inviteError.value = '';
+  sendingInvite.value = true;
+  
+  try {
+    const res = await apiFetch('/invitations', {
+      method: 'POST',
+      body: JSON.stringify(inviteForm.value),
+    });
+    inviteSuccess.value = true;
+    inviteForm.value.email = '';
+    
+    // In development mode with Ethereal mail, we might return the code/previewUrl directly
+    if (res && typeof res === 'object') {
+      const data = res as any;
+      if (data.preview_url) {
+        invitePreviewUrl.value = data.preview_url;
+      }
+    }
+    
+    // Auto close modal after a few seconds if successful
+    setTimeout(() => {
+      if (inviteModalOpen.value && inviteSuccess.value) {
+         inviteModalOpen.value = false;
+         inviteSuccess.value = false;
+         invitePreviewUrl.value = '';
+      }
+    }, 4000);
+  } catch (e: any) {
+    console.error(e);
+    inviteError.value = e.message || 'Failed to send invitation.';
+  } finally {
+    sendingInvite.value = false;
   }
 }
 

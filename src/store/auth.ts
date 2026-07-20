@@ -22,6 +22,7 @@ export interface AuthState {
   refreshToken: string | null;
   user: User | null;
   isOfflineMode: boolean;
+  pendingInviteCode: string | null;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -31,6 +32,7 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: null,
     user: null,
     isOfflineMode: true,
+    pendingInviteCode: null,
   }),
   getters: {
     isAuthenticated: (state): boolean => !!state.accessToken && !!state.user,
@@ -38,6 +40,10 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     setOfflineMode(status: boolean): void {
       this.isOfflineMode = status;
+    },
+    
+    setPendingInviteCode(code: string | null): void {
+      this.pendingInviteCode = code;
     },
 
     async fetchUser(): Promise<void> {
@@ -79,6 +85,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = data.user;
       this.isOfflineMode = false;
       await this.fetchUser();
+      await this.processPendingInvite();
     },
 
     async register(dto: {
@@ -107,6 +114,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = data.user;
       this.isOfflineMode = false;
       await this.fetchUser();
+      await this.processPendingInvite();
     },
 
     async refreshTokens(): Promise<void> {
@@ -131,6 +139,30 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = null;
       this.user = null;
       this.isOfflineMode = true;
+      this.pendingInviteCode = null;
+    },
+
+    async processPendingInvite(): Promise<void> {
+      if (!this.pendingInviteCode || !this.accessToken) return;
+      const { backendUrl } = useSettingsStore();
+      try {
+        const res = await fetch(`${backendUrl}/invitations/accept`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.accessToken}`
+          },
+          body: JSON.stringify({ code: this.pendingInviteCode }),
+        });
+        if (res.ok) {
+          this.pendingInviteCode = null;
+          await this.fetchUser();
+        } else {
+          console.error('Failed to accept pending invite');
+        }
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 });
