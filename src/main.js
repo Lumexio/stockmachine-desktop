@@ -15,6 +15,11 @@ if (squirrelStartup) {
   app.quit();
 }
 
+// Suppress GPU/VSync errors on Linux
+app.commandLine.appendSwitch('disable-gpu-vsync');
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('disable-software-rasterizer');
+
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,

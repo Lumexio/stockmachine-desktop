@@ -22,15 +22,15 @@ let columns = ref([
 let endpoint = ref('products');
 let formFields = ref([
   { key: 'name', label: i18n.t('forms.label.products.name'), value: '', rules: [v => !!v || i18n.t('forms.validation.required')] },
-  { key: 'quantity', label: i18n.t('forms.label.products.quantity'), value: '', rules: [v => !!v || i18n.t('forms.validation.required')] },
+  { key: 'quantity', type: 'number', label: i18n.t('forms.label.products.quantity'), value: '', rules: [v => !!v || i18n.t('forms.validation.required')] },
   { key: 'description', label: i18n.t('forms.label.products.description'), value: '' },
   { key: 'category_name', fk: 'category_id', label: i18n.t('forms.label.products.category_name'), value: '', selector: true },
   { key: 'shelve_name', fk: 'shelve_id', label: i18n.t('forms.label.products.shelve_name'), value: '', selector: true },
   { key: 'rack_name', fk: 'rack_id', label: i18n.t('forms.label.products.rack_name'), value: '', selector: true },
   { key: 'supplier_name', fk: 'supplier_id', label: i18n.t('forms.label.products.supplier_name'), value: '', selector: true },
-  { key: 'cost_price', label: i18n.t('forms.label.products.cost_price'), value: 0 },
-  { key: 'selling_price', label: i18n.t('forms.label.products.selling_price'), value: 0 },
-  { key: 'min_stock', label: i18n.t('forms.label.products.min_stock'), value: 10 },
+  { key: 'cost_price', type: 'number', label: i18n.t('forms.label.products.cost_price'), value: 0 },
+  { key: 'selling_price', type: 'number', label: i18n.t('forms.label.products.selling_price'), value: 0 },
+  { key: 'min_stock', type: 'number', label: i18n.t('forms.label.products.min_stock'), value: 10 },
 ]);
 let relations = ref([
   { key: 'category_id', endpoint: 'categories' },

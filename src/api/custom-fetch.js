@@ -39,12 +39,13 @@ const BACKEND_URL = (
 
 export const apiFetch = async (path, options = {}) => {
   const base = BACKEND_URL;
-  const { accessToken } = getAuthState();
+  const { accessToken, currentLocationId } = getAuthState();
 
   const buildHeaders = (token) => ({
     'Content-Type': 'application/json',
     ...(options.headers || {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(currentLocationId ? { 'X-Location-Id': String(currentLocationId) } : {}),
   });
 
   const doFetch = (token) =>

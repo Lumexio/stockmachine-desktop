@@ -17,12 +17,20 @@ export interface User {
   } | null;
 }
 
+export interface Location {
+  id: number;
+  name: string;
+  org_id: number;
+}
+
 export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
   isOfflineMode: boolean;
   pendingInviteCode: string | null;
+  currentLocationId: number | null;
+  locations: Location[];
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -33,6 +41,8 @@ export const useAuthStore = defineStore('auth', {
     user: null,
     isOfflineMode: true,
     pendingInviteCode: null,
+    currentLocationId: null,
+    locations: [],
   }),
   getters: {
     isAuthenticated: (state): boolean => !!state.accessToken && !!state.user,
@@ -46,6 +56,29 @@ export const useAuthStore = defineStore('auth', {
       this.pendingInviteCode = code;
     },
 
+    setCurrentLocationId(id: number | null): void {
+      this.currentLocationId = id;
+    },
+
+    async fetchLocations(): Promise<void> {
+      if (!this.accessToken || !this.user?.org_id) return;
+      const { backendUrl } = useSettingsStore();
+      try {
+        const res = await fetch(`${backendUrl}/organizations/${this.user.org_id}/locations`, {
+          headers: { Authorization: `Bearer ${this.accessToken}` },
+        });
+        if (res.ok) {
+          const json = await res.json();
+          this.locations = json.data || [];
+          if (this.locations.length > 0 && !this.currentLocationId) {
+            this.currentLocationId = this.locations[0].id;
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch locations', e);
+      }
+    },
+
     async fetchUser(): Promise<void> {
       if (!this.accessToken) return;
       const { backendUrl } = useSettingsStore();
@@ -57,6 +90,7 @@ export const useAuthStore = defineStore('auth', {
           const json = await res.json();
           if (json?.data) {
             this.user = json.data;
+            await this.fetchLocations();
           }
         }
       } catch (e) {

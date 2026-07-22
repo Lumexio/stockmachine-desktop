@@ -25,6 +25,41 @@
         </v-list>
       </v-menu>
     </v-btn>
+
+    <!-- Location Switcher (Admin/Owner only) -->
+    <v-menu v-if="auth.isAuthenticated && (auth.user?.role === 'owner' || auth.user?.role === 'admin')" offset-y transition="scale-transition">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" variant="tonal" class="mr-2 text-none rounded-pill px-4" prepend-icon="mdi-map-marker">
+          {{ auth.locations?.find(l => l.id === auth.currentLocationId)?.name || 'Select Location' }}
+          <v-icon end size="small">mdi-chevron-down</v-icon>
+        </v-btn>
+      </template>
+      <v-list elevation="8" rounded="xl" class="pa-2 mt-1" min-width="200">
+        <v-list-item
+          v-for="loc in auth.locations"
+          :key="loc.id"
+          @click="switchLocation(loc.id)"
+          :active="loc.id === auth.currentLocationId"
+          color="primary"
+          rounded="lg"
+          class="mb-1"
+        >
+          <template v-slot:prepend v-if="loc.id === auth.currentLocationId">
+            <v-icon color="primary" size="small" class="mr-2">mdi-check-circle</v-icon>
+          </template>
+          <template v-slot:prepend v-else>
+            <div style="width: 28px;"></div>
+          </template>
+          <v-list-item-title :class="{'font-weight-bold': loc.id === auth.currentLocationId}">{{ loc.name }}</v-list-item-title>
+        </v-list-item>
+        <v-divider class="my-2"></v-divider>
+        <v-list-item @click="createLocationModal = true" rounded="lg" color="primary" class="hover-primary-lighten">
+          <v-list-item-title class="text-primary font-weight-bold">
+            <v-icon start>mdi-plus-circle</v-icon> Create New Location
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
     <!-- User Profile & Settings side-by-side buttons -->
     <template v-if="auth.isAuthenticated">
       <v-chip
@@ -88,11 +123,33 @@
       </v-btn>
     </template>
   </modal-generic>
+
+  <!-- Create Location Modal -->
+  <v-dialog v-model="createLocationModal" max-width="400">
+    <v-card>
+      <v-card-title>Create New Location</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="newLocationName"
+          label="Location Name"
+          variant="outlined"
+          autofocus
+          @keyup.enter="handleCreateLocation"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn variant="text" @click="createLocationModal = false">Cancel</v-btn>
+        <v-btn color="primary" variant="elevated" :loading="creatingLocation" @click="handleCreateLocation">Create</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
 import { ref, computed, inject } from 'vue';
 import { useStore } from '../../store';
+import { useSettingsStore } from '../../store/settings';
 import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from "../../api/generic-fetch-queries";
 import ModalGeneric from './modal-generic.js';
@@ -128,6 +185,46 @@ setInterval(refreshPendingCount, 5000);
 async function logout() {
   auth.logout();
   router.push('/login');
+}
+
+function switchLocation(id) {
+  auth.setCurrentLocationId(id);
+  eventBus.emit('refreshData');
+}
+
+const createLocationModal = ref(false);
+const newLocationName = ref('');
+const creatingLocation = ref(false);
+
+async function handleCreateLocation() {
+  if (!newLocationName.value || !auth.user?.org_id) return;
+  creatingLocation.value = true;
+  try {
+    const res = await fetch(`${useSettingsStore().backendUrl}/organizations/${auth.user.org_id}/locations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.accessToken}`
+      },
+      body: JSON.stringify({ name: newLocationName.value })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Failed to create location');
+    }
+    await auth.fetchLocations();
+    createLocationModal.value = false;
+    newLocationName.value = '';
+    toast.success('Location created successfully');
+    
+    // Switch to the new location if possible
+    const newLoc = auth.locations[auth.locations.length - 1];
+    if (newLoc) switchLocation(newLoc.id);
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    creatingLocation.value = false;
+  }
 }
 
 const iconTheme = computed(() => (darkMode.value ? 'mdi-moon-waning-crescent' : 'mdi-white-balance-sunny'));
