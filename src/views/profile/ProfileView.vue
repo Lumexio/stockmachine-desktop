@@ -139,8 +139,8 @@
           </v-col>
 
           <v-col cols="12" md="6">
-            <v-card class="pa-1 h-100 premium-card-wrapper rounded-xl elevation-4 d-flex">
-              <div class="pa-4 flex-grow-1 premium-card-inner rounded-lg d-flex flex-column">
+            <v-card class="pa-1 h-100  rounded-xl elevation-4 d-flex">
+              <div class="pa-4 flex-grow-1  rounded-lg d-flex flex-column">
                 <div class="d-flex justify-space-between align-start mb-2">
                   <div>
                     <div class="text-h5 font-weight-black tracking-tight bg-clip-text text-primary">Upgrade Plan</div>
@@ -150,7 +150,7 @@
                   </div>
                   <v-icon color="primary" size="x-large" class="glow-icon">mdi-rocket-launch</v-icon>
                 </div>
-                
+
                 <div class="d-flex flex-column ga-3 flex-grow-1 justify-center">
                   <div v-if="currentPlan === 'free'" class="d-flex flex-column ga-2">
                     <v-btn
@@ -193,7 +193,7 @@
                       <v-icon right size="small" class="ml-2">mdi-star-four-points</v-icon>
                     </v-btn>
                   </div>
-                  
+
                   <div v-if="currentPlan === 'max'" class="d-flex align-center justify-center py-8 text-success font-weight-bold text-h6 tracking-tight">
                     <v-icon left size="large" class="mr-2">mdi-check-decagram</v-icon>
                     You have the Max Plan!
@@ -377,7 +377,7 @@ onMounted(async () => {
     if (userAccountType.value === 'team' && isOwnerOrAdmin.value) {
       fetchTeamMembers();
     }
-    
+
     // Stripe automatic checkout integration
     const plan = route.query.plan as string;
     const type = route.query.type as string;
@@ -486,8 +486,8 @@ async function triggerStripeCheckout(targetPlan: 'pro' | 'max', targetAccountTyp
   try {
     const res = (await apiFetch('/billing/checkout-session', {
       method: 'POST',
-      body: JSON.stringify({ 
-        target_plan: targetPlan, 
+      body: JSON.stringify({
+        target_plan: targetPlan,
         target_account_type: targetAccountType,
         return_url: 'https://stockmachine.online/app/return' // Fallback for backend validation
       }),
@@ -534,7 +534,7 @@ async function sendInvite() {
   inviteSuccess.value = false;
   inviteError.value = '';
   sendingInvite.value = true;
-  
+
   try {
     const res = await apiFetch('/invitations', {
       method: 'POST',
@@ -542,7 +542,7 @@ async function sendInvite() {
     });
     inviteSuccess.value = true;
     inviteForm.value.email = '';
-    
+
     // In development mode with Ethereal mail, we might return the code/previewUrl directly
     if (res && typeof res === 'object') {
       const data = res as any;
@@ -550,7 +550,7 @@ async function sendInvite() {
         invitePreviewUrl.value = data.preview_url;
       }
     }
-    
+
     // Auto close modal after a few seconds if successful
     setTimeout(() => {
       if (inviteModalOpen.value && inviteSuccess.value) {
