@@ -58,7 +58,7 @@
     "idb": "^8.0.0",
     "minify-css-string": "^1.0.0",
     "pinia": "^2.1.4",
-    "pinia-plugin-persistedstate": "^4.0.1",
+    "pinia-plugin-persistedstate": "3.2.3",
     "update-electron-app": "^3.1.1",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.4.38",
