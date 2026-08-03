@@ -129,7 +129,8 @@
   });
 
   // Handle forced logout (e.g. from apiFetch interceptor)
-  const handleAuthLogout = () => {
+  const handleAuthLogout = async () => {
+    import('./api/indexeddb').then(({ clearAllQueued }) => clearAllQueued());
     auth.logout();
     router.push('/login');
   };

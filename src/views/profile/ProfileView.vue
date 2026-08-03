@@ -318,6 +318,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useI18nStore } from '@/store/i18n';
 import { useAuthStore } from '@/store/auth';
 import { apiFetch } from '@/api/custom-fetch';
+import { getQueueLength, clearAllQueued } from '@/api/indexeddb';
 import CheckoutModal from './CheckoutModal.vue';
 
 const route = useRoute();
@@ -567,7 +568,14 @@ async function sendInvite() {
   }
 }
 
-function logout(): void {
+async function logout(): Promise<void> {
+  const pending = await getQueueLength();
+  if (pending > 0) {
+    if (!window.confirm('You have unsynced offline data. Logging out will discard these changes. Continue?')) {
+      return;
+    }
+    await clearAllQueued();
+  }
   auth.logout();
   router.push('/login');
 }

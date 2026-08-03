@@ -150,6 +150,12 @@ export const getQueueLength = async () => {
   return db.count('sync_queue');
 };
 
+/** Clear all pending operations (e.g. on logout) to prevent cross-account leaks */
+export const clearAllQueued = async () => {
+  const db = await dbPromise;
+  return db.clear('sync_queue');
+};
+
 // ── ID map helpers ────────────────────────────────────────────────────────────
 
 /**
