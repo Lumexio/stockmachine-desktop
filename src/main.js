@@ -3,13 +3,7 @@ import { join } from 'node:path';
 import squirrelStartup from 'electron-squirrel-startup';
 import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
 
-updateElectronApp({
-  updateSource: {
-    repo: 'Lumexio/ps-electron',
-    type: UpdateSourceType.ElectronPublicUpdateService,
-  },
-  updateInterval: '5 minutes',
-});
+updateElectronApp();
 
 if (squirrelStartup) {
   app.quit();

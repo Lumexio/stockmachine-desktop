@@ -28,7 +28,7 @@
     "provider": "github",
     "releaseType": "release"
   },
-  "repository": "https://github.com/Lumexio/ps-electron.git",
+  "repository": "https://github.com/Lumexio/stockmachine-desktop.git",
   "config": {
     "forge": "./forge.config.mjs"
   },

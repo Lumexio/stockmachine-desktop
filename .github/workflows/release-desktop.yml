@@ -35,7 +35,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: out/make/**/*.exe
+          path: |
+            out/make/**/*.exe
+            out/make/**/*.nupkg
+            out/make/**/RELEASES
           retention-days: 3
 
   # ── Build Linux package ──────────────────────────────────────────────────────
@@ -92,6 +95,8 @@ jobs:
           generate_release_notes: true
           files: |
             release-assets/windows/**/*.exe
+            release-assets/windows/**/*.nupkg
+            release-assets/windows/**/RELEASES
             release-assets/linux/**/*.deb
           body: |
             ## STOCKMACHINE ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
