@@ -23,4 +23,25 @@ export default createVuetify({
     defaultTheme: 'default-light',
     themes: theme.themes,
   },
+  defaults: {
+    VCard: {
+      elevation: 0,
+      border: true,
+      rounded: 'xl',
+    },
+    VBtn: {
+      variant: 'flat',
+      rounded: 'pill',
+    },
+    VTextField: {
+      variant: 'solo-filled',
+      flat: true,
+      rounded: 'pill',
+    },
+    VSelect: {
+      variant: 'solo-filled',
+      flat: true,
+      rounded: 'pill',
+    },
+  },
 })
