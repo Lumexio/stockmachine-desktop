@@ -21,7 +21,8 @@ export default {
     persistent: Boolean,
     width: [String, Number],
     fullscreen: Boolean,
-    scrollable: Boolean
+    scrollable: Boolean,
+    error: String
   },
   setup(props, { slots, expose }) {
     const i18n = useI18nStore();
@@ -110,14 +111,21 @@ export default {
       default: () => h(VCard, {}, {
         default: () => [
           h(VCardTitle, {}, () => props.title),
-          h(VCardText, {}, () => {
-            if (props.mode === 'delete') {
-              return h('div', {
-                class: 'text-h6 text-center pa-4',
-                style: 'min-height: 100px; display: flex; align-items: center; justify-content: center;'
-              }, i18n.t('modals.deleteConfirm'));
-            }
-            return h(VRow, {}, () => props.formFields.map(input =>
+          h(VCardText, {}, () => [
+            props.error ? h('div', { class: 'mb-4' }, [
+              h('div', { class: 'v-alert v-theme--default-light v-alert--variant-tonal text-error bg-error-lighten-4 pa-4 rounded-xl d-flex align-center' }, [
+                h(VIcon, { class: 'mr-2' }, () => 'mdi-alert-circle'),
+                h('span', props.error)
+              ])
+            ]) : null,
+            (() => {
+              if (props.mode === 'delete') {
+                return h('div', {
+                  class: 'text-h6 text-center pa-4',
+                  style: 'min-height: 100px; display: flex; align-items: center; justify-content: center;'
+                }, i18n.t('modals.deleteConfirm'));
+              }
+              return h(VRow, {}, () => props.formFields.map(input =>
               h(VCol, { cols: '12', key: input.key }, () =>
                 input.selector
                   ? h(VSelect, {
@@ -175,14 +183,14 @@ export default {
                     })
               )
             ));
-          }),
-          slots.default && h(VCardText, {}, () => slots.default()),
+            })()
+          ]),
+          slots.default && h(VCardText, { class: 'pa-4 pt-0' }, () => slots.default()),
           h(VCardActions, { class: 'flex justify-end gap-4' }, {
             default: () => [
               h(VSpacer),
               h(VBtn, {
                 variant: 'elevated',
-
                 onClick: handleClose
               }, () => 'Close'),
               slots.buttonAction?.()

@@ -32,6 +32,7 @@ export default {
     const search = ref('');
     const items = ref([]);
     const loading = ref(false);
+    const formError = ref('');
 
     const {
       fetchQuery,
@@ -113,6 +114,7 @@ export default {
 
     const openModal = (modalMode, item = null) => {
       mode.value = modalMode;
+      formError.value = '';
       selectedItem.value = item;
       dialog.value?.handleOpen();
     };
@@ -129,7 +131,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to create data:', error);
-          toast.error(error.message || i18n.t('messages.error.create'));
+          formError.value = error.message || i18n.t('messages.error.create');
         }
       },
       async update() {
@@ -143,7 +145,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to update data:', error);
-          toast.error(error.message || i18n.t('messages.error.update'));
+          formError.value = error.message || i18n.t('messages.error.update');
         }
       },
       async delete() {
@@ -156,7 +158,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to delete data:', error);
-          toast.error(error.message || i18n.t('messages.error.delete'));
+          formError.value = error.message || i18n.t('messages.error.delete');
         }
       },
     };
@@ -304,6 +306,7 @@ export default {
             endpoint: props.endpoint,
             item: selectedItem.value,
             relations: props.relations,
+            error: formError.value,
           },
           {
             buttonAction: () =>
