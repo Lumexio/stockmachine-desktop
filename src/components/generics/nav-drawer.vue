@@ -147,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from 'vue';
+import { ref, computed, inject, watch } from 'vue';
 import { useStore } from '../../store';
 import { useSettingsStore } from '../../store/settings';
 import { useAuthStore } from '../../store/auth';
@@ -195,6 +195,16 @@ function switchLocation(id) {
 const createLocationModal = ref(false);
 const newLocationName = ref('');
 const creatingLocation = ref(false);
+
+watch(
+  () => auth.locations,
+  (newLocations) => {
+    if (auth.isAuthenticated && newLocations && newLocations.length === 0) {
+      createLocationModal.value = true;
+    }
+  },
+  { immediate: true }
+);
 
 async function handleCreateLocation() {
   if (!newLocationName.value || !auth.user?.org_id) return;
