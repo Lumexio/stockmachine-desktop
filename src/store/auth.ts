@@ -60,6 +60,12 @@ export const useAuthStore = defineStore('auth', {
       this.currentLocationId = id;
     },
 
+    addLocalLocation(name: string): void {
+      const newLoc = { id: Date.now() * -1, name, org_id: this.user?.org_id || 0 };
+      this.locations.push(newLoc);
+      this.currentLocationId = newLoc.id;
+    },
+
     async fetchLocations(): Promise<void> {
       if (!this.accessToken || !this.user?.org_id) return;
       const { backendUrl } = useSettingsStore();

@@ -199,7 +199,7 @@ const creatingLocation = ref(false);
 watch(
   () => auth.locations,
   (newLocations) => {
-    if (auth.isAuthenticated && newLocations && newLocations.length === 0) {
+    if ((auth.isAuthenticated || auth.isOfflineMode) && newLocations && newLocations.length === 0) {
       createLocationModal.value = true;
     }
   },
@@ -207,22 +207,33 @@ watch(
 );
 
 async function handleCreateLocation() {
-  if (!newLocationName.value || !auth.user?.org_id) return;
+  if (!newLocationName.value || (!auth.user?.org_id && !auth.isOfflineMode)) return;
+
+  if (auth.isOfflineMode && auth.locations.length >= 1) {
+    toast.error('Offline freemium limited to 1 location');
+    return;
+  }
+
   creatingLocation.value = true;
   try {
-    const res = await fetch(`${useSettingsStore().backendUrl}/organizations/${auth.user.org_id}/locations`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.accessToken}`
-      },
-      body: JSON.stringify({ name: newLocationName.value })
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || 'Failed to create location');
+    if (auth.isOfflineMode) {
+      auth.addLocalLocation(newLocationName.value);
+    } else {
+      const res = await fetch(`${useSettingsStore().backendUrl}/organizations/${auth.user.org_id}/locations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.accessToken}`
+        },
+        body: JSON.stringify({ name: newLocationName.value })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to create location');
+      }
+      await auth.fetchLocations();
     }
-    await auth.fetchLocations();
+    
     createLocationModal.value = false;
     newLocationName.value = '';
     toast.success('Location created successfully');
