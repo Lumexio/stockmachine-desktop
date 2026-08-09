@@ -1,9 +1,18 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'node:path';
 import squirrelStartup from 'electron-squirrel-startup';
-import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
+import { checkForUpdates } from './utils/github-updater';
 
-updateElectronApp();
+// ponytail: Cross-platform Github Releases updater
+// Built-in autoUpdater (and update-electron-app) does not support Linux natively.
+// We use a zero-dependency API fetch approach that works identically on Windows/Linux/Mac.
+if (app.isReady()) {
+  checkForUpdates();
+} else {
+  app.whenReady().then(checkForUpdates);
+}
+// Check every 6 hours
+setInterval(checkForUpdates, 1000 * 60 * 60 * 6);
 
 if (squirrelStartup) {
   app.quit();
