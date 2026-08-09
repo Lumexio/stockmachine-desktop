@@ -426,7 +426,23 @@ function onFileChange(event: Event) {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      profileForm.value.photo_url = e.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 512;
+        let width = img.width;
+        let height = img.height;
+        if (width > MAX_WIDTH) {
+          height = (MAX_WIDTH / width) * height;
+          width = MAX_WIDTH;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        profileForm.value.photo_url = canvas.toDataURL('image/jpeg', 0.6);
+      };
+      img.src = e.target?.result as string;
     };
     reader.readAsDataURL(file);
   } else {
