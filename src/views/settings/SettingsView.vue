@@ -91,16 +91,71 @@
         </v-row>
       </v-card-text>
     </v-card>
+    
+    <!-- Section 3: Data Sync -->
+    <v-card class="mb-6" v-if="isFreePlan && canManageSnapshots">
+      <v-card-title class="text-h6 pa-4">Data Sync</v-card-title>
+      <v-divider />
+      <v-card-text class="pa-4">
+        <div class="text-subtitle-1 font-weight-bold mb-2">
+          Storage Preference
+        </div>
+        <p class="text-body-2 text-medium-emphasis mb-3">
+          Choose where your catalog data is synced.
+        </p>
+        
+        <v-btn-toggle
+          v-model="storagePreference"
+          color="primary"
+          variant="outlined"
+          divided
+          class="mb-4 w-100"
+          @update:model-value="onStoragePreferenceChange"
+        >
+          <v-btn value="server" class="flex-grow-1 text-none">
+            <v-icon start>mdi-server</v-icon>
+            Comet Server (Limited)
+          </v-btn>
+          <v-btn value="gdrive" class="flex-grow-1 text-none">
+            <v-icon start>mdi-google-drive</v-icon>
+            Google Drive (Unlimited)
+          </v-btn>
+        </v-btn-toggle>
+
+        <template v-if="storagePreference === 'gdrive'">
+          <v-alert type="info" variant="tonal" class="mb-3">
+            Google Drive sync is managed via the Web Dashboard (stockmachine.online). Please log in there to authorize and perform cloud sync operations.
+          </v-alert>
+        </template>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18nStore } from '../../store/i18n';
 import { useStore } from '../../store/index';
+import { useAuthStore } from '../../store/auth';
 
 const i18n = useI18nStore();
 const store = useStore();
+const authStore = useAuthStore();
+
+const canManageSnapshots = computed(() =>
+  ['owner', 'admin'].includes(authStore.user?.role || ''),
+);
+const isFreePlan = computed(() => authStore.user?.organization?.plan_id === 'free');
+
+const storagePreference = ref(localStorage.getItem('storage_preference') || 'server');
+
+const onStoragePreferenceChange = (val) => {
+  if (!val) {
+    storagePreference.value = localStorage.getItem('storage_preference') || 'server';
+    return;
+  }
+  localStorage.setItem('storage_preference', val);
+};
 
 const languages = [
   { code: 'en', label: 'EN' },
