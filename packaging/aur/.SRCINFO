@@ -1,0 +1,18 @@
+pkgbase = stockmachine-bin
+	pkgdesc = Stock Machine is a stock management system that helps you manage your inventory with ease.
+	pkgver = 1.0.3
+	pkgrel = 1
+	url = https://github.com/Lumexio/stockmachine-desktop
+	arch = x86_64
+	license = MIT
+	depends = gconf
+	depends = libnotify
+	depends = libappindicator-gtk3
+	depends = libxss
+	depends = nss
+	provides = stockmachine
+	conflicts = stockmachine
+	source = https://github.com/Lumexio/stockmachine-desktop/releases/download/1.0.3/stockmachine_1.0.3_amd64.deb
+	sha256sums = SKIP
+
+pkgname = stockmachine-bin

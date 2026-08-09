@@ -1,6 +1,7 @@
 import { h, ref, computed, onMounted, inject } from 'vue';
 import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
 import ModalGeneric from './modal-generic';
+import ImportWizard from './ImportWizard.vue';
 import { useToast } from 'vue-toast-notification';
 import {
   VTable,
@@ -33,6 +34,7 @@ export default {
     const items = ref([]);
     const loading = ref(false);
     const formError = ref('');
+    const showImportWizard = ref(false);
 
     const {
       fetchQuery,
@@ -119,6 +121,54 @@ export default {
       dialog.value?.handleOpen();
     };
 
+    const handleImportConfirm = async (mappedData) => {
+      try {
+        toast.info(`Processing ${mappedData.length} records...`);
+        const { getAll, add, enqueueOperation } = await import('../../api/indexeddb');
+
+        const finalProducts = [];
+        
+        for (const item of mappedData) {
+          let currentItem = { ...item };
+          
+          for (const rel of props.relations || []) {
+            const fk = rel.key;
+            const nameFieldKey = props.formFields.find(f => f.fk === fk)?.key;
+            
+            if (nameFieldKey && currentItem[nameFieldKey] && !currentItem[fk]) {
+              const relName = currentItem[nameFieldKey];
+              const existingList = await getAll(rel.endpoint);
+              let existing = existingList.find(o => o.name.toLowerCase() === relName.toLowerCase());
+              
+              if (!existing) {
+                // Create locally & enqueue
+                const newItem = { name: relName, _unsynced: true };
+                const localId = await add(rel.endpoint, newItem);
+                await enqueueOperation({ operation: 'create', endpoint: rel.endpoint, payload: { ...newItem, id: localId }, localId });
+                existing = { id: localId };
+              }
+              
+              currentItem[fk] = existing.id;
+            }
+          }
+          finalProducts.push(currentItem);
+        }
+
+        for (const prod of finalProducts) {
+          await createMutation(prod);
+        }
+
+        toast.success(`Successfully imported ${finalProducts.length} records!`);
+        showImportWizard.value = false;
+        await loadItems();
+        items.value = [...items.value];
+        eventBus.emit('refreshData');
+      } catch (error) {
+        console.error('Failed to import data:', error);
+        toast.error('Failed to import data');
+      }
+    };
+
     const handlers = {
       async create() {
         try {
@@ -198,6 +248,18 @@ export default {
             'hide-details': true,
             'single-line': true,
           }),
+          h(VSpacer),
+          h(
+            VBtn,
+            {
+              class: 'ml-2',
+              onClick: () => (showImportWizard.value = true),
+              color: 'secondary',
+              variant: 'outlined',
+              prependIcon: 'mdi-import',
+            },
+            () => i18n.t('actions.import') || 'Import',
+          ),
           h(
             VBtn,
             {
@@ -356,6 +418,13 @@ export default {
                   ),
           },
         ),
+
+        h(ImportWizard, {
+          modelValue: showImportWizard.value,
+          'onUpdate:modelValue': (v) => (showImportWizard.value = v),
+          formFields: props.formFields,
+          onConfirm: handleImportConfirm
+        }),
       ]);
   },
 };
