@@ -135,7 +135,7 @@
     !storagePreference.value
   );
 
-  const selectStorage = async (type: 'server' | 'gdrive') => {
+  const selectStorage = async (type) => {
     localStorage.setItem('storage_preference', type);
     storagePreference.value = type;
     if (type === 'gdrive') {
