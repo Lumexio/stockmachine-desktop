@@ -73,6 +73,23 @@
                   </li>
                 </ul>
               </div>
+              <div class="mt-4">
+                <h3 class="text-subtitle-1 mb-2">Preview (first 5 rows)</h3>
+                <v-table density="compact" class="border">
+                  <thead>
+                    <tr>
+                      <th v-for="col in Object.values(mapping).filter(Boolean)" :key="col">{{ getFieldLabel(col) }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(row, i) in rawData.slice(0,5)" :key="i">
+                      <td v-for="col in Object.values(mapping).filter(Boolean)" :key="col">
+                        {{ row[Object.keys(mapping).find(k => mapping[k] === col)] }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </v-table>
+              </div>
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>

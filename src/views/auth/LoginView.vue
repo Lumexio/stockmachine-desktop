@@ -100,6 +100,21 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- Conflict Modal -->
+    <v-dialog v-model="conflictModalOpen" max-width="500" persistent>
+      <v-card>
+        <v-card-title class="text-h6 pa-4 bg-warning text-white">Unsaved Offline Data Detected</v-card-title>
+        <v-card-text class="pa-6">
+          <p class="text-body-2 mb-4">You have data created locally. Logging into an account will overwrite your local workspace.</p>
+          <p class="text-body-2 mb-4 font-weight-bold">Do you want to export a backup before logging in?</p>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-end gap-2 pa-4">
+          <v-btn variant="text" @click="conflictModalOpen = false">Cancel</v-btn>
+          <v-btn color="error" variant="tonal" @click="proceedWithLogin" :loading="loading">Discard & Login</v-btn>
+          <v-btn color="success" variant="elevated" @click="exportLocalBackup" :loading="exportingBackup" prepend-icon="mdi-download">Export Backup (.xlsx)</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -109,6 +124,8 @@
   import { useAuthStore } from '../../store/auth';
   import { useI18nStore } from '../../store/i18n';
   import { apiFetch } from '../../api/custom-fetch';
+  import { getAll, clearAll } from '../../api/indexeddb';
+  import * as XLSX from 'xlsx';
 
   const router = useRouter();
   const auth = useAuthStore();
@@ -126,6 +143,9 @@
   const validatingInvite = ref(false);
   const inviteError = ref('');
   const inviteSuccessMsg = ref('');
+
+  const conflictModalOpen = ref(false);
+  const exportingBackup = ref(false);
 
   onMounted(() => {
     // If there is already a pending code, show it in the UI maybe, but usually it's handled automatically after login
@@ -161,9 +181,26 @@
   async function submit() {
     const { valid } = await formRef.value.validate();
     if (!valid) return;
+
+    try {
+      // Check for local data
+      const localProducts = await getAll('products');
+      if (localProducts && localProducts.length > 0) {
+        conflictModalOpen.value = true;
+        return;
+      }
+    } catch (e) {
+      console.warn('Failed to check local db', e);
+    }
+
+    proceedWithLogin();
+  }
+
+  async function proceedWithLogin() {
     loading.value = true;
     error.value = null;
     try {
+      await clearAll('products'); // Optional: cleanup other tables too
       await auth.login(email.value, password.value);
       router.push(router.currentRoute.value.query.redirect || '/');
     } catch (e) {
@@ -173,6 +210,22 @@
           : e.message;
     } finally {
       loading.value = false;
+      conflictModalOpen.value = false;
+    }
+  }
+
+  async function exportLocalBackup() {
+    exportingBackup.value = true;
+    try {
+      const localProducts = await getAll('products');
+      const ws = XLSX.utils.json_to_sheet(localProducts);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Local Products");
+      XLSX.writeFile(wb, "offline_backup.xlsx");
+    } catch (e) {
+      console.error('Failed to export', e);
+    } finally {
+      exportingBackup.value = false;
     }
   }
 

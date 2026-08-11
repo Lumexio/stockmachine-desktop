@@ -2,6 +2,7 @@ import { h, ref, computed, onMounted, inject } from 'vue';
 import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
 import ModalGeneric from './modal-generic';
 import ImportWizard from './ImportWizard.vue';
+import ExportWizard from './ExportWizard.vue';
 import { useToast } from 'vue-toast-notification';
 import {
   VTable,
@@ -11,6 +12,10 @@ import {
   VTextField,
   VIcon,
   VSkeletonLoader,
+  VMenu,
+  VList,
+  VListItem,
+  VListItemTitle
 } from 'vuetify/components';
 import { useI18nStore } from '../../store/i18n';
 
@@ -35,6 +40,7 @@ export default {
     const loading = ref(false);
     const formError = ref('');
     const showImportWizard = ref(false);
+    const showExportWizard = ref(false);
 
     const {
       fetchQuery,
@@ -249,17 +255,20 @@ export default {
             'single-line': true,
           }),
           h(VSpacer),
-          h(
-            VBtn,
-            {
-              class: 'ml-2',
-              onClick: () => (showImportWizard.value = true),
-              color: 'secondary',
-              variant: 'outlined',
-              prependIcon: 'mdi-import',
-            },
-            () => i18n.t('actions.import') || 'Import',
-          ),
+          h(VMenu, null, {
+            activator: ({ props }) =>
+              h(VBtn, {
+                ...props,
+                class: 'ml-2',
+                color: 'secondary',
+                variant: 'outlined',
+                prependIcon: 'mdi-swap-vertical'
+              }, () => i18n.t('actions.data') || 'Data'),
+            default: () => h(VList, null, () => [
+              h(VListItem, { prependIcon: 'mdi-import', onClick: () => showImportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.import') || 'Import')),
+              h(VListItem, { prependIcon: 'mdi-export', onClick: () => showExportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.export') || 'Export'))
+            ])
+          }),
           h(
             VBtn,
             {
@@ -425,6 +434,11 @@ export default {
           formFields: props.formFields,
           onConfirm: handleImportConfirm
         }),
+        h(ExportWizard, {
+          modelValue: showExportWizard.value,
+          'onUpdate:modelValue': (v) => (showExportWizard.value = v),
+          endpoint: props.endpoint
+        })
       ]);
   },
 };
