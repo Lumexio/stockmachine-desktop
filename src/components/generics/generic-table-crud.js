@@ -156,6 +156,7 @@ export default {
               
               currentItem[fk] = existing.id;
             }
+            if (nameFieldKey) delete currentItem[nameFieldKey];
           }
           finalProducts.push(currentItem);
         }

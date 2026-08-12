@@ -138,7 +138,7 @@ const loading = ref(false);
 
 const availableFields = computed(() => {
   return props.formFields.map(f => ({
-    key: f.fk || f.key,
+    key: f.key,
     label: f.label
   }));
 });
