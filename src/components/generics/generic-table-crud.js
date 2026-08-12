@@ -1,5 +1,7 @@
 import { h, ref, computed, onMounted, inject } from 'vue';
+import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
+import { isPlanLimitReached } from '../../utils/plan-limits';
 import ModalGeneric from './modal-generic';
 import ImportWizard from './ImportWizard.vue';
 import ExportWizard from './ExportWizard.vue';
@@ -28,7 +30,7 @@ export default {
     formFields: Array,
     endpoint: String,
     relations: Array,
-    extraRowActions: Array, // [{ label, icon, color, event }] — emitted on eventBus with row data
+    extraRowActions: Array,
   },
   setup(props) {
     const toast = useToast();
@@ -41,6 +43,13 @@ export default {
     const formError = ref('');
     const showImportWizard = ref(false);
     const showExportWizard = ref(false);
+
+    const auth = useAuthStore();
+    const currentPlan = computed(() => auth.user?.organization?.plan_id || 'free');
+
+    const itemsLimitReached = computed(() => {
+      return isPlanLimitReached(currentPlan.value, items.value.length, props.endpoint);
+    });
 
     const {
       fetchQuery,
@@ -270,18 +279,23 @@ export default {
               h(VListItem, { prependIcon: 'mdi-export', onClick: () => showExportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.export') || 'Export'))
             ])
           }),
-          h(
-            VBtn,
-            {
-              class: 'ml-2 mr-2',
-              onClick: () => openModal('create'),
-              color: 'primary',
-              variant: 'elevated',
-              elevation: '2',
-            },
-            () => i18n.t('actions.create'),
-          ),
-        ]),
+            h(
+              VBtn,
+              {
+                class: 'ml-2 mr-2 font-weight-bold px-6',
+                onClick: () => openModal('create'),
+                color: 'primary',
+                variant: 'elevated',
+                elevation: '2',
+                disabled: itemsLimitReached.value,
+                title: itemsLimitReached.value ? 'Plan limit reached' : ''
+              },
+              () => [
+                h(VIcon, { class: 'mr-2' }, () => 'mdi-plus'),
+                i18n.t('actions.create')
+              ]
+            ),
+          ]),
 
         loading.value
           ? h(VSkeletonLoader, { type: 'table', class: 'ma-2' })
