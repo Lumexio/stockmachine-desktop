@@ -147,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref, computed, inject, watch } from 'vue';
+import { ref, computed, inject, watch, onMounted, onUnmounted } from 'vue';
 import { useStore } from '../../store';
 import { useSettingsStore } from '../../store/settings';
 import { useAuthStore } from '../../store/auth';
@@ -176,11 +176,23 @@ let drawer = ref(false);
 
 // Pending sync queue count
 const pendingCount = ref(0);
+let pendingInterval = null;
+
 async function refreshPendingCount() {
   pendingCount.value = await getQueueLength();
 }
-refreshPendingCount();
-setInterval(refreshPendingCount, 5000);
+
+onMounted(() => {
+  refreshPendingCount();
+  pendingInterval = setInterval(refreshPendingCount, 5000);
+});
+
+onUnmounted(() => {
+  if (pendingInterval) {
+    clearInterval(pendingInterval);
+    pendingInterval = null;
+  }
+});
 
 async function logout() {
   auth.logout();

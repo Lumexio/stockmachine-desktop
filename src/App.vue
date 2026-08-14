@@ -187,7 +187,7 @@
   });
 
   // Listen for sync completion
-  eventBus.on('syncComplete', ({ synced, failed, errors }) => {
+  const handleSyncComplete = ({ synced, failed, errors }) => {
     syncErrors.value = errors;
     if (failed > 0) {
       syncSnackbar.value = {
@@ -203,7 +203,7 @@
         color: 'success',
       };
     }
-  });
+  };
 
   // Handle forced logout (e.g. from apiFetch interceptor)
   const handleAuthLogout = async () => {
@@ -216,10 +216,12 @@
     const savedLang = localStorage.getItem('language');
     if (savedLang) i18n.setLocale(savedLang);
     window.addEventListener('auth:logout', handleAuthLogout);
+    eventBus.on('syncComplete', handleSyncComplete);
   });
 
   onUnmounted(() => {
     window.removeEventListener('auth:logout', handleAuthLogout);
+    eventBus.off('syncComplete', handleSyncComplete);
   });
 
   provide('eventBus', eventBus);

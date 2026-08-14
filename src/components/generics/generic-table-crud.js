@@ -1,4 +1,4 @@
-import { h, ref, computed, onMounted, inject } from 'vue';
+import { h, ref, computed, onMounted, onUnmounted, inject } from 'vue';
 import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
 import { isPlanLimitReached } from '../../utils/plan-limits';
@@ -106,21 +106,18 @@ export default {
     };
 
     // Setup event listener with cleanup
+    const handleRefresh = async () => {
+      await loadItems();
+      items.value = [...items.value]; // Force reactivity update
+    };
+
     onMounted(() => {
       loadItems();
-
-      // Improved event listener with immediate execution
-      const handleRefresh = async () => {
-        await loadItems();
-        items.value = [...items.value]; // Force reactivity update
-      };
-
       eventBus.on('refreshData', handleRefresh);
+    });
 
-      // Clean up the event listener when component is unmounted
-      return () => {
-        eventBus.off('refreshData', handleRefresh);
-      };
+    onUnmounted(() => {
+      eventBus.off('refreshData', handleRefresh);
     });
 
     const handleClear = () => {
