@@ -26,7 +26,9 @@ export default {
     "import": "インポート",
     "export": "在庫をエクスポート",
     "entry": "入庫",
-    "withdrawal": "出庫"
+    "withdrawal": "出庫",
+    "data": "データ",
+    "discard": "破棄"
   },
   "modals": {
     "deleteConfirm": "このレコードを削除しますか？",
@@ -48,13 +50,20 @@ export default {
       "update": "レコードの更新中にエラーが発生しました",
       "delete": "レコードの削除中にエラーが発生しました",
       "import": "インポート中にエラーが発生しました",
-      "export": "エクスポート中にエラーが発生しました"
+      "export": "エクスポート中にエラーが発生しました",
+      "noLocation": "場所がありません"
+    },
+    "confirm": {
+      "discard": "変更を破棄しますか？"
     }
   },
   "common": {
     "search": "検索",
     "actions": "アクション",
-    "notes": "メモ"
+    "notes": "メモ",
+    "noData": "データなし",
+    "quantity": "数量",
+    "optional": "オプション"
   },
   "tables": {
     "products": {
@@ -68,7 +77,11 @@ export default {
         "shelve_name": "棚",
         "rack_name": "ラック",
         "quantity": "数量",
-        "description": "説明"
+        "description": "説明",
+        "supplier_name": "サプライヤー",
+        "cost_price": "原価",
+        "selling_price": "販売価格",
+        "min_stock": "最小在庫"
       }
     },
     "categories": {
@@ -116,6 +129,15 @@ export default {
         "entity": "エンティティ",
         "qty_change": "数量変更"
       }
+    },
+    "suppliers": {
+      "title": "サプライヤー",
+      "columns": {
+        "name": "名前",
+        "contact_name": "担当者名",
+        "email": "メール",
+        "phone": "電話番号"
+      }
     }
   },
   "forms": {
@@ -130,7 +152,12 @@ export default {
         "description": "説明",
         "category_name": "カテゴリー",
         "shelve_name": "棚",
-        "rack_name": "ラック"
+        "rack_name": "ラック",
+        "supplier_name": "サプライヤー",
+        "cost_price": "原価",
+        "selling_price": "販売価格",
+        "min_stock": "最小在庫",
+        "status": "ステータス"
       },
       "categories": {
         "name": "名前",
@@ -142,7 +169,15 @@ export default {
       },
       "racks": {
         "name": "名前",
-        "description": "説明"
+        "description": "説明",
+        "shelve_name": "棚"
+      },
+      "suppliers": {
+        "name": "名前",
+        "contact_name": "担当者名",
+        "email": "メール",
+        "phone": "電話番号",
+        "address": "住所"
       }
     },
     "placeholders": {
@@ -152,7 +187,8 @@ export default {
       "price": "価格を入力",
       "category": "カテゴリーを選択",
       "shelve": "棚を選択",
-      "rack": "ラックを選択"
+      "rack": "ラックを選択",
+      "notes": "メモ"
     },
     "validation": {
       "required": "この項目は必須です"
@@ -178,7 +214,8 @@ export default {
     "individualDesc": "個人利用 — 1つの在庫",
     "organization": "組織",
     "orgDesc": "チーム向け複数拠点の在庫管理",
-    "forgotPassword": "パスワードをお忘れですか？"
+    "forgotPassword": "パスワードをお忘れですか？",
+    "error": "エラー"
   },
   "settings": {
     "title": "設定",
@@ -189,7 +226,25 @@ export default {
     "connectAccount": "アカウントを接続",
     "loginToSync": "デバイス間で在庫を同期するにはログインしてください。",
     "registerOnWeb": "ウェブで登録",
-    "colorSchemes": "カラースキーム"
+    "colorSchemes": "カラースキーム",
+    "catalogSnapshot": "カタログスナップショット",
+    "snapshotDescription": "データをバックアップ",
+    "snapshotWarning": "警告",
+    "exportSnapshot": "エクスポート",
+    "importSnapshot": "インポート",
+    "snapshotAdminOnly": "管理者のみ",
+    "googleConnected": "Google 接続済み",
+    "googleNotConnected": "Google 未接続",
+    "connectGoogleDrive": "Google Driveに接続",
+    "syncThisDevice": "このデバイスを同期",
+    "restoreGoogleDrive": "Driveから復元",
+    "snapshotInvalid": "無効なスナップショット",
+    "googleSynced": "同期済み",
+    "snapshotConfirm": "確認しますか？",
+    "googleRestored": "復元済み",
+    "snapshotExported": "エクスポート済み",
+    "snapshotTooLarge": "サイズが大きすぎます",
+    "snapshotImported": "インポート済み"
   },
   "welcome": {
     "title": "STOCKMACHINEへようこそ",
@@ -218,12 +273,29 @@ export default {
     "recentOperations": "最近の操作履歴",
     "noData": "データなし",
     "lowStockAlert": "在庫不足アラート",
-    "categoryStock": "カテゴリ別の在庫レベル"
+    "categoryStock": "カテゴリ別の在庫レベル",
+    "totalStock": "総在庫",
+    "totalValue": "総価値",
+    "movements": "動き"
   },
   "entityTypes": {
     "product": "製品",
     "category": "カテゴリー",
     "rack": "ラック",
     "shelf": "棚"
+  },
+  "history": {
+    "filters": {
+      "all": "すべて",
+      "entry": "入庫",
+      "withdrawal": "出庫",
+      "product": "製品",
+      "category": "カテゴリー",
+      "rack": "ラック",
+      "shelf": "棚"
+    },
+    "entity": "エンティティ",
+    "quantityBefore": "変更前",
+    "quantityAfter": "変更後"
   }
 };

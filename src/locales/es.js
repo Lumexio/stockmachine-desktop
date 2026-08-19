@@ -27,7 +27,9 @@ export default {
     "import": "Importar",
     "export": "Exportar stock",
     "entry": "Entrada de stock",
-    "withdrawal": "Salida de stock"
+    "withdrawal": "Salida de stock",
+    "data": "Datos",
+    "discard": "Descartar"
   },
   "modals": {
     "deleteConfirm": "¿Quieres eliminar este registro?",
@@ -49,13 +51,20 @@ export default {
       "update": "Error al actualizar el registro",
       "delete": "Error al eliminar el registro",
       "import": "Error durante la importación",
-      "export": "Error durante la exportación"
+      "export": "Error durante la exportación",
+      "noLocation": "Sin ubicación"
+    },
+    "confirm": {
+      "discard": "¿Descartar cambios?"
     }
   },
   "common": {
     "search": "Buscar",
     "actions": "Acciones",
-    "notes": "Notas"
+    "notes": "Notas",
+    "noData": "Sin datos",
+    "quantity": "Cantidad",
+    "optional": "Opcional"
   },
   "tables": {
     "products": {
@@ -153,7 +162,8 @@ export default {
         "supplier_name": "Proveedor",
         "cost_price": "Precio de Costo",
         "selling_price": "Precio de Venta",
-        "min_stock": "Límite de Stock Mínimo"
+        "min_stock": "Límite de Stock Mínimo",
+        "status": "Estado"
       },
       "suppliers": {
         "name": "Nombre",
@@ -172,7 +182,8 @@ export default {
       },
       "racks": {
         "name": "Nombre",
-        "description": "Descripción"
+        "description": "Descripción",
+        "shelve_name": "Estante"
       }
     },
     "placeholders": {
@@ -182,7 +193,8 @@ export default {
       "price": "Ingrese precio",
       "category": "Seleccione categoría",
       "shelve": "Seleccione estante",
-      "rack": "Seleccione rack"
+      "rack": "Seleccione rack",
+      "notes": "Notas"
     },
     "validation": {
       "required": "Este campo es requerido"
@@ -208,7 +220,8 @@ export default {
     "individualDesc": "Uso personal — un inventario",
     "organization": "Organización",
     "orgDesc": "Inventario multi-ubicación para equipos",
-    "forgotPassword": "¿Olvidaste tu contraseña?"
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "error": "Error"
   },
   "settings": {
     "title": "Ajustes",
@@ -219,7 +232,25 @@ export default {
     "connectAccount": "Conectar cuenta",
     "loginToSync": "Inicia sesión para sincronizar tu inventario entre dispositivos.",
     "registerOnWeb": "Registrarse en la web",
-    "colorSchemes": "Esquemas de Color"
+    "colorSchemes": "Esquemas de Color",
+    "catalogSnapshot": "Respaldo de Catálogo",
+    "snapshotDescription": "Respalda tus datos",
+    "snapshotWarning": "Advertencia",
+    "exportSnapshot": "Exportar",
+    "importSnapshot": "Importar",
+    "snapshotAdminOnly": "Solo admin",
+    "googleConnected": "Google Conectado",
+    "googleNotConnected": "Google No Conectado",
+    "connectGoogleDrive": "Conectar Google Drive",
+    "syncThisDevice": "Sincronizar este disp.",
+    "restoreGoogleDrive": "Restaurar de Drive",
+    "snapshotInvalid": "Respaldo inválido",
+    "googleSynced": "Sincronizado",
+    "snapshotConfirm": "¿Confirmar?",
+    "googleRestored": "Restaurado",
+    "snapshotExported": "Exportado",
+    "snapshotTooLarge": "Respaldo muy grande",
+    "snapshotImported": "Importado"
   },
   "welcome": {
     "title": "Bienvenido a STOCKMACHINE",
@@ -249,7 +280,9 @@ export default {
     "noData": "Sin datos disponibles",
     "lowStockAlert": "Alerta de stock bajo",
     "categoryStock": "Niveles de stock por categoría",
-    "totalValue": "Valor Total de Stock"
+    "totalValue": "Valor Total de Stock",
+    "totalStock": "Stock Total",
+    "movements": "Movimientos"
   },
   "entityTypes": {
     "product": "Producto",
@@ -257,5 +290,19 @@ export default {
     "rack": "Estante",
     "shelf": "Repisa",
     "supplier": "Proveedor"
+  },
+  "history": {
+    "filters": {
+      "all": "Todos",
+      "entry": "Entrada",
+      "withdrawal": "Salida",
+      "product": "Producto",
+      "category": "Categoría",
+      "rack": "Estante",
+      "shelf": "Estante"
+    },
+    "entity": "Entidad",
+    "quantityBefore": "Cant Antes",
+    "quantityAfter": "Cant Después"
   }
 };

@@ -26,7 +26,9 @@ export default {
     "import": "Importer",
     "export": "Exporter le stock",
     "entry": "Entrée de stock",
-    "withdrawal": "Sortie de stock"
+    "withdrawal": "Sortie de stock",
+    "data": "Données",
+    "discard": "Ignorer"
   },
   "modals": {
     "deleteConfirm": "Voulez-vous supprimer cet enregistrement ?",
@@ -48,13 +50,20 @@ export default {
       "update": "Erreur lors de la mise à jour",
       "delete": "Erreur lors de la suppression",
       "import": "Erreur lors de l'importation",
-      "export": "Erreur lors de l'exportation"
+      "export": "Erreur lors de l'exportation",
+      "noLocation": "Pas d'emplacement"
+    },
+    "confirm": {
+      "discard": "Ignorer les modifications?"
     }
   },
   "common": {
     "search": "Rechercher",
     "actions": "Actions",
-    "notes": "Notes"
+    "notes": "Notes",
+    "noData": "Aucune donnée",
+    "quantity": "Quantité",
+    "optional": "Optionnel"
   },
   "tables": {
     "products": {
@@ -68,7 +77,11 @@ export default {
         "shelve_name": "Rayon",
         "rack_name": "Étagère",
         "quantity": "Quantité",
-        "description": "Description"
+        "description": "Description",
+        "supplier_name": "Fournisseur",
+        "cost_price": "Prix de Revient",
+        "selling_price": "Prix de Vente",
+        "min_stock": "Stock Min"
       }
     },
     "categories": {
@@ -116,6 +129,15 @@ export default {
         "entity": "Entité",
         "qty_change": "Var. qté"
       }
+    },
+    "suppliers": {
+      "title": "Fournisseurs",
+      "columns": {
+        "name": "Nom",
+        "contact_name": "Nom du Contact",
+        "email": "Email",
+        "phone": "Téléphone"
+      }
     }
   },
   "forms": {
@@ -130,7 +152,12 @@ export default {
         "description": "Description",
         "category_name": "Catégorie",
         "shelve_name": "Rayon",
-        "rack_name": "Étagère"
+        "rack_name": "Étagère",
+        "supplier_name": "Fournisseur",
+        "cost_price": "Prix de Revient",
+        "selling_price": "Prix de Vente",
+        "min_stock": "Stock Min",
+        "status": "Statut"
       },
       "categories": {
         "name": "Nom",
@@ -142,7 +169,15 @@ export default {
       },
       "racks": {
         "name": "Nom",
-        "description": "Description"
+        "description": "Description",
+        "shelve_name": "Étagère"
+      },
+      "suppliers": {
+        "name": "Nom",
+        "contact_name": "Nom du Contact",
+        "email": "Email",
+        "phone": "Téléphone",
+        "address": "Adresse"
       }
     },
     "placeholders": {
@@ -152,7 +187,8 @@ export default {
       "price": "Entrez le prix",
       "category": "Sélectionnez la catégorie",
       "shelve": "Sélectionnez le rayon",
-      "rack": "Sélectionnez l'étagère"
+      "rack": "Sélectionnez l'étagère",
+      "notes": "Notes"
     },
     "validation": {
       "required": "Ce champ est obligatoire"
@@ -178,7 +214,8 @@ export default {
     "individualDesc": "Usage personnel — un inventaire",
     "organization": "Organisation",
     "orgDesc": "Inventaire multi-sites pour les équipes",
-    "forgotPassword": "Mot de passe oublié ?"
+    "forgotPassword": "Mot de passe oublié ?",
+    "error": "Erreur"
   },
   "settings": {
     "title": "Paramètres",
@@ -189,7 +226,25 @@ export default {
     "connectAccount": "Connecter un compte",
     "loginToSync": "Connectez-vous pour synchroniser votre inventaire sur tous vos appareils.",
     "registerOnWeb": "S'inscrire sur le web",
-    "colorSchemes": "Schémas de Couleur"
+    "colorSchemes": "Schémas de Couleur",
+    "catalogSnapshot": "Instantané du Catalogue",
+    "snapshotDescription": "Sauvegardez vos données",
+    "snapshotWarning": "Avertissement",
+    "exportSnapshot": "Exporter",
+    "importSnapshot": "Importer",
+    "snapshotAdminOnly": "Admin uniquement",
+    "googleConnected": "Google Connecté",
+    "googleNotConnected": "Google Non Connecté",
+    "connectGoogleDrive": "Connecter Google Drive",
+    "syncThisDevice": "Synchroniser cet app.",
+    "restoreGoogleDrive": "Restaurer depuis Drive",
+    "snapshotInvalid": "Instantané invalide",
+    "googleSynced": "Synchronisé",
+    "snapshotConfirm": "Confirmer ?",
+    "googleRestored": "Restauré",
+    "snapshotExported": "Exporté",
+    "snapshotTooLarge": "Trop volumineux",
+    "snapshotImported": "Importé"
   },
   "welcome": {
     "title": "Bienvenue dans STOCKMACHINE",
@@ -218,12 +273,29 @@ export default {
     "recentOperations": "Historique des opérations récentes",
     "noData": "Aucune donnée disponible",
     "lowStockAlert": "Alerte de stock bas",
-    "categoryStock": "Niveaux de stock par catégorie"
+    "categoryStock": "Niveaux de stock par catégorie",
+    "totalStock": "Stock Total",
+    "totalValue": "Valeur Totale",
+    "movements": "Mouvements"
   },
   "entityTypes": {
     "product": "Produit",
     "category": "Catégorie",
     "rack": "Étagère",
     "shelf": "Rayon"
+  },
+  "history": {
+    "filters": {
+      "all": "Tout",
+      "entry": "Entrée",
+      "withdrawal": "Sortie",
+      "product": "Produit",
+      "category": "Catégorie",
+      "rack": "Rayon",
+      "shelf": "Étagère"
+    },
+    "entity": "Entité",
+    "quantityBefore": "Qté Avant",
+    "quantityAfter": "Qté Après"
   }
 };
