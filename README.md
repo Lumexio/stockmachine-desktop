@@ -1,5 +1,7 @@
 # STOCKMACHINE
 
+[![AI Ready](https://img.shields.io/badge/AI--Ready-yes-brightgreen?style=flat)](https://github.com/johnpapa/ai-ready)
+
 STOCKMACHINE is a multilingual inventory management application designed to help users efficiently manage products, categories, racks, and shelves. The application supports multiple languages, including English, Spanish, French, Japanese, and Russian.
 
 ## Features
@@ -90,3 +92,8 @@ Navigate to the project directory:
 Start the application:
 ```bash
 npm start
+```
+
+## Contributing
+
+Fork the repository and create a focused branch. Install with `npm ci`, run `npm test`, and package with `npm run package-linux` (or the platform-specific package command) before opening a pull request. Keep Electron APIs behind the preload bridge, preserve offline IndexedDB behavior, and update all five locale files when user-facing text changes.
