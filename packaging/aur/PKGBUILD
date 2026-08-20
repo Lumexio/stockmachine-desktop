@@ -1,0 +1,23 @@
+# Maintainer: Lumexio <fsmsoftdev@gmail.com>
+
+pkgname=stockmachine-bin
+pkgver=1.0.3
+pkgrel=1
+pkgdesc="Stock Machine is a stock management system that helps you manage your inventory with ease."
+arch=('x86_64')
+url="https://github.com/Lumexio/stockmachine-desktop"
+license=('MIT')
+depends=('gconf' 'libnotify' 'libappindicator-gtk3' 'libxss' 'nss')
+provides=('stockmachine')
+conflicts=('stockmachine')
+# Note: Ensure the GitHub release matches this version string format. If your releases have a "v", change this URL to "v${pkgver}".
+source=("${url}/releases/download/${pkgver}/stockmachine_${pkgver}_amd64.deb")
+sha256sums=('SKIP') # Use `updpkgsums` to automatically calculate this when you release
+
+package() {
+	# Extract the data.tar.xz from the deb file directly into the pkgdir
+	tar -xf data.tar.xz -C "${pkgdir}"
+
+	# The deb package usually installs to /usr/lib/stockmachine or /opt/stockmachine
+	# No further compilation needed, it's just moving files to where Arch expects them.
+}

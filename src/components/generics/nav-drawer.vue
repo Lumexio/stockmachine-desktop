@@ -5,41 +5,114 @@
       {{ i18n.t('app.title') }}
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <!-- Online/offline + pending badge -->
     <v-chip
-      :color="isOnline ? 'success' : 'default'"
-      :prepend-icon="isOnline ? 'mdi-wifi' : 'mdi-wifi-off'"
+      :color="(isOnline && !auth.isOfflineMode) ? 'success' : 'default'"
+      :prepend-icon="(isOnline && !auth.isOfflineMode) ? 'mdi-wifi' : 'mdi-wifi-off'"
       size="small"
       class="mr-2"
     >
-      {{ isOnline ? i18n.t('sync.online') : i18n.t('sync.offline') }}
+      {{ (isOnline && !auth.isOfflineMode) ? i18n.t('sync.online') : i18n.t('sync.offline') }}
       <v-badge v-if="pendingCount > 0" :content="pendingCount" color="warning" floating />
     </v-chip>
     <LanguageSelector @change-language="handleLanguageChange" />
-    <v-switch :prepend-icon="iconTheme" class="mr-3" @click="setDark" v-model="darkMode" hide-details inset></v-switch>
+    <v-switch :prepend-icon="iconTheme" class="mr-3" v-model="darkMode" hide-details inset></v-switch>
     <v-btn icon>
       <v-icon>mdi-content-save</v-icon>
       <v-menu offset-y activator="parent">
         <v-list>
           <FileMenuItem v-for="item in menuItems" :key="item.type" v-bind="item"
-            :menu-options="Object.values(FILE_FORMATS)" @action="handleMenuAction" />
+            :menu-options="getAllowedFileFormats(item.type)" @action="handleMenuAction" />
         </v-list>
       </v-menu>
     </v-btn>
-    <!-- User info + logout -->
+
+    <!-- Location Switcher (Admin/Owner only) -->
+    <v-menu v-if="auth.isAuthenticated && (auth.user?.role === 'owner' || auth.user?.role === 'admin')" offset-y transition="scale-transition">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" variant="tonal" class="mr-2 text-none rounded-pill px-4" prepend-icon="mdi-map-marker">
+          {{ auth.locations?.find(l => l.id === auth.currentLocationId)?.name || 'Select Location' }}
+          <v-icon end size="small">mdi-chevron-down</v-icon>
+        </v-btn>
+      </template>
+      <v-list elevation="8" rounded="xl" class="pa-2 mt-1" min-width="200">
+        <v-list-item
+          v-for="loc in auth.locations"
+          :key="loc.id"
+          @click="switchLocation(loc.id)"
+          :active="loc.id === auth.currentLocationId"
+          color="primary"
+          rounded="lg"
+          class="mb-1"
+        >
+          <template v-slot:prepend v-if="loc.id === auth.currentLocationId">
+            <v-icon color="primary" size="small" class="mr-2">mdi-check-circle</v-icon>
+          </template>
+          <template v-slot:prepend v-else>
+            <div style="width: 28px;"></div>
+          </template>
+          <v-list-item-title :class="{'font-weight-bold': loc.id === auth.currentLocationId}">{{ loc.name }}</v-list-item-title>
+        </v-list-item>
+        <v-divider class="my-2"></v-divider>
+        <v-list-item @click="createLocationModal = true" rounded="lg" color="primary" class="hover-primary-lighten">
+          <v-list-item-title class="text-primary font-weight-bold">
+            <v-icon start>mdi-plus-circle</v-icon> Create New Location
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <!-- User Profile & Settings side-by-side buttons -->
     <template v-if="auth.isAuthenticated">
-      <v-chip size="small" class="mr-1" prepend-icon="mdi-account">{{ auth.user?.name }}</v-chip>
-      <v-btn icon size="small" @click="logout" :title="i18n.t('auth.logout')">
-        <v-icon>mdi-logout</v-icon>
+      <v-chip
+        to="/profile"
+        size="small"
+        class="mr-2"
+        prepend-icon="mdi-account"
+        variant="outlined"
+      >
+        {{ auth.user?.name }}
+      </v-chip>
+     <v-btn icon size="small" to="/settings" title="Settings" class="mr-2">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
+    </template>
+
+    <template v-else>
+      <v-btn to="/login" variant="outlined" size="small" class="mr-2" prepend-icon="mdi-login">
+        {{ i18n.t('welcome.loginBtn') }}
+      </v-btn>
+      <v-btn icon size="small" to="/settings" title="Settings" class="mr-2">
+        <v-icon>mdi-cog</v-icon>
       </v-btn>
     </template>
   </v-app-bar>
   <v-navigation-drawer app v-model="drawer">
-    <v-list>
+    <v-list nav density="compact">
       <v-list-item :append-icon="item.icon" v-for="item in items" :key="item.title" :to="item.to">
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
+
+    <template #append>
+      <v-divider />
+      <div v-if="auth.isAuthenticated" class="ma-2 d-flex align-center justify-space-between">
+        <v-list-item
+          to="/profile"
+          rounded="xl"
+          prepend-icon="mdi-account-circle"
+          :title="auth.user?.name ?? ''"
+          class="pa-2 flex-grow-1"
+        >
+          <template #subtitle>
+            <v-chip size="x-small" color="primary" class="mt-1">
+              {{ auth.user?.account_type === 'individual' ? 'Individual' : (auth.user?.role || '') }}
+            </v-chip>
+          </template>
+        </v-list-item>
+        <v-btn icon size="small" to="/settings" variant="text" title="Settings">
+          <v-icon>mdi-cog</v-icon>
+        </v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 
   <modal-generic ref="modalRef" :title="i18n.t('modals.import.title')" :form-fields="fileUploadFields" mode="create">
@@ -50,11 +123,33 @@
       </v-btn>
     </template>
   </modal-generic>
+
+  <!-- Create Location Modal -->
+  <v-dialog v-model="createLocationModal" max-width="400">
+    <v-card>
+      <v-card-title>Create New Location</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="newLocationName"
+          label="Location Name"
+          variant="outlined"
+          autofocus
+          @keyup.enter="handleCreateLocation"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn variant="text" @click="createLocationModal = false">Cancel</v-btn>
+        <v-btn color="primary" variant="elevated" :loading="creatingLocation" @click="handleCreateLocation">Create</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, inject } from 'vue';
+import { ref, computed, inject, watch, onMounted, onUnmounted } from 'vue';
 import { useStore } from '../../store';
+import { useSettingsStore } from '../../store/settings';
 import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from "../../api/generic-fetch-queries";
 import ModalGeneric from './modal-generic.js';
@@ -71,7 +166,7 @@ const store = useStore();
 const i18n = useI18nStore();
 const auth = useAuthStore();
 const router = useRouter();
-const { isOnline, canSync } = useConnectivity();
+const { isOnline } = useConnectivity();
 const props = defineProps({
   items: Array,
 });
@@ -81,38 +176,101 @@ let drawer = ref(false);
 
 // Pending sync queue count
 const pendingCount = ref(0);
+let pendingInterval = null;
+
 async function refreshPendingCount() {
   pendingCount.value = await getQueueLength();
 }
-refreshPendingCount();
-setInterval(refreshPendingCount, 5000);
+
+onMounted(() => {
+  refreshPendingCount();
+  pendingInterval = setInterval(refreshPendingCount, 5000);
+});
+
+onUnmounted(() => {
+  if (pendingInterval) {
+    clearInterval(pendingInterval);
+    pendingInterval = null;
+  }
+});
 
 async function logout() {
   auth.logout();
   router.push('/login');
 }
 
-let iconTheme = computed(() => (darkMode.value ? 'mdi-moon-waning-crescent' : 'mdi-white-balance-sunny'));
+function switchLocation(id) {
+  auth.setCurrentLocationId(id);
+  eventBus.emit('refreshData');
+}
+
+const createLocationModal = ref(false);
+const newLocationName = ref('');
+const creatingLocation = ref(false);
+
+watch(
+  () => auth.locations,
+  (newLocations) => {
+    if ((auth.isAuthenticated || auth.isOfflineMode) && newLocations && newLocations.length === 0) {
+      createLocationModal.value = true;
+    }
+  },
+  { immediate: true }
+);
+
+async function handleCreateLocation() {
+  if (!newLocationName.value || (!auth.user?.org_id && !auth.isOfflineMode)) return;
+
+  if (auth.isOfflineMode && auth.locations.length >= 1) {
+    toast.error('Offline freemium limited to 1 location');
+    return;
+  }
+
+  creatingLocation.value = true;
+  try {
+    if (auth.isOfflineMode) {
+      auth.addLocalLocation(newLocationName.value);
+    } else {
+      const res = await fetch(`${useSettingsStore().backendUrl}/organizations/${auth.user.org_id}/locations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.accessToken}`
+        },
+        body: JSON.stringify({ name: newLocationName.value })
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'Failed to create location');
+      }
+      await auth.fetchLocations();
+    }
+    
+    createLocationModal.value = false;
+    newLocationName.value = '';
+    toast.success('Location created successfully');
+    
+    // Switch to the new location if possible
+    const newLoc = auth.locations[auth.locations.length - 1];
+    if (newLoc) switchLocation(newLoc.id);
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    creatingLocation.value = false;
+  }
+}
+
+const iconTheme = computed(() => (darkMode.value ? 'mdi-moon-waning-crescent' : 'mdi-white-balance-sunny'));
 const darkMode = computed({
   get() {
-    return store.hasDarkMode === 'dark';
+    return store.isDarkActive;
   },
-  set(value) {
-    store.setDarkMode(value ? 'dark' : 'light');
+  set(val) {
+    if (val !== store.isDarkActive) {
+      store.setDarkMode();
+    }
   }
 });
-
-onMounted(() => {
-  hasDarkMode();
-});
-
-function setDark() {
-  store.setDarkMode(darkMode.value ? 'light' : 'dark');
-}
-
-function hasDarkMode() {
-  return store.hasDarkMode === 'dark';
-}
 
 const toast = useToast();
 const eventBus = inject('eventBus');
@@ -133,7 +291,7 @@ const fileUploadFields = ref([
   {
     key: 'file',
     label: 'Select File',
-    value: [], // Initialize as empty array
+    value: [],
     type: 'file',
     rules: [v => !!v?.length || 'File is required'],
     isFileUpload: true,
@@ -164,7 +322,7 @@ async function handleFileUpload() {
       await new Promise(resolve => setTimeout(resolve, 100));
       eventBus.emit('refreshData');
       toast.success('Data imported and refreshed successfully');
-      fileUploadFields.value[0].value = []; // Reset as empty array
+      fileUploadFields.value[0].value = [];
     } catch (error) {
       toast.error('Error during import');
       console.error(error);
@@ -172,11 +330,20 @@ async function handleFileUpload() {
   }
 }
 
-
 const menuItems = computed(() => [
   { ...MENU_ITEMS.EXPORT, title: i18n.t('actions.export') },
   { ...MENU_ITEMS.IMPORT, title: i18n.t('actions.import') }
 ]);
+
+const getAllowedFileFormats = (type) => {
+  const formats = Object.values(FILE_FORMATS);
+  if (type === 'import') return formats;
+  const plan = auth.user?.organization?.plan_id || 'free';
+  if (plan === 'free') {
+    return formats.filter(f => f.format === 'xlsx');
+  }
+  return formats;
+};
 
 const handleMenuAction = async ({ type, format }) => {
   try {
@@ -191,10 +358,8 @@ const handleMenuAction = async ({ type, format }) => {
   }
 };
 
-// Add language handling
 const handleLanguageChange = (languageCode) => {
   i18n.setLocale(languageCode);
-  // Emit a custom event for language change
   eventBus.emit('languageChanged', languageCode);
 };
 </script>

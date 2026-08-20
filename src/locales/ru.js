@@ -26,7 +26,9 @@ export default {
     "import": "Импорт",
     "export": "Экспорт товаров",
     "entry": "Приход",
-    "withdrawal": "Расход"
+    "withdrawal": "Расход",
+    "data": "Данные",
+    "discard": "Отменить"
   },
   "modals": {
     "deleteConfirm": "Вы хотите удалить эту запись?",
@@ -48,13 +50,20 @@ export default {
       "update": "Ошибка при обновлении записи",
       "delete": "Ошибка при удалении записи",
       "import": "Ошибка при импорте",
-      "export": "Ошибка при экспорте"
+      "export": "Ошибка при экспорте",
+      "noLocation": "Нет локации"
+    },
+    "confirm": {
+      "discard": "Отменить изменения?"
     }
   },
   "common": {
     "search": "Поиск",
     "actions": "Действия",
-    "notes": "Заметки"
+    "notes": "Заметки",
+    "noData": "Нет данных",
+    "quantity": "Количество",
+    "optional": "Необязательно"
   },
   "tables": {
     "products": {
@@ -68,7 +77,11 @@ export default {
         "shelve_name": "Полка",
         "rack_name": "Стеллаж",
         "quantity": "Количество",
-        "description": "Описание"
+        "description": "Описание",
+        "supplier_name": "Поставщик",
+        "cost_price": "Себестоимость",
+        "selling_price": "Цена продажи",
+        "min_stock": "Мин. запас"
       }
     },
     "categories": {
@@ -116,6 +129,15 @@ export default {
         "entity": "Сущность",
         "qty_change": "Изм. кол-ва"
       }
+    },
+    "suppliers": {
+      "title": "Поставщики",
+      "columns": {
+        "name": "Название",
+        "contact_name": "Имя контакта",
+        "email": "Эл. почта",
+        "phone": "Телефон"
+      }
     }
   },
   "forms": {
@@ -130,7 +152,12 @@ export default {
         "description": "Описание",
         "category_name": "Категория",
         "shelve_name": "Полка",
-        "rack_name": "Стеллаж"
+        "rack_name": "Стеллаж",
+        "supplier_name": "Поставщик",
+        "cost_price": "Себестоимость",
+        "selling_price": "Цена продажи",
+        "min_stock": "Мин. запас",
+        "status": "Статус"
       },
       "categories": {
         "name": "Название",
@@ -142,7 +169,15 @@ export default {
       },
       "racks": {
         "name": "Название",
-        "description": "Описание"
+        "description": "Описание",
+        "shelve_name": "Полка"
+      },
+      "suppliers": {
+        "name": "Название",
+        "contact_name": "Имя контакта",
+        "email": "Эл. почта",
+        "phone": "Телефон",
+        "address": "Адрес"
       }
     },
     "placeholders": {
@@ -152,7 +187,8 @@ export default {
       "price": "Введите цену",
       "category": "Выберите категорию",
       "shelve": "Выберите полку",
-      "rack": "Выберите стеллаж"
+      "rack": "Выберите стеллаж",
+      "notes": "Заметки"
     },
     "validation": {
       "required": "Это поле обязательно"
@@ -178,7 +214,8 @@ export default {
     "individualDesc": "Личное использование — один склад",
     "organization": "Организация",
     "orgDesc": "Многоуровневый склад для команд",
-    "forgotPassword": "Забыли пароль?"
+    "forgotPassword": "Забыли пароль?",
+    "error": "Ошибка"
   },
   "settings": {
     "title": "Настройки",
@@ -189,7 +226,25 @@ export default {
     "connectAccount": "Подключить аккаунт",
     "loginToSync": "Войдите, чтобы синхронизировать инвентарь между устройствами.",
     "registerOnWeb": "Зарегистрироваться на сайте",
-    "colorSchemes": "Цветовые Схемы"
+    "colorSchemes": "Цветовые Схемы",
+    "catalogSnapshot": "Снимок каталога",
+    "snapshotDescription": "Резервное копирование",
+    "snapshotWarning": "Внимание",
+    "exportSnapshot": "Экспорт",
+    "importSnapshot": "Импорт",
+    "snapshotAdminOnly": "Только администратор",
+    "googleConnected": "Google подключен",
+    "googleNotConnected": "Google не подключен",
+    "connectGoogleDrive": "Подключить Google Drive",
+    "syncThisDevice": "Синхронизировать это устр.",
+    "restoreGoogleDrive": "Восстановить из Drive",
+    "snapshotInvalid": "Недействительный снимок",
+    "googleSynced": "Синхронизировано",
+    "snapshotConfirm": "Подтвердить?",
+    "googleRestored": "Восстановлено",
+    "snapshotExported": "Экспортировано",
+    "snapshotTooLarge": "Слишком большой снимок",
+    "snapshotImported": "Импортировано"
   },
   "welcome": {
     "title": "Добро пожаловать в STOCKMACHINE",
@@ -218,12 +273,29 @@ export default {
     "recentOperations": "История последних операций",
     "noData": "Нет данных",
     "lowStockAlert": "Предупреждение о низком запасе",
-    "categoryStock": "Уровни запасов по категориям"
+    "categoryStock": "Уровни запасов по категориям",
+    "totalStock": "Общий запас",
+    "totalValue": "Общая стоимость",
+    "movements": "Движения"
   },
   "entityTypes": {
     "product": "Товар",
     "category": "Категория",
     "rack": "Стеллаж",
     "shelf": "Полка"
+  },
+  "history": {
+    "filters": {
+      "all": "Все",
+      "entry": "Приход",
+      "withdrawal": "Расход",
+      "product": "Продукт",
+      "category": "Категория",
+      "rack": "Стеллаж",
+      "shelf": "Полка"
+    },
+    "entity": "Сущность",
+    "quantityBefore": "Кол-во до",
+    "quantityAfter": "Кол-во после"
   }
 };

@@ -1,6 +1,10 @@
-import { h, ref, computed, onMounted, inject } from 'vue';
+import { h, ref, computed, onMounted, onUnmounted, inject } from 'vue';
+import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
+import { isPlanLimitReached } from '../../utils/plan-limits';
 import ModalGeneric from './modal-generic';
+import ImportWizard from './ImportWizard.vue';
+import ExportWizard from './ExportWizard.vue';
 import { useToast } from 'vue-toast-notification';
 import {
   VTable,
@@ -10,6 +14,10 @@ import {
   VTextField,
   VIcon,
   VSkeletonLoader,
+  VMenu,
+  VList,
+  VListItem,
+  VListItemTitle
 } from 'vuetify/components';
 import { useI18nStore } from '../../store/i18n';
 
@@ -22,7 +30,7 @@ export default {
     formFields: Array,
     endpoint: String,
     relations: Array,
-    extraRowActions: Array, // [{ label, icon, color, event }] — emitted on eventBus with row data
+    extraRowActions: Array,
   },
   setup(props) {
     const toast = useToast();
@@ -32,6 +40,16 @@ export default {
     const search = ref('');
     const items = ref([]);
     const loading = ref(false);
+    const formError = ref('');
+    const showImportWizard = ref(false);
+    const showExportWizard = ref(false);
+
+    const auth = useAuthStore();
+    const currentPlan = computed(() => auth.user?.organization?.plan_id || 'free');
+
+    const itemsLimitReached = computed(() => {
+      return isPlanLimitReached(currentPlan.value, items.value.length, props.endpoint);
+    });
 
     const {
       fetchQuery,
@@ -88,21 +106,18 @@ export default {
     };
 
     // Setup event listener with cleanup
+    const handleRefresh = async () => {
+      await loadItems();
+      items.value = [...items.value]; // Force reactivity update
+    };
+
     onMounted(() => {
       loadItems();
-
-      // Improved event listener with immediate execution
-      const handleRefresh = async () => {
-        await loadItems();
-        items.value = [...items.value]; // Force reactivity update
-      };
-
       eventBus.on('refreshData', handleRefresh);
+    });
 
-      // Clean up the event listener when component is unmounted
-      return () => {
-        eventBus.off('refreshData', handleRefresh);
-      };
+    onUnmounted(() => {
+      eventBus.off('refreshData', handleRefresh);
     });
 
     const handleClear = () => {
@@ -113,8 +128,58 @@ export default {
 
     const openModal = (modalMode, item = null) => {
       mode.value = modalMode;
+      formError.value = '';
       selectedItem.value = item;
       dialog.value?.handleOpen();
+    };
+
+    const handleImportConfirm = async (mappedData) => {
+      try {
+        toast.info(`Processing ${mappedData.length} records...`);
+        const { getAll, add, enqueueOperation } = await import('../../api/indexeddb');
+
+        const finalProducts = [];
+        
+        for (const item of mappedData) {
+          let currentItem = { ...item };
+          
+          for (const rel of props.relations || []) {
+            const fk = rel.key;
+            const nameFieldKey = props.formFields.find(f => f.fk === fk)?.key;
+            
+            if (nameFieldKey && currentItem[nameFieldKey] && !currentItem[fk]) {
+              const relName = currentItem[nameFieldKey];
+              const existingList = await getAll(rel.endpoint);
+              let existing = existingList.find(o => o.name.toLowerCase() === relName.toLowerCase());
+              
+              if (!existing) {
+                // Create locally & enqueue
+                const newItem = { name: relName, _unsynced: true };
+                const localId = await add(rel.endpoint, newItem);
+                await enqueueOperation({ operation: 'create', endpoint: rel.endpoint, payload: { ...newItem, id: localId }, localId });
+                existing = { id: localId };
+              }
+              
+              currentItem[fk] = existing.id;
+            }
+            if (nameFieldKey) delete currentItem[nameFieldKey];
+          }
+          finalProducts.push(currentItem);
+        }
+
+        for (const prod of finalProducts) {
+          await createMutation(prod);
+        }
+
+        toast.success(`Successfully imported ${finalProducts.length} records!`);
+        showImportWizard.value = false;
+        await loadItems();
+        items.value = [...items.value];
+        eventBus.emit('refreshData');
+      } catch (error) {
+        console.error('Failed to import data:', error);
+        toast.error('Failed to import data');
+      }
     };
 
     const handlers = {
@@ -129,7 +194,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to create data:', error);
-          toast.error(i18n.t('messages.error.create'));
+          formError.value = error.message || i18n.t('messages.error.create');
         }
       },
       async update() {
@@ -143,7 +208,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to update data:', error);
-          toast.error(i18n.t('messages.error.update'));
+          formError.value = error.message || i18n.t('messages.error.update');
         }
       },
       async delete() {
@@ -156,7 +221,7 @@ export default {
           eventBus.emit('refreshData');
         } catch (error) {
           console.error('Failed to delete data:', error);
-          toast.error(i18n.t('messages.error.delete'));
+          formError.value = error.message || i18n.t('messages.error.delete');
         }
       },
     };
@@ -196,18 +261,38 @@ export default {
             'hide-details': true,
             'single-line': true,
           }),
-          h(
-            VBtn,
-            {
-              class: 'ml-2 mr-2',
-              onClick: () => openModal('create'),
-              color: 'primary',
-              variant: 'elevated',
-              elevation: '2',
-            },
-            () => i18n.t('actions.create'),
-          ),
-        ]),
+          h(VSpacer),
+          h(VMenu, null, {
+            activator: ({ props }) =>
+              h(VBtn, {
+                ...props,
+                class: 'ml-2',
+                color: 'secondary',
+                variant: 'outlined',
+                prependIcon: 'mdi-swap-vertical'
+              }, () => i18n.t('actions.data') || 'Data'),
+            default: () => h(VList, null, () => [
+              h(VListItem, { prependIcon: 'mdi-import', onClick: () => showImportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.import') || 'Import')),
+              h(VListItem, { prependIcon: 'mdi-export', onClick: () => showExportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.export') || 'Export'))
+            ])
+          }),
+            h(
+              VBtn,
+              {
+                class: 'ml-2 mr-2 font-weight-bold px-6',
+                onClick: () => openModal('create'),
+                color: 'primary',
+                variant: 'elevated',
+                elevation: '2',
+                disabled: itemsLimitReached.value,
+                title: itemsLimitReached.value ? 'Plan limit reached' : ''
+              },
+              () => [
+                h(VIcon, { class: 'mr-2' }, () => 'mdi-plus'),
+                i18n.t('actions.create')
+              ]
+            ),
+          ]),
 
         loading.value
           ? h(VSkeletonLoader, { type: 'table', class: 'ma-2' })
@@ -304,6 +389,7 @@ export default {
             endpoint: props.endpoint,
             item: selectedItem.value,
             relations: props.relations,
+            error: formError.value,
           },
           {
             buttonAction: () =>
@@ -353,6 +439,18 @@ export default {
                   ),
           },
         ),
+
+        h(ImportWizard, {
+          modelValue: showImportWizard.value,
+          'onUpdate:modelValue': (v) => (showImportWizard.value = v),
+          formFields: props.formFields,
+          onConfirm: handleImportConfirm
+        }),
+        h(ExportWizard, {
+          modelValue: showExportWizard.value,
+          'onUpdate:modelValue': (v) => (showExportWizard.value = v),
+          endpoint: props.endpoint
+        })
       ]);
   },
 };

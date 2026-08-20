@@ -1,19 +1,27 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'node:path';
 import squirrelStartup from 'electron-squirrel-startup';
-import { updateElectronApp, UpdateSourceType } from 'update-electron-app';
+import { checkForUpdates } from './utils/github-updater';
 
-updateElectronApp({
-  updateSource: {
-    repo: 'Lumexio/ps-electron',
-    type: UpdateSourceType.ElectronPublicUpdateService,
-  },
-  updateInterval: '5 minutes',
-});
+// ponytail: Cross-platform Github Releases updater
+// Built-in autoUpdater (and update-electron-app) does not support Linux natively.
+// We use a zero-dependency API fetch approach that works identically on Windows/Linux/Mac.
+if (app.isReady()) {
+  checkForUpdates();
+} else {
+  app.whenReady().then(checkForUpdates);
+}
+// Check every 6 hours
+setInterval(checkForUpdates, 1000 * 60 * 60 * 6);
 
 if (squirrelStartup) {
   app.quit();
 }
+
+// Suppress GPU/VSync errors on Linux
+app.commandLine.appendSwitch('disable-gpu-vsync');
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('disable-software-rasterizer');
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -38,7 +46,7 @@ const createWindow = () => {
         responseHeaders: {
           ...details.responseHeaders,
           'Content-Security-Policy': [
-            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http://165.227.205.129:8080 http://localhost:3000; font-src 'self' data:;",
+            "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://*.stripe.com; connect-src 'self' https://api.stripe.com https://api.stockmachine.online http://165.227.205.129:8080 http://localhost:3000 https://*.stripe.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://*.stripe.com; font-src 'self' data: https://fonts.gstatic.com;",
           ],
         },
       });

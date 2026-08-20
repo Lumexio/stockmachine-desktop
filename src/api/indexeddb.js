@@ -92,6 +92,11 @@ export const remove = async (storeName, id) => {
   return db.delete(storeName, id);
 };
 
+export const clearAll = async (storeName) => {
+  const db = await dbPromise;
+  return db.clear(storeName);
+};
+
 export const exportAllData = async () => {
   const db = await dbPromise;
   const stores = db.objectStoreNames;
@@ -148,6 +153,12 @@ export const incrementRetries = async (id) => {
 export const getQueueLength = async () => {
   const db = await dbPromise;
   return db.count('sync_queue');
+};
+
+/** Clear all pending operations (e.g. on logout) to prevent cross-account leaks */
+export const clearAllQueued = async () => {
+  const db = await dbPromise;
+  return db.clear('sync_queue');
 };
 
 // ── ID map helpers ────────────────────────────────────────────────────────────

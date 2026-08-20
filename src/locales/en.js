@@ -27,7 +27,9 @@ export default {
     "import": "Import",
     "export": "Export stock",
     "entry": "Stock Entry",
-    "withdrawal": "Stock Withdrawal"
+    "withdrawal": "Stock Withdrawal",
+    "data": "Data",
+    "discard": "Discard"
   },
   "modals": {
     "deleteConfirm": "Do you want to delete this record?",
@@ -49,13 +51,20 @@ export default {
       "update": "Error updating record",
       "delete": "Error deleting record",
       "import": "Error during import",
-      "export": "Error during export"
+      "export": "Error during export",
+      "noLocation": "No location"
+    },
+    "confirm": {
+      "discard": "Discard changes?"
     }
   },
   "common": {
     "search": "Search",
     "actions": "Actions",
-    "notes": "Notes"
+    "notes": "Notes",
+    "noData": "No data",
+    "quantity": "Quantity",
+    "optional": "Optional"
   },
   "tables": {
     "products": {
@@ -153,7 +162,8 @@ export default {
         "supplier_name": "Supplier",
         "cost_price": "Cost Price",
         "selling_price": "Selling Price",
-        "min_stock": "Min Stock Threshold"
+        "min_stock": "Min Stock Threshold",
+        "status": "Status"
       },
       "suppliers": {
         "name": "Name",
@@ -172,7 +182,8 @@ export default {
       },
       "racks": {
         "name": "Name",
-        "description": "Description"
+        "description": "Description",
+        "shelve_name": "Shelf"
       }
     },
     "placeholders": {
@@ -182,7 +193,8 @@ export default {
       "price": "Enter price",
       "category": "Select category",
       "shelve": "Select shelve",
-      "rack": "Select rack"
+      "rack": "Select rack",
+      "notes": "Notes"
     },
     "validation": {
       "required": "This field is required"
@@ -208,7 +220,8 @@ export default {
     "individualDesc": "Personal use — one inventory",
     "organization": "Organization",
     "orgDesc": "Multi-location inventory for teams",
-    "forgotPassword": "Forgot password?"
+    "forgotPassword": "Forgot password?",
+    "error": "Error"
   },
   "settings": {
     "title": "Settings",
@@ -219,7 +232,25 @@ export default {
     "connectAccount": "Connect Account",
     "loginToSync": "Log in to sync your inventory across devices.",
     "registerOnWeb": "Register on Web",
-    "colorSchemes": "Color Schemes"
+    "colorSchemes": "Color Schemes",
+    "catalogSnapshot": "Catalog Snapshot",
+    "snapshotDescription": "Backup your data",
+    "snapshotWarning": "Warning",
+    "exportSnapshot": "Export Snapshot",
+    "importSnapshot": "Import Snapshot",
+    "snapshotAdminOnly": "Admin only",
+    "googleConnected": "Google Connected",
+    "googleNotConnected": "Google Not Connected",
+    "connectGoogleDrive": "Connect Google Drive",
+    "syncThisDevice": "Sync this device",
+    "restoreGoogleDrive": "Restore from Drive",
+    "snapshotInvalid": "Invalid snapshot",
+    "googleSynced": "Synced",
+    "snapshotConfirm": "Confirm?",
+    "googleRestored": "Restored",
+    "snapshotExported": "Snapshot Exported",
+    "snapshotTooLarge": "Snapshot too large",
+    "snapshotImported": "Snapshot Imported"
   },
   "welcome": {
     "title": "Welcome to STOCKMACHINE",
@@ -249,7 +280,9 @@ export default {
     "noData": "No data available",
     "lowStockAlert": "Low Stock Alert",
     "categoryStock": "Category Stock Levels",
-    "totalValue": "Total Stock Value"
+    "totalValue": "Total Stock Value",
+    "totalStock": "Total Stock",
+    "movements": "Movements"
   },
   "entityTypes": {
     "product": "Product",
@@ -257,5 +290,19 @@ export default {
     "rack": "Rack",
     "shelf": "Shelf",
     "supplier": "Supplier"
+  },
+  "history": {
+    "filters": {
+      "all": "All",
+      "entry": "Entry",
+      "withdrawal": "Withdrawal",
+      "product": "Product",
+      "category": "Category",
+      "rack": "Rack",
+      "shelf": "Shelf"
+    },
+    "entity": "Entity",
+    "quantityBefore": "Quantity Before",
+    "quantityAfter": "Quantity After"
   }
 };

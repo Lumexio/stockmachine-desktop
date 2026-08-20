@@ -1,0 +1,16 @@
+{
+  "name": "STOCKMACHINE",
+  "short_name": "STOCKMACHINE",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff0000",
+  "description": "Stock Machine is a stock management system that helps you manage your inventory with ease.",
+  "icons": [
+    {
+      "src": "images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

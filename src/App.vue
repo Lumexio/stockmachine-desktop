@@ -4,6 +4,60 @@
       <v-app>
         <nav-drawer :items="list" />
         <v-main>
+          <v-dialog v-model="showOnboardingConfig" persistent max-width="600">
+            <v-card class="pa-4 rounded-xl">
+              <v-card-title class="text-h5 font-weight-bold mb-2">
+                <v-icon start color="primary" class="mr-2">mdi-cloud-sync</v-icon>
+                Data Sync Configuration
+              </v-card-title>
+              <v-card-text>
+                <p class="mb-4 text-body-1">
+                  As a free user, you can choose where to securely sync your catalog across devices:
+                </p>
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <v-card
+                      variant="outlined"
+                      class="h-100 cursor-pointer d-flex flex-column"
+                      color="grey-darken-1"
+                      @click="selectStorage('server')"
+                      hover
+                    >
+                      <v-card-item>
+                        <template #prepend>
+                          <v-icon size="x-large" color="grey-darken-1">mdi-server</v-icon>
+                        </template>
+                        <v-card-title class="text-subtitle-1 font-weight-bold">Comet Server</v-card-title>
+                      </v-card-item>
+                      <v-card-text class="flex-grow-1 pt-0">
+                        Data is stored on our managed servers. Strict freemium storage limits apply.
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-card
+                      variant="elevated"
+                      elevation="4"
+                      class="h-100 cursor-pointer d-flex flex-column"
+                      style="border: 2px solid rgb(var(--v-theme-primary))"
+                      @click="selectStorage('gdrive')"
+                      hover
+                    >
+                      <v-card-item>
+                        <template #prepend>
+                          <v-icon size="x-large" color="primary">mdi-google-drive</v-icon>
+                        </template>
+                        <v-card-title class="text-subtitle-1 text-primary font-weight-bold">Google Drive</v-card-title>
+                      </v-card-item>
+                      <v-card-text class="flex-grow-1 pt-0">
+                        Sync to your personal Drive. <strong class="text-primary">Unlimited capacity.</strong> (Recommended)
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
           <router-view />
         </v-main>
         <!-- Sync result snackbar -->
@@ -53,7 +107,7 @@
 </template>
 
 <script setup>
-  import { provide, ref, watch, onMounted, onUnmounted } from 'vue';
+  import { provide, ref, computed, watch, onMounted, onUnmounted } from 'vue';
   import NavDrawer from './components/generics/nav-drawer.vue';
   import WelcomeModal from './components/welcome-modal.vue';
   import useStore from './store';
@@ -71,17 +125,48 @@
   const router = useRouter();
   const { canSync } = useConnectivity();
 
-  const showWelcome = ref(!store.hasSeenWelcome);
+  const storagePreference = ref(localStorage.getItem('storage_preference'));
+
+  const showOnboardingConfig = computed(() =>
+    auth.isAuthenticated &&
+    !auth.isOfflineMode &&
+    auth.user?.organization?.plan_id === 'free' &&
+    ['owner', 'admin'].includes(auth.user?.role || '') &&
+    !storagePreference.value
+  );
+
+  const selectStorage = async (type) => {
+    localStorage.setItem('storage_preference', type);
+    storagePreference.value = type;
+    if (type === 'gdrive') {
+      // Just show a quick toast since OAuth isn't supported inside the electron app right now
+      syncSnackbar.value = {
+        show: true,
+        text: 'Please configure Google Drive sync on the Web Dashboard (stockmachine.online)',
+        color: 'success',
+      };
+    }
+  };
+
+  const showWelcome = computed({
+    get: () => !store.hasSeenWelcome && !auth.isAuthenticated && !auth.isOfflineMode,
+    set: (val) => {
+      if (!val) {
+        store.setHasSeenWelcome();
+      }
+    },
+  });
 
   function onWelcomeLogin() {
     store.setHasSeenWelcome();
-    showWelcome.value = false;
+    auth.setOfflineMode(false);
     router.push('/login');
   }
 
   function onWelcomeOffline() {
     store.setHasSeenWelcome();
-    showWelcome.value = false;
+    auth.setOfflineMode(true);
+    router.push('/');
   }
 
   // Sync state
@@ -102,7 +187,7 @@
   });
 
   // Listen for sync completion
-  eventBus.on('syncComplete', ({ synced, failed, errors }) => {
+  const handleSyncComplete = ({ synced, failed, errors }) => {
     syncErrors.value = errors;
     if (failed > 0) {
       syncSnackbar.value = {
@@ -118,10 +203,11 @@
         color: 'success',
       };
     }
-  });
+  };
 
   // Handle forced logout (e.g. from apiFetch interceptor)
-  const handleAuthLogout = () => {
+  const handleAuthLogout = async () => {
+    import('./api/indexeddb').then(({ clearAllQueued }) => clearAllQueued());
     auth.logout();
     router.push('/login');
   };
@@ -130,10 +216,12 @@
     const savedLang = localStorage.getItem('language');
     if (savedLang) i18n.setLocale(savedLang);
     window.addEventListener('auth:logout', handleAuthLogout);
+    eventBus.on('syncComplete', handleSyncComplete);
   });
 
   onUnmounted(() => {
     window.removeEventListener('auth:logout', handleAuthLogout);
+    eventBus.off('syncComplete', handleSyncComplete);
   });
 
   provide('eventBus', eventBus);

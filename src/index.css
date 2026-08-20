@@ -1,5 +1,74 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
+  font-family: Inter, Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, Arial, sans-serif;
   margin: auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography Rules & Hierarchy */
+h1, h2, h3 {
+  font-weight: 700;
+}
+.subtitle, .section-header {
+  font-weight: 600;
+}
+.body-text {
+  font-weight: 400;
+}
+.caption, .label {
+  font-weight: 500;
+}
+
+/* Touch-Friendly Design */
+button, .v-btn, .clickable {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Buttons & Interactivity Microinteractions */
+.v-btn--elevated, .v-btn--flat, .v-btn {
+  border-radius: 8px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.v-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+.v-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+/* Cards & Surfaces ("Liquid Glass" & Modern Depth) */
+.v-card, .v-sheet {
+  border-radius: 12px !important;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, transform 0.3s ease !important;
+}
+
+/* Light Mode Elevations */
+.v-theme--default-light .v-card,
+.v-theme--electron-neon-light .v-card,
+.v-theme--tokyo-day .v-card,
+.v-theme--newspaper-light .v-card {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* Dark Mode Liquid Glass */
+.v-theme--default-dark .v-card,
+.v-theme--electron-neon-dark .v-card,
+.v-theme--tokyo-night .v-card,
+.v-theme--newspaper-dark .v-card {
+  background: rgba(var(--v-theme-surface), 0.7) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Accessibility & Focus States */
+*:focus-visible {
+  outline: 2px solid var(--v-theme-primary);
+  outline-offset: 2px;
 }

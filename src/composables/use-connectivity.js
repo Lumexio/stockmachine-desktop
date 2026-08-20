@@ -11,10 +11,10 @@ const _isOnline = ref(navigator.onLine);
 async function pingBackend() {
   const settings = useSettingsStore();
   try {
-    const res = await fetch(`${settings.backendUrl}/auth/me`, {
+    const res = await fetch(`${settings.backendUrl}/health`, {
       signal: AbortSignal.timeout(3000),
     });
-    _isOnline.value = res.status === 401 || res.ok;
+    _isOnline.value = res.ok || res.status === 401;
   } catch {
     _isOnline.value = false;
   }
@@ -31,6 +31,8 @@ function stopPing() {
   pingTimer = null;
 }
 
+let subscribers = 0;
+
 export function useConnectivity() {
   const auth = useAuthStore();
 
@@ -44,14 +46,20 @@ export function useConnectivity() {
   const handleOffline = () => { _isOnline.value = false; };
 
   onMounted(() => {
+    subscribers++;
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     startPing();
   });
 
   onUnmounted(() => {
+    subscribers--;
     window.removeEventListener('online', handleOnline);
     window.removeEventListener('offline', handleOffline);
+    if (subscribers <= 0) {
+      subscribers = 0;
+      stopPing();
+    }
   });
 
   return { isOnline, canSync };

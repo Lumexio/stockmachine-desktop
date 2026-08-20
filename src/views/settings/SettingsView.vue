@@ -1,46 +1,17 @@
 <template>
-  <v-container class="pa-6" max-width="700">
-    <!-- Section 1: User Profile -->
-    <v-card v-if="auth.isAuthenticated" class="mb-6">
-      <v-card-title class="text-h6 pa-4">{{
-        i18n.t('settings.userProfile')
-      }}</v-card-title>
-      <v-divider />
-      <v-list>
-        <v-list-item :title="i18n.t('auth.name')" :subtitle="auth.user?.name" />
-        <v-divider />
-        <v-list-item
-          :title="i18n.t('auth.email')"
-          :subtitle="auth.user?.email"
-        />
-        <v-divider />
-        <v-list-item :title="i18n.t('auth.role')">
-          <template #subtitle>
-            <v-chip size="small" color="primary" class="mt-1">{{
-              auth.user?.role
-            }}</v-chip>
-          </template>
-        </v-list-item>
-        <v-divider />
-        <v-list-item
-          :title="i18n.t('auth.accountType')"
-          :subtitle="
-            auth.user?.org_id
-              ? i18n.t('auth.organization')
-              : i18n.t('auth.individual')
-          "
-        />
-      </v-list>
-    </v-card>
+  <v-container class="pa-6" max-width="850">
+    <div class="text-h5 font-weight-bold mb-6">
+      {{ i18n.t('settings.title') || 'Application Settings' }}
+    </div>
 
-    <!-- Section 2: Language -->
+    <!-- Section 1: Language Preferences -->
     <v-card class="mb-6">
       <v-card-title class="text-h6 pa-4">{{
         i18n.t('settings.language')
       }}</v-card-title>
       <v-divider />
       <v-card-text class="pa-4">
-        <div class="d-flex gap-2 flex-wrap">
+        <div class="d-flex ga-2 flex-wrap">
           <v-btn
             v-for="lang in languages"
             :key="lang.code"
@@ -57,7 +28,7 @@
       </v-card-text>
     </v-card>
 
-    <!-- Section 3: Appearance -->
+    <!-- Section 2: Appearance & Dual-Column Color Schemes -->
     <v-card class="mb-6">
       <v-card-title class="text-h6 pa-4">{{
         i18n.t('settings.appearance')
@@ -65,130 +36,155 @@
       <v-divider />
       <v-card-text class="pa-4">
         <div class="d-flex align-center justify-space-between mb-4">
-          <span>{{
-            isDark ? i18n.t('app.theme.dark') : i18n.t('app.theme.light')
-          }}</span>
-          <v-switch
-            v-model="isDark"
-            color="primary"
-            hide-details
-          />
+          <span class="font-weight-medium">Dark Theme Mode</span>
+          <v-switch v-model="isDark" color="primary" hide-details />
         </div>
         <v-divider class="my-4" />
         <div class="text-subtitle-1 mb-2 font-weight-medium">
-          {{ i18n.t('settings.colorSchemes') }}
+          {{ i18n.t('settings.colorSchemes') || 'Color Schemes' }}
         </div>
-        <div class="d-flex gap-2 flex-wrap">
-          <v-btn
-            v-for="scheme in colorSchemes"
-            :key="scheme.value"
-            :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
-            :variant="
-              store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
-            "
-            size="small"
-            @click="store.setColorScheme(scheme.value)"
-          >
-            {{ scheme.label }}
-          </v-btn>
-        </div>
+
+        <v-row class="mt-1">
+          <!-- Light Themes Column -->
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2 mb-2 font-weight-bold text-medium-emphasis">
+              Light Schemes
+            </div>
+            <div class="d-flex flex-column ga-2">
+              <v-btn
+                v-for="scheme in lightSchemes"
+                :key="scheme.value"
+                :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
+                :variant="
+                  store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
+                "
+                size="small"
+                class="justify-start text-none"
+                @click="store.setColorScheme(scheme.value)"
+              >
+                {{ scheme.label }}
+              </v-btn>
+            </div>
+          </v-col>
+
+          <!-- Dark Themes Column -->
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2 mb-2 font-weight-bold text-medium-emphasis">
+              Dark Schemes
+            </div>
+            <div class="d-flex flex-column ga-2">
+              <v-btn
+                v-for="scheme in darkSchemes"
+                :key="scheme.value"
+                :color="store.isDarkMode === scheme.value ? 'primary' : undefined"
+                :variant="
+                  store.isDarkMode === scheme.value ? 'elevated' : 'outlined'
+                "
+                size="small"
+                class="justify-start text-none"
+                @click="store.setColorScheme(scheme.value)"
+              >
+                {{ scheme.label }}
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
-
-    <!-- Section 4: Account -->
-    <v-card v-if="auth.isAuthenticated">
-      <v-card-title class="text-h6 pa-4">{{
-        i18n.t('settings.account')
-      }}</v-card-title>
+    
+    <!-- Section 3: Data Sync -->
+    <v-card class="mb-6" v-if="isFreePlan && canManageSnapshots">
+      <v-card-title class="text-h6 pa-4">Data Sync</v-card-title>
       <v-divider />
       <v-card-text class="pa-4">
-        <v-btn
-          color="error"
-          variant="tonal"
-          prepend-icon="mdi-logout"
-          @click="logout"
-        >
-          {{ i18n.t('auth.logout') }}
-        </v-btn>
-      </v-card-text>
-    </v-card>
-
-    <!-- Section 5: Connect account (shown when offline / not logged in) -->
-    <v-card v-else>
-      <v-card-title class="text-h6 pa-4">{{
-        i18n.t('settings.connectAccount')
-      }}</v-card-title>
-      <v-divider />
-      <v-card-text class="pa-4">
-        <p class="text-body-2 text-medium-emphasis mb-4">
-          {{ i18n.t('settings.loginToSync') }}
+        <div class="text-subtitle-1 font-weight-bold mb-2">
+          Storage Preference
+        </div>
+        <p class="text-body-2 text-medium-emphasis mb-3">
+          Choose where your catalog data is synced.
         </p>
-        <div class="d-flex gap-3 flex-wrap">
-          <v-btn
-            color="primary"
-            variant="elevated"
-            elevation="2"
-            prepend-icon="mdi-login"
-            @click="router.push('/login')"
-          >
-            {{ i18n.t('auth.login') }}
+        
+        <v-btn-toggle
+          v-model="storagePreference"
+          color="primary"
+          variant="outlined"
+          divided
+          class="mb-4 w-100"
+          @update:model-value="onStoragePreferenceChange"
+        >
+          <v-btn value="server" class="flex-grow-1 text-none">
+            <v-icon start>mdi-server</v-icon>
+            Comet Server (Limited)
           </v-btn>
-          <v-btn
-            color="primary"
-            variant="outlined"
-            prepend-icon="mdi-open-in-new"
-            @click="openRegister"
-          >
-            {{ i18n.t('settings.registerOnWeb') }}
+          <v-btn value="gdrive" class="flex-grow-1 text-none">
+            <v-icon start>mdi-google-drive</v-icon>
+            Google Drive (Unlimited)
           </v-btn>
-        </div>
+        </v-btn-toggle>
+
+        <template v-if="storagePreference === 'gdrive'">
+          <v-alert type="info" variant="tonal" class="mb-3">
+            Google Drive sync is managed via the Web Dashboard (stockmachine.online). Please log in there to authorize and perform cloud sync operations.
+          </v-alert>
+        </template>
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script setup>
-  import { computed } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useI18nStore } from '../../store/i18n';
-  import { useAuthStore } from '../../store/auth';
-  import { useStore } from '../../store/index';
+import { computed, ref } from 'vue';
+import { useI18nStore } from '../../store/i18n';
+import { useStore } from '../../store/index';
+import { useAuthStore } from '../../store/auth';
 
-  const router = useRouter();
-  const i18n = useI18nStore();
-  const auth = useAuthStore();
-  const store = useStore();
+const i18n = useI18nStore();
+const store = useStore();
+const authStore = useAuthStore();
 
-  const languages = [
-    { code: 'en', label: 'EN' },
-    { code: 'es', label: 'ES' },
-    { code: 'fr', label: 'FR' },
-    { code: 'ja', label: 'JA' },
-    { code: 'ru', label: 'RU' },
-  ];
+const canManageSnapshots = computed(() =>
+  ['owner', 'admin'].includes(authStore.user?.role || ''),
+);
+const isFreePlan = computed(() => authStore.user?.organization?.plan_id === 'free');
 
-  const colorSchemes = [
-    { value: 'light', label: 'Default Light' },
-    { value: 'dark', label: 'Default Dark' },
-    { value: 'electric', label: 'Electric Neon' },
-    { value: 'tokyo', label: 'Tokyo Night' },
-    { value: 'newspaper', label: 'Newspaper' },
-  ];
+const storagePreference = ref(localStorage.getItem('storage_preference') || 'server');
 
-  const isDark = computed({
-    get: () => store.isDarkMode === 'dark',
-    set: () => store.setDarkMode(),
-  });
-
-  function openRegister() {
-    window.api.send('toMain', {
-      type: 'openExternal',
-      url: 'http://165.227.205.129:8080/register',
-    });
+const onStoragePreferenceChange = (val) => {
+  if (!val) {
+    storagePreference.value = localStorage.getItem('storage_preference') || 'server';
+    return;
   }
+  localStorage.setItem('storage_preference', val);
+};
 
-  function logout() {
-    auth.logout();
-    router.push('/login');
-  }
+const languages = [
+  { code: 'en', label: 'EN' },
+  { code: 'es', label: 'ES' },
+  { code: 'fr', label: 'FR' },
+  { code: 'ja', label: 'JA' },
+  { code: 'ru', label: 'RU' },
+];
+
+const lightSchemes = [
+  { value: 'default-light', label: 'Default Light' },
+  { value: 'electron-neon-light', label: 'Electron Neon Light' },
+  { value: 'tokyo-day', label: 'Tokyo Day' },
+  { value: 'newspaper-light', label: 'Newspaper Light' },
+];
+
+const darkSchemes = [
+  { value: 'default-dark', label: 'Default Dark' },
+  { value: 'electron-neon-dark', label: 'Electron Neon Dark' },
+  { value: 'tokyo-night', label: 'Tokyo Night' },
+  { value: 'newspaper-dark', label: 'Newspaper Dark' },
+];
+
+const isDark = computed({
+  get: () => store.isDarkActive,
+  set: (val) => {
+    if (val !== store.isDarkActive) {
+      store.setDarkMode();
+    }
+  },
+});
 </script>

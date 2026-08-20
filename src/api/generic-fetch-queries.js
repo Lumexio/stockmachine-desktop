@@ -6,12 +6,12 @@ import { useAuthStore } from '../store/auth';
 import { useSettingsStore } from '../store/settings';
 
 export function useGenericFetchQueries(endpoint) {
-  /** True when the user is authenticated and a backend URL is configured. */
+  /** True when the user is authenticated, not in offline mode, and a backend URL is configured. */
   const isSyncMode = () => {
     try {
       const auth = useAuthStore();
       const settings = useSettingsStore();
-      return !!(auth.isAuthenticated && settings.backendUrl);
+      return !!(auth.isAuthenticated && !auth.isOfflineMode && settings.backendUrl);
     } catch {
       return false;
     }
@@ -58,6 +58,13 @@ export function useGenericFetchQueries(endpoint) {
 
   const createMutation = async (newData) => {
     const sanitizedData = JSON.parse(JSON.stringify(newData));
+    if (endpoint === 'products') {
+      ['quantity', 'cost_price', 'selling_price', 'min_stock'].forEach(field => {
+        if (sanitizedData[field] !== undefined) {
+          sanitizedData[field] = Number(sanitizedData[field]) || 0;
+        }
+      });
+    }
     sanitizedData._unsynced = true;
     const localId = await add(endpoint, sanitizedData);
     await enqueueOperation({ operation: 'create', endpoint, payload: { ...sanitizedData, id: localId }, localId });
@@ -87,6 +94,13 @@ export function useGenericFetchQueries(endpoint) {
 
   const updateMutation = async (updatedData) => {
     const sanitizedData = JSON.parse(JSON.stringify(updatedData));
+    if (endpoint === 'products') {
+      ['quantity', 'cost_price', 'selling_price', 'min_stock'].forEach(field => {
+        if (sanitizedData[field] !== undefined) {
+          sanitizedData[field] = Number(sanitizedData[field]) || 0;
+        }
+      });
+    }
     const storesToLog = ['products', 'categories', 'racks', 'shelves', 'suppliers'];
     let quantityBefore = undefined;
     let quantityAfter = undefined;

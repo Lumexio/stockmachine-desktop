@@ -13,7 +13,10 @@ export default {
     arch: 'x64',
 
     executableName: 'stockmachine',
-    name: 'STOCKMACHINE'
+    name: 'STOCKMACHINE',
+    win32metadata: {
+      manifest: './app.manifest'
+    }
   },
   rebuildConfig: {},
   makers: [
