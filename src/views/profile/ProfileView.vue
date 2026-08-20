@@ -98,7 +98,7 @@
       <v-divider />
       <v-card-text class="pa-6">
         <v-row class="mb-2" align="stretch">
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="5">
             <v-card variant="outlined" class="pa-5 h-100 tier-card d-flex flex-column rounded-xl">
               <div class="d-flex justify-space-between align-center mb-4">
                 <div class="text-h6 font-weight-bold">Current Limits</div>
@@ -138,10 +138,10 @@
             </v-card>
           </v-col>
 
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="7">
             <v-card class="pa-1 h-100  rounded-xl elevation-4 d-flex">
-              <div class="pa-4 flex-grow-1  rounded-lg d-flex flex-column">
-                <div class="d-flex justify-space-between align-start mb-2">
+              <div class="pa-4 flex-fill w-75 rounded-lg d-flex flex-column">
+                <div class="d-flex align-start mb-2">
                   <div>
                     <div class="text-h5 font-weight-black tracking-tight bg-clip-text text-primary">Upgrade Plan</div>
                     <div class="text-caption text-medium-emphasis mb-4">
@@ -653,3 +653,4 @@ async function logout(): Promise<void> {
   100% { background-position: 0% 50%; }
 }
 </style>
+

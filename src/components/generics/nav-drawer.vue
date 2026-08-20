@@ -16,27 +16,28 @@
     </v-chip>
     <LanguageSelector @change-language="handleLanguageChange" />
     <v-switch :prepend-icon="iconTheme" class="mr-3" v-model="darkMode" hide-details inset></v-switch>
-    <v-btn icon>
-      <v-icon>mdi-content-save</v-icon>
-      <v-menu offset-y activator="parent">
-        <v-list>
-          <FileMenuItem v-for="item in menuItems" :key="item.type" v-bind="item"
-            :menu-options="getAllowedFileFormats(item.type)" @action="handleMenuAction" />
-        </v-list>
-      </v-menu>
-    </v-btn>
-
+        <!-- Data Dropdown -->
+    <v-menu v-if="auth.isAuthenticated" offset-y transition="scale-transition">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" variant="outlined" class="mr-2 text-none" prepend-icon="mdi-swap-vertical">
+          Data
+        </v-btn>
+      </template>
+      <v-list elevation="8" rounded="xl" class="pa-2 mt-1" min-width="200">
+        <v-list-item prepend-icon="mdi-import" @click="triggerImportWizard" title="Import" />
+        <v-list-item prepend-icon="mdi-export" @click="triggerExportWizard" title="Export" />
+      </v-list>
+    </v-menu>
     <!-- Location Switcher (Admin/Owner only) -->
     <v-menu v-if="auth.isAuthenticated && (auth.user?.role === 'owner' || auth.user?.role === 'admin')" offset-y transition="scale-transition">
       <template v-slot:activator="{ props }">
         <v-btn v-bind="props" variant="tonal" class="mr-2 text-none rounded-pill px-4" prepend-icon="mdi-map-marker">
-          {{ auth.locations?.find(l => l.id === auth.currentLocationId)?.name || 'Select Location' }}
+          {{ auth.currentLocationId === 0 ? 'Global' : (auth.locations?.find(l => l.id === auth.currentLocationId)?.name || 'Select Location') }}
           <v-icon end size="small">mdi-chevron-down</v-icon>
         </v-btn>
       </template>
       <v-list elevation="8" rounded="xl" class="pa-2 mt-1" min-width="200">
-        <v-list-item
-          v-for="loc in auth.locations"
+        <v-list-item @click="switchLocation(0)" :active="auth.currentLocationId === 0" color="primary" rounded="lg" class="mb-1"><template v-slot:prepend v-if="auth.currentLocationId === 0"><v-icon color="primary" size="small" class="mr-2">mdi-earth</v-icon></template><template v-slot:prepend v-else><div style="width: 28px;"></div></template><v-list-item-title :class="{'font-weight-bold': auth.currentLocationId === 0}">Global</v-list-item-title></v-list-item><v-divider class="my-2"></v-divider><v-list-item v-for="loc in auth.locations"
           :key="loc.id"
           @click="switchLocation(loc.id)"
           :active="loc.id === auth.currentLocationId"
@@ -113,6 +114,8 @@
         </v-btn>
       </div>
     </template>
+    <ImportWizard v-model="showImportWizard" />
+    <ExportWizard v-model="showExportWizard" />
   </v-navigation-drawer>
 
   <modal-generic ref="modalRef" :title="i18n.t('modals.import.title')" :form-fields="fileUploadFields" mode="create">
@@ -148,9 +151,68 @@
 
 <script setup>
 import { ref, computed, inject, watch, onMounted, onUnmounted } from 'vue';
-import { useStore } from '../../store';
-import { useSettingsStore } from '../../store/settings';
+import ImportWizard from '@/components/generics/ImportWizard.vue';
+import ExportWizard from '@/components/generics/ExportWizard.vue';
+
+const showImportWizard = ref(false);
+const showExportWizard = ref(false);
+
+function triggerImportWizard() {
+  showImportWizard.value = true;
+}
+
+function triggerExportWizard() {
+  showExportWizard.value = true;
+}import { useStore } from '../../store';
+
+  import { useSettingsStore } from '../../store/settings';
 import { useAuthStore } from '../../store/auth';
+  import { customFetch } from '../../api/custom-fetch';
+
+  const snapshotInput = ref(null);
+
+  function triggerSnapshotImport() {
+    snapshotInput.value?.click();
+  }
+
+  async function handleSnapshotFile(event) {
+    const target = event.target;
+    const file = target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const snapshot = JSON.parse(text);
+      
+      await customFetch('/snapshots/catalog/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ snapshot, dryRun: false })
+      });
+      alert('Snapshot imported successfully!');
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to import snapshot');
+    } finally {
+      if (target) target.value = '';
+    }
+  }
+
+  async function downloadGlobalSnapshot() {
+    try {
+      const response = await customFetch('/snapshots/catalog');
+      const url = URL.createObjectURL(new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "stockmachine-catalog-${new Date().toISOString().slice(0, 10)}.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      alert('Failed to export snapshot');
+    }
+  }
 import { useGenericFetchQueries } from "../../api/generic-fetch-queries";
 import ModalGeneric from './modal-generic.js';
 import { useToast } from 'vue-toast-notification';
@@ -363,3 +425,16 @@ const handleLanguageChange = (languageCode) => {
   eventBus.emit('languageChanged', languageCode);
 };
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+

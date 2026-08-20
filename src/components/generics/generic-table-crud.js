@@ -3,8 +3,6 @@ import { useAuthStore } from '../../store/auth';
 import { useGenericFetchQueries } from '../../api/generic-fetch-queries';
 import { isPlanLimitReached } from '../../utils/plan-limits';
 import ModalGeneric from './modal-generic';
-import ImportWizard from './ImportWizard.vue';
-import ExportWizard from './ExportWizard.vue';
 import { useToast } from 'vue-toast-notification';
 import {
   VTable,
@@ -41,8 +39,6 @@ export default {
     const items = ref([]);
     const loading = ref(false);
     const formError = ref('');
-    const showImportWizard = ref(false);
-    const showExportWizard = ref(false);
 
     const auth = useAuthStore();
     const currentPlan = computed(() => auth.user?.organization?.plan_id || 'free');
@@ -133,54 +129,6 @@ export default {
       dialog.value?.handleOpen();
     };
 
-    const handleImportConfirm = async (mappedData) => {
-      try {
-        toast.info(`Processing ${mappedData.length} records...`);
-        const { getAll, add, enqueueOperation } = await import('../../api/indexeddb');
-
-        const finalProducts = [];
-        
-        for (const item of mappedData) {
-          let currentItem = { ...item };
-          
-          for (const rel of props.relations || []) {
-            const fk = rel.key;
-            const nameFieldKey = props.formFields.find(f => f.fk === fk)?.key;
-            
-            if (nameFieldKey && currentItem[nameFieldKey] && !currentItem[fk]) {
-              const relName = currentItem[nameFieldKey];
-              const existingList = await getAll(rel.endpoint);
-              let existing = existingList.find(o => o.name.toLowerCase() === relName.toLowerCase());
-              
-              if (!existing) {
-                // Create locally & enqueue
-                const newItem = { name: relName, _unsynced: true };
-                const localId = await add(rel.endpoint, newItem);
-                await enqueueOperation({ operation: 'create', endpoint: rel.endpoint, payload: { ...newItem, id: localId }, localId });
-                existing = { id: localId };
-              }
-              
-              currentItem[fk] = existing.id;
-            }
-            if (nameFieldKey) delete currentItem[nameFieldKey];
-          }
-          finalProducts.push(currentItem);
-        }
-
-        for (const prod of finalProducts) {
-          await createMutation(prod);
-        }
-
-        toast.success(`Successfully imported ${finalProducts.length} records!`);
-        showImportWizard.value = false;
-        await loadItems();
-        items.value = [...items.value];
-        eventBus.emit('refreshData');
-      } catch (error) {
-        console.error('Failed to import data:', error);
-        toast.error('Failed to import data');
-      }
-    };
 
     const handlers = {
       async create() {
@@ -262,20 +210,6 @@ export default {
             'single-line': true,
           }),
           h(VSpacer),
-          h(VMenu, null, {
-            activator: ({ props }) =>
-              h(VBtn, {
-                ...props,
-                class: 'ml-2',
-                color: 'secondary',
-                variant: 'outlined',
-                prependIcon: 'mdi-swap-vertical'
-              }, () => i18n.t('actions.data') || 'Data'),
-            default: () => h(VList, null, () => [
-              h(VListItem, { prependIcon: 'mdi-import', onClick: () => showImportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.import') || 'Import')),
-              h(VListItem, { prependIcon: 'mdi-export', onClick: () => showExportWizard.value = true }, () => h(VListItemTitle, () => i18n.t('actions.export') || 'Export'))
-            ])
-          }),
             h(
               VBtn,
               {
@@ -440,17 +374,9 @@ export default {
           },
         ),
 
-        h(ImportWizard, {
-          modelValue: showImportWizard.value,
-          'onUpdate:modelValue': (v) => (showImportWizard.value = v),
-          formFields: props.formFields,
-          onConfirm: handleImportConfirm
-        }),
-        h(ExportWizard, {
-          modelValue: showExportWizard.value,
-          'onUpdate:modelValue': (v) => (showExportWizard.value = v),
-          endpoint: props.endpoint
-        })
       ]);
   },
 };
+
+
+
