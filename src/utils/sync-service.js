@@ -98,7 +98,11 @@ export async function runSync() {
       await dequeueOperation(queueId);
       synced++;
     } catch (e) {
-      await incrementRetries(queueId);
+      if (e.message.includes('402') || e.message.includes('403')) {
+        await dequeueOperation(queueId); // ponytail: terminal failure on plan limits, drop from queue
+      } else {
+        await incrementRetries(queueId);
+      }
       errors.push({ entry, error: e.message });
     }
   }
