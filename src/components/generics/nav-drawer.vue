@@ -257,6 +257,8 @@ onUnmounted(() => {
 });
 
 async function logout() {
+  const { clearAllQueued } = await import('../../api/indexeddb');
+  await clearAllQueued();
   auth.logout();
   router.push('/login');
 }

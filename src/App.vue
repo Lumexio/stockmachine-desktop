@@ -207,7 +207,8 @@
 
   // Handle forced logout (e.g. from apiFetch interceptor)
   const handleAuthLogout = async () => {
-    import('./api/indexeddb').then(({ clearAllQueued }) => clearAllQueued());
+    // P0 UX Fix: Never silently drop the offline queue on token expiry
+    // import('./api/indexeddb').then(({ clearAllQueued }) => clearAllQueued());
     auth.logout();
     router.push('/login');
   };

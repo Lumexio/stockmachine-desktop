@@ -107,13 +107,37 @@ export default {
       items.value = [...items.value]; // Force reactivity update
     };
 
+    let barcodeBuffer = '';
+    let barcodeTimeout = null;
+
+    const handleKeydown = (e) => {
+      // Fast typing from a scanner ends with 'Enter'
+      if (e.key === 'Enter' && barcodeBuffer.length > 3) {
+        search.value = barcodeBuffer;
+        barcodeBuffer = '';
+        e.preventDefault();
+        return;
+      }
+      
+      // Ignore modifier keys
+      if (e.key.length > 1) return;
+
+      barcodeBuffer += e.key;
+      clearTimeout(barcodeTimeout);
+      barcodeTimeout = setTimeout(() => {
+        barcodeBuffer = '';
+      }, 50); // 50ms threshold
+    };
+
     onMounted(() => {
       loadItems();
       eventBus.on('refreshData', handleRefresh);
+      window.addEventListener('keydown', handleKeydown);
     });
 
     onUnmounted(() => {
       eventBus.off('refreshData', handleRefresh);
+      window.removeEventListener('keydown', handleKeydown);
     });
 
     const handleClear = () => {
