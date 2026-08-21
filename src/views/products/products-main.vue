@@ -10,7 +10,7 @@ const eventBus = inject('eventBus');
 let title = ref(i18n.t('tables.products.title'));
 let columns = ref([
   { id: 0, key: 'name', title: i18n.t('tables.products.columns.name') },
-  { id: 'barcode', key: 'barcode', title: 'Barcode' },
+  { id: 9, key: 'barcode', title: 'Barcode' },
   { id: 1, key: 'category_name', title: i18n.t('tables.products.columns.category_name') },
   { id: 2, key: 'shelve_name', title: i18n.t('tables.products.columns.shelve_name') },
   { id: 3, key: 'rack_name', title: i18n.t('tables.products.columns.rack_name') },
