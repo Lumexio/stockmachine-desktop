@@ -10,6 +10,7 @@ const eventBus = inject('eventBus');
 let title = ref(i18n.t('tables.products.title'));
 let columns = ref([
   { id: 0, key: 'name', title: i18n.t('tables.products.columns.name') },
+  { id: 'barcode', key: 'barcode', title: 'Barcode' },
   { id: 1, key: 'category_name', title: i18n.t('tables.products.columns.category_name') },
   { id: 2, key: 'shelve_name', title: i18n.t('tables.products.columns.shelve_name') },
   { id: 3, key: 'rack_name', title: i18n.t('tables.products.columns.rack_name') },
@@ -22,6 +23,7 @@ let columns = ref([
 let endpoint = ref('products');
 let formFields = ref([
   { key: 'name', label: i18n.t('forms.label.products.name'), value: '', rules: [v => !!v || i18n.t('forms.validation.required')] },
+  { key: 'barcode', label: 'Barcode', value: '' },
   { key: 'quantity', type: 'number', label: i18n.t('forms.label.products.quantity'), value: '', rules: [v => !!v || i18n.t('forms.validation.required')] },
   { key: 'description', label: i18n.t('forms.label.products.description'), value: '' },
   { key: 'category_name', fk: 'category_id', label: i18n.t('forms.label.products.category_name'), value: '', selector: true },
