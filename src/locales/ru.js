@@ -51,10 +51,15 @@ export default {
       "delete": "Ошибка при удалении записи",
       "import": "Ошибка при импорте",
       "export": "Ошибка при экспорте",
-      "noLocation": "Нет локации"
+      "noLocation": "Нет локации",
+      "permissionRequired": "Требуется разрешение",
+      "cameraPermission": "Для сканирования требуется разрешение на использование камеры."
     },
     "confirm": {
       "discard": "Отменить изменения?"
+    },
+    "info": {
+      "pointCamera": "Наведите камеру на штрихкод"
     }
   },
   "common": {
@@ -81,7 +86,8 @@ export default {
         "supplier_name": "Поставщик",
         "cost_price": "Себестоимость",
         "selling_price": "Цена продажи",
-        "min_stock": "Мин. запас"
+        "min_stock": "Мин. запас",
+        "barcode": "Штрихкод"
       }
     },
     "categories": {
@@ -157,7 +163,8 @@ export default {
         "cost_price": "Себестоимость",
         "selling_price": "Цена продажи",
         "min_stock": "Мин. запас",
-        "status": "Статус"
+        "status": "Статус",
+        "barcode": "Штрихкод"
       },
       "categories": {
         "name": "Название",
@@ -188,7 +195,8 @@ export default {
       "category": "Выберите категорию",
       "shelve": "Выберите полку",
       "rack": "Выберите стеллаж",
-      "notes": "Заметки"
+      "notes": "Заметки",
+      "barcode": "Отсканируйте или введите штрихкод"
     },
     "validation": {
       "required": "Это поле обязательно"

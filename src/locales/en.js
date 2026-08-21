@@ -52,10 +52,15 @@ export default {
       "delete": "Error deleting record",
       "import": "Error during import",
       "export": "Error during export",
-      "noLocation": "No location"
+      "noLocation": "No location",
+      "permissionRequired": "Permission required",
+      "cameraPermission": "Camera permission is needed to scan barcodes."
     },
     "confirm": {
       "discard": "Discard changes?"
+    },
+    "info": {
+      "pointCamera": "Point camera at barcode"
     }
   },
   "common": {
@@ -82,7 +87,8 @@ export default {
         "supplier_name": "Supplier",
         "cost_price": "Cost",
         "selling_price": "Price",
-        "min_stock": "Min Stock"
+        "min_stock": "Min Stock",
+        "barcode": "Barcode"
       }
     },
     "suppliers": {
@@ -163,7 +169,8 @@ export default {
         "cost_price": "Cost Price",
         "selling_price": "Selling Price",
         "min_stock": "Min Stock Threshold",
-        "status": "Status"
+        "status": "Status",
+        "barcode": "Barcode"
       },
       "suppliers": {
         "name": "Name",
@@ -194,7 +201,8 @@ export default {
       "category": "Select category",
       "shelve": "Select shelve",
       "rack": "Select rack",
-      "notes": "Notes"
+      "notes": "Notes",
+      "barcode": "Scan or enter barcode"
     },
     "validation": {
       "required": "This field is required"

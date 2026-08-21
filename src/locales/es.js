@@ -52,10 +52,15 @@ export default {
       "delete": "Error al eliminar el registro",
       "import": "Error durante la importación",
       "export": "Error durante la exportación",
-      "noLocation": "Sin ubicación"
+      "noLocation": "Sin ubicación",
+      "permissionRequired": "Permiso requerido",
+      "cameraPermission": "Se necesita permiso de la cámara para escanear."
     },
     "confirm": {
       "discard": "¿Descartar cambios?"
+    },
+    "info": {
+      "pointCamera": "Apunte la cámara al código"
     }
   },
   "common": {
@@ -82,7 +87,8 @@ export default {
         "supplier_name": "Proveedor",
         "cost_price": "Costo",
         "selling_price": "Precio",
-        "min_stock": "Stock Mín"
+        "min_stock": "Stock Mín",
+        "barcode": "Código de Barras"
       }
     },
     "suppliers": {
@@ -163,7 +169,8 @@ export default {
         "cost_price": "Precio de Costo",
         "selling_price": "Precio de Venta",
         "min_stock": "Límite de Stock Mínimo",
-        "status": "Estado"
+        "status": "Estado",
+        "barcode": "Código de Barras"
       },
       "suppliers": {
         "name": "Nombre",
@@ -194,7 +201,8 @@ export default {
       "category": "Seleccione categoría",
       "shelve": "Seleccione estante",
       "rack": "Seleccione rack",
-      "notes": "Notas"
+      "notes": "Notas",
+      "barcode": "Escanear o ingresar código de barras"
     },
     "validation": {
       "required": "Este campo es requerido"

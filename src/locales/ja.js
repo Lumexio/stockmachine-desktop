@@ -51,10 +51,15 @@ export default {
       "delete": "レコードの削除中にエラーが発生しました",
       "import": "インポート中にエラーが発生しました",
       "export": "エクスポート中にエラーが発生しました",
-      "noLocation": "場所がありません"
+      "noLocation": "場所がありません",
+      "permissionRequired": "許可が必要です",
+      "cameraPermission": "スキャンするにはカメラの許可が必要です。"
     },
     "confirm": {
       "discard": "変更を破棄しますか？"
+    },
+    "info": {
+      "pointCamera": "カメラをバーコードに向けてください"
     }
   },
   "common": {
@@ -81,7 +86,8 @@ export default {
         "supplier_name": "サプライヤー",
         "cost_price": "原価",
         "selling_price": "販売価格",
-        "min_stock": "最小在庫"
+        "min_stock": "最小在庫",
+        "barcode": "バーコード"
       }
     },
     "categories": {
@@ -157,7 +163,8 @@ export default {
         "cost_price": "原価",
         "selling_price": "販売価格",
         "min_stock": "最小在庫",
-        "status": "ステータス"
+        "status": "ステータス",
+        "barcode": "バーコード"
       },
       "categories": {
         "name": "名前",
@@ -188,7 +195,8 @@ export default {
       "category": "カテゴリーを選択",
       "shelve": "棚を選択",
       "rack": "ラックを選択",
-      "notes": "メモ"
+      "notes": "メモ",
+      "barcode": "バーコードをスキャンまたは入力"
     },
     "validation": {
       "required": "この項目は必須です"
