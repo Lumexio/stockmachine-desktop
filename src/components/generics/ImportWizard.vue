@@ -302,25 +302,46 @@ async function executeImport() {
         const cleanRow: any = {};
         for (const fileCol in mapping.value) {
           const dbField = mapping.value[fileCol];
-          if (dbField) cleanRow[dbField] = row[fileCol];
+          if (dbField) {
+             const val = row[fileCol];
+             cleanRow[dbField] = dbField === 'quantity' ? Number(val) : val;
+          }
         }
         return cleanRow;
       });
       
       const endpoint = selectedEntity.value;
+      const failedRows: any[] = [];
       let successCount = 0;
-      for (const item of mappedData) {
-        try {
-          await apiFetch(`/${endpoint}`, {
-            method: 'POST',
-            body: JSON.stringify(item)
-          });
-          successCount++;
-        } catch (e) {
-          console.error('Failed to import item', item, e);
-        }
+
+      const BATCH_SIZE = 10;
+      for (let i = 0; i < mappedData.length; i += BATCH_SIZE) {
+        const batch = mappedData.slice(i, i + BATCH_SIZE);
+        await Promise.all(batch.map(async (item) => {
+          try {
+            await apiFetch(`/${endpoint}`, {
+              method: 'POST',
+              body: JSON.stringify(item)
+            });
+            successCount++;
+          } catch (e: any) {
+            failedRows.push({ item, error: e.message || 'Import failed' });
+          }
+        }));
       }
-      alert(`Imported ${successCount}/${mappedData.length} records into ${selectedEntityLabel.value}`);
+
+      if (failedRows.length > 0) {
+        const blob = new Blob([JSON.stringify(failedRows, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `import-errors-${endpoint}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert(`Imported ${successCount}/${mappedData.length}. ${failedRows.length} failed. Downloading error log...`);
+      } else {
+        alert(`Imported ${successCount}/${mappedData.length} records into ${selectedEntityLabel.value}`);
+      }
       window.location.reload();
     }
     close();
